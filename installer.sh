@@ -1,5 +1,5 @@
 #!/bin/sh
-##setup command=wget -q "--no-check-certificate" https://raw.githubusercontent.com/fairbird/backupflash/main/installer.sh -O - | /bin/sh
+##setup command=wget -q "--no-check-certificate" https://raw.githubusercontent.com/fairbird/BackUpFlash/main/installer.sh -O - | /bin/sh
 
 version=6.6
 description=What is NEW :\n-Add OpenVision PY3 images\n\n**************************\n: ما هو الجديد\n- لبايثون 3 OpenVision إضافة صور فريق 
@@ -151,7 +151,7 @@ fi
 cd /tmp 
 set -e
 rm -f *backupflash*
-wget --no-check-certificate --content-disposition https://github.com/fairbird/backupflash/archive/refs/heads/main.tar.gz
+wget --no-check-certificate --content-disposition https://github.com/fairbird/BackUpFlash/archive/refs/heads/main.tar.gz
 tar -xzf backupflash-main.tar.gz
 cp -rf backupflash-main/usr /
 rm -f *backupflash*
