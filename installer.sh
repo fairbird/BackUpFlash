@@ -1,8 +1,8 @@
 #!/bin/sh
 ##setup command=wget -q "--no-check-certificate" https://raw.githubusercontent.com/fairbird/BackUpFlash/main/installer.sh -O - | /bin/sh
 
-version=6.6
-description=What is NEW :\n-Add OpenVision PY3 images\n\n**************************\n: ما هو الجديد\n- لبايثون 3 OpenVision إضافة صور فريق 
+version=6.7
+description=What is NEW :\n-Move plugin to my source github\n\n**************************\n: ما هو الجديد\n- github نقل البلجن الى سورساتي على
 
 
 if [ ! -d '/usr/lib64' ]; then
