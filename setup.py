@@ -2,9 +2,9 @@
 # -*- coding: utf-8 -*-
 from distutils.core import setup
 
-PLUGIN_DIR = 'Extensions.backupflash'
+PLUGIN_DIR = 'Extensions.BackUpFlash'
 
-setup(name='enigma2-plugin-extensions-backupflash',
+setup(name='enigma2-plugin-extensions-BackUpFlash',
        version='1.0',
        author='RAED',
        author_email='rrrr53@hotmail.com',
