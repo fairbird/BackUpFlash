@@ -152,7 +152,7 @@ cd /tmp
 set -e
 rm -rf *BackUpFlash*
 rm -rf *main*
-wget --no-check-certificate https://github.com/fairbird/BackUpFlash/archive/refs/heads/main.tar.gz
+wget -q "--no-check-certificate" https://github.com/fairbird/BackUpFlash/archive/refs/heads/main.tar.gz
 tar -xzf main.tar.gz
 cp -rf BackUpFlash-main/usr /
 rm -rf *BackUpFlash*
