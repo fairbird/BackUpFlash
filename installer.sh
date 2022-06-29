@@ -151,10 +151,12 @@ fi
 cd /tmp 
 set -e
 rm -rf *BackUpFlash*
-wget --no-check-certificate --content-disposition https://github.com/fairbird/BackUpFlash/archive/refs/heads/main.tar.gz
-tar -xzf BackUpFlash-main.tar.gz
+rm -rf *main*
+wget --no-check-certificate https://github.com/fairbird/BackUpFlash/archive/refs/heads/main.tar.gz
+tar -xzf main.tar.gz
 cp -rf BackUpFlash-main/usr /
 rm -rf *BackUpFlash*
+rm -rf *main*
 ## This commands to save plugin from BA protection
 if [ -f "/media/ba/ba.sh" -a "$LIBPATH/enigma2/python/Plugins/Extensions/backupflashe" ]; then
 mv /usr/lib/enigma2/python/Plugins/Extensions/backupflashe /media/ba
