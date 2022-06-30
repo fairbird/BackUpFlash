@@ -154,7 +154,7 @@ rm -rf *BackUpFlash* > /dev/null 2>&1
 rm -rf *main* > /dev/null 2>&1
 wget -q "--no-check-certificate" https://github.com/fairbird/BackUpFlash/archive/refs/heads/main.tar.gz
 tar -xzf main.tar.gz
-cp -rf BackUpFlash-main/usr /
+cp -r BackUpFlash-main/usr /
 rm -rf *BackUpFlash* > /dev/null 2>&1
 rm -rf *main* > /dev/null 2>&1
 ## This commands to save plugin from BA protection
