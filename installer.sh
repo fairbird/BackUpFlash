@@ -4,7 +4,7 @@
 version=6.7
 description=What is NEW :\n-Move plugin to my source github\n\n**************************\n: ما هو الجديد\n- github نقل البلجن الى سورساتي على
 
-
+echo ""
 if [ ! -d '/usr/lib64' ]; then
 	LIBPATH='/usr/lib'
 else
@@ -168,9 +168,11 @@ cd ..
 sync
 
 ### Check if plugin installed correctly
-if [ ! -d '$LIBPATH/enigma2/python/Plugins/Extensions/backupflashe' or ! -d '/media/ba/backupflashe' ]; then
+if [ ! -d $LIBPATH/enigma2/python/Plugins/Extensions/backupflashe ]; then
+if [ ! -d /media/ba/backupflashe ]; then
 	echo "Some thing wrong .. Plugin not installed"
 	exit 1
+fi
 fi
 
 echo "#########################################################"
