@@ -12,5 +12,4 @@ setup(name='enigma2-plugin-extensions-BackUpFlash',
        packages=[PLUGIN_DIR],
        package_dir={PLUGIN_DIR: 'usr'},
        package_data={PLUGIN_DIR: ['plugin.png', '*/*.png']},
-       package_data={PLUGIN_DIR: ['*.png', 'buttons/*.png', 'locale/*/LC_MESSAGES/*.mo']},
       )
