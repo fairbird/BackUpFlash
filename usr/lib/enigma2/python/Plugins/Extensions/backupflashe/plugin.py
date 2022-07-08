@@ -252,8 +252,7 @@ class full_main(Screen, ConfigListScreen):
     def checkupdates(self):
         try:
                 from twisted.web.client import getPage, error
-                #url = b'http://tunisia-dreambox.info/TSplugins/backupflash/installer.sh'
-                url = b'https://raw.githubusercontent.com/fairbird/KeyAdder/main/installer.sh'
+                url = b'https://raw.githubusercontent.com/fairbird/BackUpFlash/main/installer.sh'
                 getPage(url,timeout=10).addCallback(self.parseData).addErrback(self.errBack)
         except Exception as error:
                 trace_error()
@@ -287,8 +286,7 @@ class full_main(Screen, ConfigListScreen):
         try:
                 if answer:
                            cmdlist = []
-                           #cmd='wget http://tunisia-dreambox.info/TSplugins/backupflash/installer.sh -O - | /bin/sh'
-                           cmd='wget https://raw.githubusercontent.com/fairbird/KeyAdder/main/installer.sh -O - | /bin/sh'
+                           cmd='wget https://raw.githubusercontent.com/fairbird/BackUpFlash/main/installer.sh -O - | /bin/sh'
                            cmdlist.append(cmd)
                            self.session.open(Console, title='Installing last update, enigma will be started after install', cmdlist=cmdlist, finishedCallback=self.myCallback, closeOnSuccess=False)
         except:
