@@ -1,8 +1,8 @@
 #!/bin/bash
 ##setup command=wget -q "--no-check-certificate" https://raw.githubusercontent.com/fairbird/BackUpFlash/main/installer.sh -O - | /bin/sh
 
-version=6.7
-description=What is NEW :\n-Move plugin to my source github\n\n**************************\n: ما هو الجديد\n- github نقل البلجن الى سورساتي على
+version=6.8
+description=What is NEW :\n-Change OpenPLI-Unoffical images Url download \n\n**************************\n: ما هو الجديد\n-OpenPLI-Unoffical تغير رابط تحميل صور
 
 echo ""
 if [ ! -d '/usr/lib64' ]; then

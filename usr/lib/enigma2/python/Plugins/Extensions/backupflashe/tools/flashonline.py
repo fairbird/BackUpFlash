@@ -102,7 +102,7 @@ class teamsScreen(Screen):
         teams.append(("OpenATV Python2", "OpenATV Python2"))
         teams.append(("OpenATV Python3", "OpenATV Python3"))
         #teams.append(("ArEaDeLtA-SaT", "ArEaDeLtA-SaT")) ## No more Team
-        #teams.append(("OpenPLI-Unoffical", "OpenPLI-Unoffical")) ## No more Team
+        teams.append(("OpenPLI-Unoffical", "OpenPLI-Unoffical")) ## No more Team
         teams.append(("OpenESI", "OpenESI"))
         teams.append(("PurE2", "PurE2"))
         teams.append(("PKTeam", "PKTeam"))
@@ -249,15 +249,15 @@ class imagesScreen(Screen):
                         imagePath =  os.path.join('http://images.mynonpublic.com/openatv/7.1/', imageName2)
                 images.append((imageName,imagePath))
         if self.teamName=="OpenPLI-Unoffical":
-           imagesPath="http://pli-images.net/images/index.php?dir="+boxtype
-           regx = b'''<a class="autoindex_a" href="(.*?)&amp;file=(.*?)">'''
+           imagesPath="https://www.openpli.net/openpli/"
+           regx = b'''<td data-sort="(.*?)"><a href="/openpli/(.*?)">'''
            rimages=get_images(imagesPath,regx)
            for item in rimages:
                 imageName=item[1]
                 if PY3:
-                        imageName=imageName.decode()
-                imagePath='http://pli-images.net/images/release/6/'+boxtype+'/'+imageName
-                if ".bz2" in  imageName:
+                	imageName=imageName.decode()
+                imagePath = os.path.join('https://www.openpli.net/openpli/', imageName)
+                if not boxtype in imageName:
                     continue
                 images.append((imageName,imagePath))
         if self.teamName=="ArEaDeLtA-SaT":
