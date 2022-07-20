@@ -249,14 +249,14 @@ class imagesScreen(Screen):
                         imagePath =  os.path.join('http://images.mynonpublic.com/openatv/7.1/', imageName2)
                 images.append((imageName,imagePath))
         if self.teamName=="OpenPLI-Unoffical":
-           imagesPath="https://www.openpli.net/openpli/"
-           regx = b'''<td data-sort="(.*?)"><a href="/openpli/(.*?)">'''
+           imagesPath="https://www.openpli.net/openpli-11.3/"
+           regx = b'''<td data-sort="(.*?)"><a href="/openpli-11.3/(.*?)">'''
            rimages=get_images(imagesPath,regx)
            for item in rimages:
                 imageName=item[1]
                 if PY3:
                 	imageName=imageName.decode()
-                imagePath = os.path.join('https://www.openpli.net/openpli/', imageName)
+                imagePath = os.path.join('https://www.openpli.net/openpli-11.3/', imageName)
                 if not boxtype in imageName:
                     continue
                 images.append((imageName,imagePath))
