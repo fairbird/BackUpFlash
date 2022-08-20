@@ -1,5 +1,5 @@
 #!/bin/bash
-##setup command=wget -q "--no-check-certificate" https://raw.githubusercontent.com/fairbird/BackUpFlash/main/installer.sh -O - | /bin/sh
+##setup command=wget https://raw.githubusercontent.com/fairbird/BackUpFlash/main/installer.sh -O - | /bin/sh
 
 version=6.9
 description=What is NEW :\n-Update OpenPLI-Unoffical images Url download\n-Fix Update online \n\n**************************\n: ما هو الجديد\n-OpenPLI-Unoffical تغير رابط تحميل صور\n-تعديل رابط تحميل صور
@@ -152,7 +152,7 @@ cd /tmp
 set -e
 rm -rf *BackUpFlash* > /dev/null 2>&1
 rm -rf *main* > /dev/null 2>&1
-wget -q "--no-check-certificate" https://github.com/fairbird/BackUpFlash/archive/refs/heads/main.tar.gz
+wget https://github.com/fairbird/BackUpFlash/archive/refs/heads/main.tar.gz
 tar -xzf main.tar.gz
 cp -r BackUpFlash-main/usr /
 rm -rf *BackUpFlash* > /dev/null 2>&1
