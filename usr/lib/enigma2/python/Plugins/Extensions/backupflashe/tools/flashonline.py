@@ -97,7 +97,8 @@ class teamsScreen(Screen):
         boxtype=getboxtype()
         logdata("boxtype",boxtype)
         teams = []
-        teams.append(("BlackHole", "BlackHole"))
+        teams.append(("BlackHole Python2", "BlackHole Python2"))
+        teams.append(("BlackHole Python3", "BlackHole Python3"))
         teams.append(("OpenTSimage", "OpenTSimage"))
         teams.append(("OpenATV Python2", "OpenATV Python2"))
         teams.append(("OpenATV Python3", "OpenATV Python3"))
@@ -172,7 +173,7 @@ class imagesScreen(Screen):
         boxtype=getboxtype()
         self.canflash=True
         self.urlimage = ''
-        if self.teamName=="BlackHole":
+        if self.teamName=="BlackHole Python2":
            if boxtype == "dm900":
               self.canflash=False 
            elif boxtype == "dm920":
@@ -180,18 +181,59 @@ class imagesScreen(Screen):
               self.urlimage = 'http://tunisia-dreambox.info/RAED/OE2.5/BH-920/'
            elif boxtype == "dm520":
               self.canflash=True
-              self.urlimage = 'http://tunisia-dreambox.info/RAED/OE2.5/BH-220/'
+              self.urlimage = 'http://tunisia-dreambox.info/RAED/OE2.5/BH-520/'
+           elif boxtype == "dm7080":
+              self.canflash=True
+              self.urlimage = 'http://tunisia-dreambox.info/RAED/OE2.5/BH-7080/'
            else:
              return []
            imagesPath = self.urlimage
-           regx = b'''<a href="/RAED/OE2.5/BH-920/(.*?)">(.*?)</a>''' ## PY3
+           if boxtype == "dm920":
+           	regx = b'''<a href="/RAED/OE2.5/BH-920/(.*?)">(.*?)</a>'''
+           elif boxtype == "dm520":
+           	regx = b'''<a href="/RAED/OE2.5/BH-520/(.*?)">(.*?)</a>'''
+           elif boxtype == "dm7080":
+           	regx = b'''<a href="/RAED/OE2.5/BH-7080/(.*?)">(.*?)</a>'''
            rimages=get_images(imagesPath,regx)
            logdata("rimages",rimages)
            for item in rimages:
-                if not item[0].endswith(b".zip"): ## PY3
+                if not item[0].endswith(b".zip"):
                     continue
                 imageName=item[0]
-                if PY3: ## PY3
+                if PY3:
+                        imageName=imageName.decode()
+                        imagePath = os.path.join(self.urlimage, imageName)
+                else:
+                        imagePath = os.path.join(self.urlimage, imageName)
+                images.append((imageName,imagePath))
+        if self.teamName=="BlackHole Python3":
+           if boxtype == "dm900":
+              self.canflash=False 
+           elif boxtype == "dm920":
+              self.canflash=True
+              self.urlimage = 'http://tunisia-dreambox.info/RAED/OE2.5/BH-920-PY3/'
+           elif boxtype == "dm520":
+              self.canflash=True
+              self.urlimage = 'http://tunisia-dreambox.info/RAED/OE2.5/BH-520-PY3/'
+           elif boxtype == "dm7080":
+              self.canflash=True
+              self.urlimage = 'http://tunisia-dreambox.info/RAED/OE2.5/BH-7080-PY3/'
+           else:
+             return []
+           imagesPath = self.urlimage
+           if boxtype == "dm920":
+           	regx = b'''<a href="/RAED/OE2.5/BH-920-PY3/(.*?)">(.*?)</a>'''
+           elif boxtype == "dm520":
+           	regx = b'''<a href="/RAED/OE2.5/BH-520-PY3/(.*?)">(.*?)</a>'''
+           elif boxtype == "dm7080":
+           	regx = b'''<a href="/RAED/OE2.5/BH-7080-PY3/(.*?)">(.*?)</a>'''
+           rimages=get_images(imagesPath,regx)
+           logdata("rimages",rimages)
+           for item in rimages:
+                if not item[0].endswith(b".zip"):
+                    continue
+                imageName=item[0]
+                if PY3:
                         imageName=imageName.decode()
                         imagePath = os.path.join(self.urlimage, imageName)
                 else:
@@ -209,11 +251,14 @@ class imagesScreen(Screen):
            else:
              return []
            imagesPath = self.urlimage
-           regx = b'''<a href="/RAED/OE2.5/OpenTS-920/(.*?)">(.*?)</a>''' ## PY3
+           if boxtype == "dm920":
+           	regx = b'''<a href="/RAED/OE2.5/OpenTS-920/(.*?)">(.*?)</a>'''
+           elif boxtype == "dm520":
+           	regx = b'''<a href="/RAED/OE2.5/OpenTS-520/(.*?)">(.*?)</a>'''
            rimages=get_images(imagesPath,regx)
            logdata("rimages",rimages)
            for item in rimages:
-                if not item[0].endswith(b".zip"): ## PY3
+                if not item[0].endswith(b".zip"):
                     continue
                 imageName=item[0]
                 if PY3:
