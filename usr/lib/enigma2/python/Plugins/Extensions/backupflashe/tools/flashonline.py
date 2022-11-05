@@ -4,7 +4,6 @@
 # Code RAED & mfaraj57
 
 # python3
-from __future__ import print_function
 from .compat import PY3
 
 from enigma import eTimer
@@ -627,32 +626,32 @@ class imagesScreen(Screen):
                     continue
                 images.append((imageName,imagePath))
         if self.teamName=="OpenVision Python2":
-           imagesPath="https://images.openvision.dedyn.io/12.1/Vision/Dreambox/"+boxtype+"/"
-           regx = ('''<a href="/12.1/Vision/Dreambox/%s/(.*?)">(.*?)</a>''' % boxtype).encode()
+           imagesPath="https://images.openvision.dedyn.io/12.2/EOL/Vision/Dreambox/"+boxtype+"/"
+           regx = ('''<a href="/12.2/EOL/Vision/Dreambox/%s/(.*?)">(.*?)</a>''' % boxtype).encode()
            rimages=get_images(imagesPath,regx)
            logdata("rimages",rimages)
            for item in rimages:
                 imageName=item[1]
                 if PY3:
                         imageName=imageName.decode()
-                        imagePath = os.path.join("https://images.openvision.dedyn.io/12.1/Vision/Dreambox/"+boxtype+"/", imageName)
+                        imagePath = os.path.join("https://images.openvision.dedyn.io/12.2/EOL/Vision/Dreambox/"+boxtype+"/", imageName)
                 else:
-                        imagePath = os.path.join("https://images.openvision.dedyn.io/12.1/Vision/Dreambox/"+boxtype+"/", imageName)
+                        imagePath = os.path.join("https://images.openvision.dedyn.io/12.2/EOL/Vision/Dreambox/"+boxtype+"/", imageName)
                 if not item[0].endswith(b".zip"):
                     continue
                 images.append((imageName,imagePath))
         if self.teamName=="OpenVision Python3":
-           imagesPath="https://images.openvision.dedyn.io/12.1/Beta/Vision/Dreambox/"+boxtype+"/"
-           regx = ('''<a href="/12.1/Beta/Vision/Dreambox/%s/(.*?)">(.*?)</a>''' % boxtype).encode()
+           imagesPath="https://images.openvision.dedyn.io/12.2/Stable/CMD/Dreambox/"+boxtype+"/"
+           regx = ('''<a href="/12.2/Stable/CMD/Dreambox/%s/(.*?)">(.*?)</a>''' % boxtype).encode()
            rimages=get_images(imagesPath,regx)
            logdata("rimages",rimages)
            for item in rimages:
                 imageName=item[1]
                 if PY3:
                         imageName=imageName.decode()
-                        imagePath = os.path.join("https://images.openvision.dedyn.io/12.1/Beta/Vision/Dreambox/"+boxtype+"/", imageName)
+                        imagePath = os.path.join("https://images.openvision.dedyn.io/12.2/Stable/CMD/Dreambox/"+boxtype+"/", imageName)
                 else:
-                        imagePath = os.path.join("https://images.openvision.dedyn.io/12.1/Beta/Vision/Dreambox/"+boxtype+"/", imageName)
+                        imagePath = os.path.join("https://images.openvision.dedyn.io/12.2/Stable/CMD/Dreambox/"+boxtype+"/", imageName)
                 if not item[0].endswith(b".zip"):
                     continue
                 images.append((imageName,imagePath))
