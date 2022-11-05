@@ -1,8 +1,8 @@
 #!/bin/bash
 ##setup command=wget https://raw.githubusercontent.com/fairbird/BackUpFlash/main/installer.sh -O - | /bin/sh
 
-version=7.0
-description=What is NEW :\n-Add BlackHole PY3 image Download links\n-Fix Update online \n\n**************************\n: ما هو الجديد\n-BlackHole Py3 إضافة رابط تحميل صور
+version=7.1
+description=What is NEW :\n-Fix OpenVision image Download links\n-Fix Update online \n\n**************************\n: ما هو الجديد\n-OpenVision تعديل رابط تحميل صور
 
 echo ""
 if [ ! -d '/usr/lib64' ]; then
