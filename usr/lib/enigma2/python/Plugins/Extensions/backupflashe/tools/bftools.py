@@ -10,7 +10,7 @@ from .compat import compat_Request, compat_urlopen
 from Components.About import about
 from Tools.Directories import fileExists, copyfile, createDir, resolveFilename, SCOPE_PLUGINS
 
-import os, traceback, re, json, datetime
+import os, traceback, re, json, datetime, ssl
 
 logfile="/tmp/backupflash.log"
 backupflash_script="/tmp/backupflash.sh"
@@ -106,7 +106,6 @@ def get_images(url,regx):
         images = []
         logdata("images_url",url)
         try:
-            import ssl
             req = compat_Request(url, headers={'User-Agent': 'Mozilla/5.0'}) # add [headers={'User-Agent': 'Mozilla/5.0'}] to fix HTTP Error 403: Forbidden
             response = compat_urlopen(req,timeout=20,context=ssl._create_unverified_context())
             data = response.read()
@@ -119,12 +118,30 @@ def get_images(url,regx):
             trace_error()
             return []
 
+def get_images2(url,regx):
+        images = []
+        logdata("images_url",url)
+        try:
+            req = compat_Request(url, headers={'User-Agent': 'Mozilla/5.0'}) # add [headers={'User-Agent': 'Mozilla/5.0'}] to fix HTTP Error 403: Forbidden
+            response = compat_urlopen(req,timeout=20,context=ssl._create_unverified_context())
+            try:
+                data = response.read().decode('utf-8')
+            except Exception as e:
+                data = response.read()  
+            response.close()
+            match = re.findall(str(regx), data, re.M|re.I)
+            for item1,item2 in match:
+                images.append((item1,item2))
+            return images
+        except:
+            trace_error()
+            return []
+
 def get_images_mediafire(url):
         images = []
         logdata("images_url",url)
         def readnet(url):
             try:
-                import ssl
                 req = compat_Request(url, headers={'User-Agent': 'Mozilla/5.0'}) # add [headers={'User-Agent': 'Mozilla/5.0'}] to fix HTTP Error 403: Forbidden
                 response = compat_urlopen(req,timeout=30,context=ssl._create_unverified_context())
                 data = response.read()
