@@ -20,7 +20,7 @@ from Components.config import config
 from .skin import *
 from .Console import Console
 from .download import imagedownloadScreen
-from .bftools import logdata, getboxtype, get_images, copylog, trace_error
+from .bftools import logdata, getboxtype, get_images, get_images2, copylog, trace_error
 
 headers = {
     'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10.12; rv:55.0) Gecko/20100101 Firefox/55.0',
@@ -170,19 +170,13 @@ class imagesScreen(Screen):
     def getteam_images(self):
         images = []
         boxtype=getboxtype()
-        self.canflash=True
         self.urlimage = ''
         if self.teamName=="BlackHole Python2":
-           if boxtype == "dm900":
-              self.canflash=False 
-           elif boxtype == "dm920":
-              self.canflash=True
+           if boxtype == "dm920":
               self.urlimage = 'http://tunisia-dreambox.info/RAED/OE2.5/BH-920/'
            elif boxtype == "dm520":
-              self.canflash=True
               self.urlimage = 'http://tunisia-dreambox.info/RAED/OE2.5/BH-520/'
            elif boxtype == "dm7080":
-              self.canflash=True
               self.urlimage = 'http://tunisia-dreambox.info/RAED/OE2.5/BH-7080/'
            else:
              return []
@@ -194,10 +188,8 @@ class imagesScreen(Screen):
            elif boxtype == "dm7080":
            	regx = b'''<a href="/RAED/OE2.5/BH-7080/(.*?)">(.*?)</a>'''
            rimages=get_images(imagesPath,regx)
-           logdata("rimages",rimages)
+           #logdata("rimages",rimages)
            for item in rimages:
-                if not item[0].endswith(b".zip"):
-                    continue
                 imageName=item[0]
                 if PY3:
                         imageName=imageName.decode()
@@ -206,46 +198,27 @@ class imagesScreen(Screen):
                         imagePath = os.path.join(self.urlimage, imageName)
                 images.append((imageName,imagePath))
         if self.teamName=="BlackHole Python3":
-           if boxtype == "dm900":
-              self.canflash=False 
-           elif boxtype == "dm920":
-              self.canflash=True
-              self.urlimage = 'http://tunisia-dreambox.info/RAED/OE2.5/BH-920-PY3/'
+           if boxtype == "dm920":
+              boxtype = "DM920"
            elif boxtype == "dm520":
-              self.canflash=True
-              self.urlimage = 'http://tunisia-dreambox.info/RAED/OE2.5/BH-520-PY3/'
+              boxtype = "DM520"
            elif boxtype == "dm7080":
-              self.canflash=True
-              self.urlimage = 'http://tunisia-dreambox.info/RAED/OE2.5/BH-7080-PY3/'
+              boxtype = "DM7080"
            else:
              return []
-           imagesPath = self.urlimage
-           if boxtype == "dm920":
-           	regx = b'''<a href="/RAED/OE2.5/BH-920-PY3/(.*?)">(.*?)</a>'''
-           elif boxtype == "dm520":
-           	regx = b'''<a href="/RAED/OE2.5/BH-520-PY3/(.*?)">(.*?)</a>'''
-           elif boxtype == "dm7080":
-           	regx = b'''<a href="/RAED/OE2.5/BH-7080-PY3/(.*?)">(.*?)</a>'''
-           rimages=get_images(imagesPath,regx)
+           imagesPath = "https://github.com/fairbird/My-BlackHole-Images/tree/main/" + boxtype
+           regx = '''href="/fairbird/my-BlackHole-Images/blob/main/%s/(.*?)">(.*?)</a>''' % boxtype
+           rimages=get_images2(imagesPath,regx)
            logdata("rimages",rimages)
            for item in rimages:
-                if not item[0].endswith(b".zip"):
-                    continue
-                imageName=item[0]
-                if PY3:
-                        imageName=imageName.decode()
-                        imagePath = os.path.join(self.urlimage, imageName)
-                else:
-                        imagePath = os.path.join(self.urlimage, imageName)
+                imageName=item[1]
+                imageName2=item[0]
+                imagePath =  os.path.join('https://github.com/fairbird/My-BlackHole-Images/raw/main/%s/' % boxtype, imageName2)
                 images.append((imageName,imagePath))
         if self.teamName=="OpenTSimage":
-           if boxtype == "dm900":
-              self.canflash=False 
-           elif boxtype == "dm920":
-              self.canflash=True
+           if boxtype == "dm920":
               self.urlimage = 'http://tunisia-dreambox.info/RAED/OE2.5/OpenTS-920/'
            elif boxtype == "dm520":
-              self.canflash=True
               self.urlimage = 'http://tunisia-dreambox.info/RAED/OE2.5/OpenTS-520/'
            else:
              return []
@@ -255,10 +228,7 @@ class imagesScreen(Screen):
            elif boxtype == "dm520":
            	regx = b'''<a href="/RAED/OE2.5/OpenTS-520/(.*?)">(.*?)</a>'''
            rimages=get_images(imagesPath,regx)
-           logdata("rimages",rimages)
            for item in rimages:
-                if not item[0].endswith(b".zip"):
-                    continue
                 imageName=item[0]
                 if PY3:
                         imageName=imageName.decode()
@@ -283,6 +253,7 @@ class imagesScreen(Screen):
            imagesPath="http://images.mynonpublic.com/openatv/7.1/index.php?open="+boxtype
            regx = b'''<a href='(.*?)'>(.*?)</a>'''
            rimages=get_images(imagesPath,regx)
+           logdata("rimages",rimages)
            for item in rimages:
                 imageName=item[1]
                 imageName2=item[0]
@@ -393,29 +364,19 @@ class imagesScreen(Screen):
         if self.teamName=="Merlin4":
            if boxtype=="dreamone" or boxtype=="dreamtwo":
               imagesPath = "http://feed.dreamboxtools.de/oe_2.6/deb/images/"
+              regx = b'''<a href="/oe_2.6/deb/images/(.*?)">(.*?)</a>'''
            else:
               imagesPath = "http://feed.dreamboxtools.de/oe_2.5/deb/images/"
-           regx = b'''>(.*?)</a>'''
-           rimages=get_images(imagesPath,regx)
-           if boxtype=="dreamone" or boxtype=="dreamtwo":
-           	regx = b'''<a href="/oe_2.6/deb/images/(.*?)">(.*?)</a>'''
-           else:
-           	regx = b'''<a href="/oe_2.5/deb/images/(.*?)">(.*?)</a>'''
+              regx = b'''<a href="/oe_2.5/deb/images/(.*?)">(.*?)</a>'''
            rimages=get_images(imagesPath,regx)
            for item in rimages:
                 imageName=item[1]
                 if PY3:
                         imageName=imageName.decode()
                 if boxtype=="dreamone" or boxtype=="dreamtwo":
-                        if PY3:
-                            imagePath = os.path.join("http://feed.dreamboxtools.de/oe_2.6/deb/images/", imageName)
-                        else:
-                            imagePath = os.path.join("http://feed.dreamboxtools.de/oe_2.6/deb/images/", imageName)
+                        imagePath = os.path.join("http://feed.dreamboxtools.de/oe_2.6/deb/images/", imageName)
                 else:
-                        if PY3:
-                            imagePath = os.path.join("http://feed.dreamboxtools.de/oe_2.5/deb/images/", imageName)
-                        else:
-                            imagePath = os.path.join("http://feed.dreamboxtools.de/oe_2.5/deb/images/", imageName)
+                        imagePath = os.path.join("http://feed.dreamboxtools.de/oe_2.5/deb/images/", imageName)
                 if not boxtype in imageName:
                     continue
                 images.append((imageName,imagePath))
@@ -629,7 +590,6 @@ class imagesScreen(Screen):
            imagesPath="https://images.openvision.dedyn.io/12.2/EOL/Vision/Dreambox/"+boxtype+"/"
            regx = ('''<a href="/12.2/EOL/Vision/Dreambox/%s/(.*?)">(.*?)</a>''' % boxtype).encode()
            rimages=get_images(imagesPath,regx)
-           logdata("rimages",rimages)
            for item in rimages:
                 imageName=item[1]
                 if PY3:
@@ -644,7 +604,6 @@ class imagesScreen(Screen):
            imagesPath="https://images.openvision.dedyn.io/12.2/Develop/Vision/Dreambox/"+boxtype+"/"
            regx = ('''<a href="/12.2/Develop/Vision/Dreambox/%s/(.*?)">(.*?)</a>''' % boxtype).encode()
            rimages=get_images(imagesPath,regx)
-           logdata("rimages",rimages)
            for item in rimages:
                 imageName=item[1]
                 if PY3:
