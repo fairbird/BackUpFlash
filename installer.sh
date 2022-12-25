@@ -1,8 +1,8 @@
 #!/bin/bash
 ##setup command=wget https://raw.githubusercontent.com/fairbird/BackUpFlash/main/installer.sh -O - | /bin/sh
 
-version=7.2
-description=What is NEW :\n-Change BlackHole image Download links\n\n**************************\n: ما هو الجديد\n-BlackHole إستبدال رابط تحميل صور
+version=7.3
+description=What is NEW :\n-Remove some Team images not available any more\n\n**************************\n: ما هو الجديد\n-إلغاء بعض روابط الصور لبعض الفرق بسبب عدم توفر روابط التحميل
 
 echo ""
 if [ ! -d '/usr/lib64' ]; then
