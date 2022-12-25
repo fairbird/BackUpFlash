@@ -96,16 +96,16 @@ class teamsScreen(Screen):
         boxtype=getboxtype()
         logdata("boxtype",boxtype)
         teams = []
-        teams.append(("BlackHole Python2", "BlackHole Python2"))
+        #teams.append(("BlackHole Python2", "BlackHole Python2")) ## No more Url download
         teams.append(("BlackHole Python3", "BlackHole Python3"))
-        teams.append(("OpenTSimage", "OpenTSimage"))
+        #teams.append(("OpenTSimage", "OpenTSimage")) ## No more Url download
         teams.append(("OpenATV Python2", "OpenATV Python2"))
         teams.append(("OpenATV Python3", "OpenATV Python3"))
         #teams.append(("ArEaDeLtA-SaT", "ArEaDeLtA-SaT")) ## No more Team
-        teams.append(("OpenPLI-Unoffical", "OpenPLI-Unoffical")) ## No more Team
-        teams.append(("OpenESI", "OpenESI"))
+        #teams.append(("OpenPLI-Unoffical", "OpenPLI-Unoffical")) ## No more Team
+        #teams.append(("OpenESI", "OpenESI")) ## No more Team
         teams.append(("PurE2", "PurE2"))
-        teams.append(("PKTeam", "PKTeam"))
+        #teams.append(("PKTeam", "PKTeam")) ## No more Url download
         teams.append(("AFF-TitanNit", "AFF-TitanNit"))
         teams.append(("OpenSatlodge", "OpenSatlodge"))
         teams.append(("OpenVision Python2", "OpenVision Python2"))
@@ -410,19 +410,19 @@ class imagesScreen(Screen):
                 images.append((imageName,imagePath))
         if self.teamName=="Demonisat":
            if boxtype == "dm520":
-              boxtype = '520'
+              boxtype = "520"
            elif boxtype == "dm820":
-              boxtype = '820'
+              boxtype = "820"
            elif boxtype == "dm900":
-              boxtype = '900'
+              boxtype = "900"
            elif boxtype == "dm920":
-              boxtype = '920'
+              boxtype = "920"
            elif boxtype == "dm7080":
-              boxtype = '7080'
+              boxtype = "7080"
            elif boxtype == "dreamone":
-              boxtype = 'dreamone'
+              boxtype = "dreamone"
            elif boxtype == "dreamtwo":
-              boxtype = 'dreamtwo'
+              boxtype = "dreamtwo"
            else:
               pass
            if boxtype=="dreamone" or boxtype=="dreamtwo": 
@@ -521,10 +521,10 @@ class imagesScreen(Screen):
                 	if not boxtype in imageName:
                     		continue
                 if boxtype == "dm900" or boxtype == "dm920":
-                	if "flash.zip" in imageName or not boxtype in imageName:
+                	if "mmc.zip" in imageName or not boxtype in imageName:
                     		continue
                 if boxtype == "dm520" or boxtype == "dm820":
-                	if "flash.zip" in imageName or not boxtype in imageName:
+                	if "web.zip" in imageName or not boxtype in imageName:
                     		continue
                 images.append((imageName,imagePath))
         if self.teamName=="PKTeam":
