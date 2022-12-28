@@ -1,44 +1,29 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
-# RAED & mfaraj57 &  (c) 2018
+# RAED & mfaraj57 (c) 2018
 # Code RAED & mfaraj57
 # Thank you (gutemine) for swaproot tools
-# Update 15-11-2018 Add xz option compress
-# Update 16-11-2018 Add Value of option compress
-# Update 16-11-2018 Update swaproot to 2.1 Thank you (gutemine)
-# Update 17-11-2018 Add download images option
-# Update 28-11-2018 Update swaproot to 2.2-r8 Thank you (gutemine)
-# Update 07-10-2019 Update swaproot to 2.4-r19 Thank you (gutemine)
-# Update 07-10-2019 Add support DreamOne
-# Update 30-10-2020 Add support Python3
-# Update 29-03-2021 Add support DreamTwo 
-# Update 29-03-2021 Update swaproot to 2.8-r1 Thank you (gutemine)
-# Update 29-03-2021 Add New options
-# Update 29-03-2021 Go back to swaproot 2.8-r1 It more better to flash image from External flash
-# Update 08-09-2021 Add Openvision images url download
 
-# python3
-from __future__ import print_function
-from Plugins.Extensions.backupflashe.tools.compat import PY3
-
+from enigma import eTimer, quitMainloop
+from Screens.ChoiceBox import ChoiceBox
 from Screens.MessageBox import MessageBox
+from Screens.VirtualKeyBoard import VirtualKeyBoard
+from Screens.Screen import Screen
+from Plugins.Plugin import PluginDescriptor
+from Tools.Directories import fileExists
 from Components.ActionMap import ActionMap
 from Components.Label import Label
-from Plugins.Plugin import PluginDescriptor
-from Screens.Screen import Screen
-from Screens.ChoiceBox import ChoiceBox
 from Components.MenuList import MenuList
 from Components.Sources.StaticText import StaticText
-from Tools.Directories import fileExists
 from Components.ConfigList import ConfigListScreen
 from Components.config import getConfigListEntry, ConfigSubsection, config, ConfigYesNo, ConfigSelection, NoSave, configfile
-from enigma import eTimer, quitMainloop
 import datetime
 import os
 
 from Plugins.Extensions.backupflashe.tools.skin import *
+from Plugins.Extensions.backupflashe.tools.compat import PY3
 from Plugins.Extensions.backupflashe.tools.Console import Console
-from Plugins.Extensions.backupflashe.tools.bftools import logdata, dellog, copylog, getboxtype, getmDevices, trace_error, getversioninfo
+from Plugins.Extensions.backupflashe.tools.bftools import logdata, dellog, copylog, getboxtype, getimage_name, getmDevices, trace_error, getversioninfo
 
 BRANDOS = '/var/lib/dpkg/status' ## DreamOS
 BAINIT = '/sbin/bainit'
@@ -67,7 +52,12 @@ config.backupflashe.gzcompression = ConfigSelection(default = "3", choices = xz_
 k=open("/proc/cmdline","r")
 cmd=k.read()
 k.close()
+
+getname = getimage_name()
+now = datetime.datetime.now()
+DATETIME = now.strftime('%Y-%m-%d-%H-%M')
 boxtype =getboxtype()
+
 if boxtype == "dm520":
         if cmd.find("root=/dev/sda1") is not -1:
                 rootfs="root=/dev/sda1"
@@ -94,7 +84,7 @@ class full_main(Screen, ConfigListScreen):
         self['key_yellow'].hide()
         self["help"] = StaticText()
         self['actions'] = ActionMap(['WizardActions', 'ColorActions','MenuActions'], {'green': self.doFlash,
-         'blue': self.doBackUp,
+         'blue': self.nameBackUp,
          'yellow': self.flashOnline,
          'menu' :self.showMenuoptions,                                                              
          'red': self.red,
@@ -187,19 +177,27 @@ class full_main(Screen, ConfigListScreen):
                         from Plugins.Extensions.backupflashe.tools.flash import doFlash
                         self.session.open(doFlash, device_path)
 
-    def doBackUp(self):
-        self.configsSave()
-        if self.deviceok:
-            try:
-                device_path = self['config'].list[0][1].getText()
-                image_formats = self['config'].list[1][1].getText()
-                image_compression_value = self['config'].list[2][1].getText()
-                #logdata('backup started', "started")
-                from Plugins.Extensions.backupflashe.tools.backup import doBackUp
-                self.session.open(doBackUp, device_path, image_formats, image_compression_value)
-            except:
-                trace_error()
-                pass
+    def nameBackUp(self):
+        imagename = '%s-%s-%s' % (getname, boxtype, DATETIME)
+        self.session.openWithCallback(self.doBackUp, VirtualKeyBoard, title=_("Please Enter Name For Backup Image"), text="%s" % imagename)
+
+    def doBackUp(self,target):
+        if target is None:
+            return
+        else:
+            self.configsSave()
+            if self.deviceok:
+            	try:
+            		image_name = target
+            		device_path = self['config'].list[0][1].getText()
+            		image_formats = self['config'].list[1][1].getText()
+            		image_compression_value = self['config'].list[2][1].getText()
+            		#logdata('backup started', "started")
+            		from Plugins.Extensions.backupflashe.tools.backup import doBackUp
+            		self.session.open(doBackUp, image_name, device_path, image_formats, image_compression_value)
+            	except:
+            		trace_error()
+            		pass
 
     def red(self,):
         self.session.openWithCallback(self.GoRecovery, MessageBox, _('Really shutdown now (To Go to Recovery Mode) ?!!'), MessageBox.TYPE_YESNO)
