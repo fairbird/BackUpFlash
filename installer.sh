@@ -1,8 +1,8 @@
 #!/bin/bash
 ##setup command=wget https://raw.githubusercontent.com/fairbird/BackUpFlash/main/installer.sh -O - | /bin/sh
 
-version=7.3
-description=What is NEW :\n-Remove some Team images not available any more\n\n**************************\n: ما هو الجديد\n-إلغاء بعض روابط الصور لبعض الفرق بسبب عدم توفر روابط التحميل
+version=7.4
+description=What is NEW :\n-Adding the feature of modifying the name of the backup copy before starting the backup process\n-Fix the process of deleting the damaged backup after canceling the backup process\n\n**************************\n: ما هو الجديد\n-إضافة خاصية تعديل إسم نسخة الباك اب قبل بدء عملية الباك اب\n-إصلاح عملية حذف الباك المعطوب بعد إلغاء عملية الباك اب
 
 echo ""
 if [ ! -d '/usr/lib64' ]; then
