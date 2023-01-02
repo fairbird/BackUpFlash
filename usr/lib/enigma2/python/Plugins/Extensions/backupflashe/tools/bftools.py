@@ -144,32 +144,37 @@ def get_images_mediafire(url):
             try:
                 req = compat_Request(url, headers={'User-Agent': 'Mozilla/5.0'}) # add [headers={'User-Agent': 'Mozilla/5.0'}] to fix HTTP Error 403: Forbidden
                 response = compat_urlopen(req,timeout=30,context=ssl._create_unverified_context())
-                data = response.read()
+                try:
+                	data = response.read().decode('utf-8')
+                except Exception as e:
+                	data = response.read()
                 return data
             except:
                 trace_error()
                 return None
-        data=readnet(url)
+        data = readnet(url)
         if data is None:
             return []
-        jdata=json.loads(data)
-        dl=jdata['response']['folder_content']['files']
+        jdata = json.loads(data)
+        dl = jdata['response']['folder_content']['files']
         images=[]
         for item in dl:
-                dl=item['links']['normal_download']
-                name=os.path.split(dl)[1]
-                data=readnet(dl)
-                regx="href='(.*?)'"
-                hrefs=re.findall(regx,data, re.M|re.I)
-                print("hrefs",hrefs)
+                dl = item['links']['normal_download']
+                name = os.path.split(dl)[1]
+                data = readnet(dl)
+                regx = 'href="(.*?)"'
+                try:
+                	hrefs = re.findall(str(regx), data, re.M|re.I)
+                except Exception as e:
+                	hrefs = re.findall(regx, data, re.M|re.I)
                 for href in hrefs:
                         if not "download" in href:
                            continue
-                        name=os.path.split(href)[1]
+                        name = os.path.split(href)[1]
                         images.append((name,href))
                         break
         print(images)       
-        return  images   
+        return  images
 
 def trace_error():
     try:
