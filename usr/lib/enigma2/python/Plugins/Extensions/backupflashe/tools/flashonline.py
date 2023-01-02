@@ -105,6 +105,7 @@ class teamsScreen(Screen):
         teams.append(("OpenPLI-Unoffical", "OpenPLI-Unoffical"))
         #teams.append(("OpenESI", "OpenESI")) ## No more Team
         teams.append(("PurE2", "PurE2"))
+        teams.append(("Openeight-Unoffical", "Openeight-Unoffical"))
         #teams.append(("PKTeam", "PKTeam")) ## No more Url download
         teams.append(("AFF-TitanNit", "AFF-TitanNit"))
         teams.append(("OpenSatlodge", "OpenSatlodge"))
@@ -206,6 +207,8 @@ class imagesScreen(Screen):
               key = 'gkhsdcxiikosk'
            elif boxtype == "dm7080":
               key = '5cmni3i0rch9e'
+           elif boxtype == "dm820":
+              key = '60ptu82mgakx6'
            else:
              return []
            imagesPath='https://www.mediafire.com/api/1.4/folder/get_content.php?r=cfgd&content_type=files&filter=all&order_by=name&order_direction=asc&chunk=1&version=1.5&folder_key=%s&response_format=json' % key
@@ -269,6 +272,17 @@ class imagesScreen(Screen):
 
         if self.teamName=="OpenPLI-Unoffical":
            imagesPath='https://www.mediafire.com/api/1.4/folder/get_content.php?r=cfgd&content_type=files&filter=all&order_by=name&order_direction=asc&chunk=1&version=1.5&folder_key=hlw7uznninif5&response_format=json'
+           rimages=get_images_mediafire(imagesPath)
+           logdata("rimages",rimages)
+           for item in rimages:
+                imageName=item[0]
+                imagePath=item[1]
+                if not boxtype in imageName:
+                	continue
+                images.append((imageName,imagePath))
+
+        if self.teamName=="Openeight-Unoffical":
+           imagesPath='https://www.mediafire.com/api/1.4/folder/get_content.php?r=cfgd&content_type=files&filter=all&order_by=name&order_direction=asc&chunk=1&version=1.5&folder_key=10ipmypb5ura9&response_format=json'
            rimages=get_images_mediafire(imagesPath)
            logdata("rimages",rimages)
            for item in rimages:
