@@ -20,7 +20,7 @@ from Components.config import config
 from .skin import *
 from .Console import Console
 from .download import imagedownloadScreen
-from .bftools import logdata, getboxtype, get_images, get_images2, copylog, trace_error
+from .bftools import logdata, getboxtype, get_images, get_images2, get_images_mediafire, copylog, trace_error
 
 headers = {
     'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10.12; rv:55.0) Gecko/20100101 Firefox/55.0',
@@ -171,6 +171,7 @@ class imagesScreen(Screen):
         images = []
         boxtype=getboxtype()
         self.urlimage = ''
+
         if self.teamName=="BlackHole Python2":
            if boxtype == "dm920":
               self.urlimage = 'http://tunisia-dreambox.info/RAED/OE2.5/BH-920/'
@@ -197,24 +198,24 @@ class imagesScreen(Screen):
                 else:
                         imagePath = os.path.join(self.urlimage, imageName)
                 images.append((imageName,imagePath))
+
         if self.teamName=="BlackHole Python3":
            if boxtype == "dm920":
-              boxtype = "DM920"
+              key = 'cdmen9tqtpwxk'
            elif boxtype == "dm520":
-              boxtype = "DM520"
+              key = 'gkhsdcxiikosk'
            elif boxtype == "dm7080":
-              boxtype = "DM7080"
+              key = '5cmni3i0rch9e'
            else:
              return []
-           imagesPath = "https://github.com/fairbird/My-BlackHole-Images/tree/main/" + boxtype
-           regx = '''href="/fairbird/my-BlackHole-Images/blob/main/%s/(.*?)">(.*?)</a>''' % boxtype
-           rimages=get_images2(imagesPath,regx)
+           imagesPath='https://www.mediafire.com/api/1.4/folder/get_content.php?r=cfgd&content_type=files&filter=all&order_by=name&order_direction=asc&chunk=1&version=1.5&folder_key=%s&response_format=json' % key
+           rimages=get_images_mediafire(imagesPath)
            logdata("rimages",rimages)
            for item in rimages:
-                imageName=item[1]
-                imageName2=item[0]
-                imagePath =  os.path.join('https://github.com/fairbird/My-BlackHole-Images/raw/main/%s/' % boxtype, imageName2)
+                imageName=item[0]
+                imagePath=item[1]
                 images.append((imageName,imagePath))
+
         if self.teamName=="OpenTSimage":
            if boxtype == "dm920":
               self.urlimage = 'http://tunisia-dreambox.info/RAED/OE2.5/OpenTS-920/'
@@ -236,6 +237,7 @@ class imagesScreen(Screen):
                 else:
                         imagePath = os.path.join(self.urlimage, imageName)
                 images.append((imageName,imagePath))
+
         if self.teamName=="OpenATV Python2":
            imagesPath="http://images.mynonpublic.com/openatv/current/index.php?open="+boxtype
            regx = b'''<a href='(.*?)'>(.*?)</a>'''
@@ -249,6 +251,7 @@ class imagesScreen(Screen):
                 else:
                         imagePath =  os.path.join('http://images.mynonpublic.com/openatv/current/', imageName2)
                 images.append((imageName,imagePath))
+
         if self.teamName=="OpenATV Python3":
            imagesPath="http://images.mynonpublic.com/openatv/7.1/index.php?open="+boxtype
            regx = b'''<a href='(.*?)'>(.*?)</a>'''
@@ -263,6 +266,7 @@ class imagesScreen(Screen):
                 else:
                         imagePath =  os.path.join('http://images.mynonpublic.com/openatv/7.1/', imageName2)
                 images.append((imageName,imagePath))
+
         if self.teamName=="OpenPLI-Unoffical":
            imagesPath="https://www.openpli.net/openpli-11.3/"
            regx = b'''<td data-sort="(.*?)"><a href="/openpli-11.3/(.*?)">'''
@@ -275,6 +279,7 @@ class imagesScreen(Screen):
                 if not boxtype in imageName:
                     continue
                 images.append((imageName,imagePath))
+
         if self.teamName=="ArEaDeLtA-SaT":
            imagesPath="http://areadeltasat.net/upload/E2%20Images/Dreambox/"
            regx = b'''<font color="#ffffff"><b>(.*?)</b></font>.*?<a href="(.*?)" target="_blank">'''
@@ -289,6 +294,7 @@ class imagesScreen(Screen):
                 if not boxtype in imageName:
                     continue
                 images.append((imageName+".zip",imagePath))
+
         if self.teamName=="OpenESI": 
            imagesPath="http://www.openesi.eu/images/index.php?dir=Dreambox/" +boxtype + "/"
            regx = b'''<a class="autoindex_a" href="(.*?)&amp;file=(.*?)">'''
@@ -299,6 +305,7 @@ class imagesScreen(Screen):
                 	imageName=imageName.decode()
                 imagePath="http://www.openesi.eu/images/Dreambox" + "/" + boxtype + "/" + imageName
                 images.append((imageName,imagePath))
+
         if self.teamName=="DreamElite":
            if boxtype=="dm520" or boxtype=="dm525":
               boxtype='DM520-DM525'
@@ -313,6 +320,7 @@ class imagesScreen(Screen):
                         imageName=imageName.decode()
                 imagePath="http://images.dream-elite.net/DEP/"+boxtype.upper()+'/'+imageName
                 images.append((imageName,imagePath.strip()))
+
         if self.teamName=="Dreamboxupdates-Stable":
            if boxtype=="dreamone" or boxtype=="dreamtwo":
                 imagesPath="http://www.dreamboxupdate.com/opendreambox/2.6/stable/images/"+boxtype+"/index.php"
@@ -337,6 +345,7 @@ class imagesScreen(Screen):
                 if "sig" in imageName:
                     continue
                 images.append((imageName,imagePath))
+
         if self.teamName=="Dreamboxupdates-UnStable":
            if boxtype=="dreamone" or boxtype=="dreamtwo":
                 imagesPath="http://www.dreamboxupdate.com/opendreambox/2.6/unstable/images/"+boxtype+"/index.php"
@@ -361,6 +370,7 @@ class imagesScreen(Screen):
                 if "sig" in imageName:
                     continue
                 images.append((imageName,imagePath))
+
         if self.teamName=="Merlin4":
            if boxtype=="dreamone" or boxtype=="dreamtwo":
               imagesPath = "http://feed.dreamboxtools.de/oe_2.6/deb/images/"
@@ -380,6 +390,7 @@ class imagesScreen(Screen):
                 if not boxtype in imageName:
                     continue
                 images.append((imageName,imagePath))
+
         if self.teamName=="OoZooN":
            imagesPath="http://www.oozoon-download.de/opendreambox/images/"+boxtype+"/unstable/index.html"
            regx = b'''<a href="(.*?)">(.*?)</a>'''
@@ -394,6 +405,7 @@ class imagesScreen(Screen):
                 if ".nfo" in  imageName or not "oozoon" in imageName:
                     continue
                 images.append((imageName,imagePath))
+
         if self.teamName=="Newnigma2":
            imagesPath="http://feed.newnigma2.to/daily/images/"
            regx = b'''<a href="(.*?)">(.*?)</a>'''
@@ -408,6 +420,7 @@ class imagesScreen(Screen):
                 if not boxtype in imageName:
                     continue
                 images.append((imageName,imagePath))
+
         if self.teamName=="Demonisat":
            if boxtype == "dm520":
               boxtype = "520"
@@ -446,6 +459,7 @@ class imagesScreen(Screen):
                 imageName=item[0]
                 imagePath=item[1]
                 images.append((imageName,imagePath))
+
         if self.teamName=="Powersat":
            imagesPath="http://www.power-sat.org/power-plus/index.php?dir=Powersat_2.5/immagini_powersat_"+boxtype+"_OE2.5/"
            regx = b'''<a class="autoindex_a" href="(.*?)&amp;file=(.*?)">'''
@@ -460,6 +474,7 @@ class imagesScreen(Screen):
                 if not boxtype in imageName:
                     continue
                 images.append((imageName,imagePath))
+
         if self.teamName=="Satlodge":
            if boxtype == "dreamone" or boxtype == "dreamtwo":
            	imagesPath="http://webplus.sat-lodge.it/index.php?dir=dreamone2.6/"
@@ -483,6 +498,7 @@ class imagesScreen(Screen):
                 if not boxtype in imageName:
                     continue
                 images.append((imageName,imagePath))
+
         if self.teamName=="OpenSatlodge":
            imagesPath="http://webplus.sat-lodge.it/index.php?dir=Dreambox920/"
            regx = b'''<a class="autoindex_a" href="(.*?)&amp;file=(.*?)">'''
@@ -497,6 +513,7 @@ class imagesScreen(Screen):
                 if not item[1].endswith(b".zip"):
                     continue
                 images.append((imageName,imagePath))
+
         if self.teamName=="PurE2":
            if boxtype == "dreamone" or boxtype == "dreamtwo":
            	imagesPath="https://www.pur-e2.club/OU/images/index.php?dir=6.5/dreambox/TEST-alpha/"
@@ -527,6 +544,7 @@ class imagesScreen(Screen):
                 	if "web.zip" in imageName or not boxtype in imageName:
                     		continue
                 images.append((imageName,imagePath))
+
         if self.teamName=="PKTeam":
            imagesPath="http://e2.pkteam.pl/index.php?dir=IMAGE%20DREAMBOX/HYPERION%206.1/"
            regx = b'''<a class="autoindex_a" href="(.*?)&amp;file=(.*?)">'''
@@ -541,6 +559,7 @@ class imagesScreen(Screen):
                 if not boxtype in imageName:
                     continue
                 images.append((imageName,imagePath))
+
         if self.teamName=="AFF-TitanNit":
            if boxtype == "dm520":
               boxtype = 'DM520'
@@ -563,6 +582,7 @@ class imagesScreen(Screen):
                 if not item[0].endswith(b".zip"):
                     continue
                 images.append((imageName,imagePath))
+
         if self.teamName=="Gemini4":
            if boxtype == "dreamone" or boxtype == "dreamtwo":
            	imagesPath="http://download.blue-panel.com/pyro/gemini4-unstable/developer/images/"
@@ -586,6 +606,7 @@ class imagesScreen(Screen):
                 if not boxtype in imageName:
                     continue
                 images.append((imageName,imagePath))
+
         if self.teamName=="OpenVision Python2":
            imagesPath="https://images.openvision.dedyn.io/12.2/EOL/Vision/Dreambox/"+boxtype+"/"
            regx = ('''<a href="/12.2/EOL/Vision/Dreambox/%s/(.*?)">(.*?)</a>''' % boxtype).encode()
@@ -600,6 +621,7 @@ class imagesScreen(Screen):
                 if not item[0].endswith(b".zip"):
                     continue
                 images.append((imageName,imagePath))
+
         if self.teamName=="OpenVision Python3":
            imagesPath="https://images.openvision.dedyn.io/12.2/Develop/Vision/Dreambox/"+boxtype+"/"
            regx = ('''<a href="/12.2/Develop/Vision/Dreambox/%s/(.*?)">(.*?)</a>''' % boxtype).encode()
@@ -614,6 +636,7 @@ class imagesScreen(Screen):
                 if not item[0].endswith(b".zip"):
                     continue
                 images.append((imageName,imagePath))
+
         if self.teamName=="OpenHDF":
            imagesPath="http://images.hdfreaks.cc/"+boxtype+"/"
            regx = b'''<a href="(.*?)">(.*?)</a>'''
@@ -628,6 +651,7 @@ class imagesScreen(Screen):
                 if not item[0].endswith(b".zip"):
                     continue
                 images.append((imageName,imagePath))
+
         if self.teamName=="NonSoloSat":
            imagesPath="https://www.nonsolosat.net/upload/index.php?dir=Dreambox/Nonsolosat%2026/&file="
            regx = b'''<a class="autoindex_a" href="(.*?)&amp;file=(.*?)">'''
