@@ -1,8 +1,8 @@
 #!/bin/bash
 ##setup command=wget https://raw.githubusercontent.com/fairbird/BackUpFlash/main/installer.sh -O - | /bin/sh
 
-version=7.4
-description=What is NEW :\n-Adding the feature of modifying the name of the backup copy before starting the backup process\n-Fix the process of deleting the damaged backup after canceling the backup process\n\n**************************\n: ما هو الجديد\n-إضافة خاصية تعديل إسم نسخة الباك اب قبل بدء عملية الباك اب\n-إصلاح عملية حذف الباك المعطوب بعد إلغاء عملية الباك اب
+version=7.5
+description=What is NEW :\n-Fix url download link for BlackHole and Openpli-Unoffical images\n\n**************************\n: ما هو الجديد\n-Openpli-Unoffical و BlackHole إصلاح رابط تحميل صور
 
 echo ""
 if [ ! -d '/usr/lib64' ]; then
