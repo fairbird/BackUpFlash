@@ -102,7 +102,7 @@ class teamsScreen(Screen):
         teams.append(("OpenATV Python2", "OpenATV Python2"))
         teams.append(("OpenATV Python3", "OpenATV Python3"))
         #teams.append(("ArEaDeLtA-SaT", "ArEaDeLtA-SaT")) ## No more Team
-        #teams.append(("OpenPLI-Unoffical", "OpenPLI-Unoffical")) ## No more Team
+        teams.append(("OpenPLI-Unoffical", "OpenPLI-Unoffical"))
         #teams.append(("OpenESI", "OpenESI")) ## No more Team
         teams.append(("PurE2", "PurE2"))
         #teams.append(("PKTeam", "PKTeam")) ## No more Url download
@@ -268,16 +268,14 @@ class imagesScreen(Screen):
                 images.append((imageName,imagePath))
 
         if self.teamName=="OpenPLI-Unoffical":
-           imagesPath="https://www.openpli.net/openpli-11.3/"
-           regx = b'''<td data-sort="(.*?)"><a href="/openpli-11.3/(.*?)">'''
-           rimages=get_images(imagesPath,regx)
+           imagesPath='https://www.mediafire.com/api/1.4/folder/get_content.php?r=cfgd&content_type=files&filter=all&order_by=name&order_direction=asc&chunk=1&version=1.5&folder_key=hlw7uznninif5&response_format=json'
+           rimages=get_images_mediafire(imagesPath)
+           logdata("rimages",rimages)
            for item in rimages:
-                imageName=item[1]
-                if PY3:
-                	imageName=imageName.decode()
-                imagePath = os.path.join('https://www.openpli.net/openpli-11.3/', imageName)
+                imageName=item[0]
+                imagePath=item[1]
                 if not boxtype in imageName:
-                    continue
+                	continue
                 images.append((imageName,imagePath))
 
         if self.teamName=="ArEaDeLtA-SaT":
