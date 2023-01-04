@@ -441,7 +441,7 @@ class imagesScreen(Screen):
            elif boxtype == "dm900":
               boxtype = "900"
            elif boxtype == "dm920":
-              boxtype = "dreamtwo"
+              boxtype = "920"
            elif boxtype == "dm7080":
               boxtype = "7080"
            elif boxtype == "dreamone":
