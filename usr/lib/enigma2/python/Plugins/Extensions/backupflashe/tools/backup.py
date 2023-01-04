@@ -19,7 +19,7 @@ from .bftools import logdata, dellog, copylog
         
 BRANDOS = '/var/lib/dpkg/status' ## DreamOS
 BAINIT = '/sbin/bainit'
-
+NOW = datetime.datetime.now()
 
 class doBackUp(Screen):
 
@@ -51,12 +51,11 @@ class doBackUp(Screen):
         if fileExists("/tmp/root"):
              os.system('umount /tmp/root >> %s 2>&1')
         if not fileExists("/tmp/root/usr"):
-             os.system("rm -r /tmp/root")
+             os.system("rm -r /tmp/root >> %s 2>&1")
         if fileExists("/tmp/.cancelBackup"):
              os.system("rm -f /tmp/.cancelBackup")
         self.timer.stop()
         cmdlist = []
-        NOW = datetime.datetime.now()
         LOG = '/tmp/backupflash.scr'
         logdata("Backup log","start")
         logdata("Start Time", NOW.strftime('%H:%M')) ## Print Start time to log file
@@ -111,7 +110,6 @@ class doBackUp(Screen):
             self.session.openWithCallback(self.cleanba, ProgressScreen, title = mytitle, cmdlist = cmdlist, imagePath = self.IMAGENAMEPATH)
         else:
             self.session.open(MessageBox, _('Sorry no device found to store backup.\nPlease check your media in devices manager.'), MessageBox.TYPE_INFO)
-        logdata("Finished Time", NOW.strftime('%H:%M')) ## Print Finished time to log file
 
     def cleanba(self):
         if config.backupflashe.cleanba.value:
@@ -130,6 +128,7 @@ class doBackUp(Screen):
 
     def dofinish(self):
         cancelBackup = "/tmp/.cancelBackup"
+        logdata("Finished Time", NOW.strftime('%H:%M')) ## Print Finished time to log file
         if self.image_formats == 'xz':
              IMAGENAME = '%s.tar.xz' % self.image_name
              IMAGENAMEPATH = os.path.join(self.device_path, IMAGENAME)
@@ -139,6 +138,8 @@ class doBackUp(Screen):
         if fileExists(cancelBackup):
              os.remove(cancelBackup)
              os.remove(IMAGENAMEPATH)
+             os.system('umount /tmp/root >> %s 2>&1')
+             os.system("rm -r /tmp/root >> %s 2>&1")
              logdata(".\n.\nCancelled Backup !!!!!!")
              self.close()
         else:
