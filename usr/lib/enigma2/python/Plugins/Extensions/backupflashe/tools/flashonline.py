@@ -451,9 +451,9 @@ class imagesScreen(Screen):
            else:
               pass
            if boxtype=="dreamone" or boxtype=="dreamtwo": 
-           	imagesPath="http://www.demonisat.info/demonisat-e2Img-OE2.0/Image-OE2.6/"+boxtype+"/"
+           	imagesPath="http://demonisat.info/demonisat-e2Img-OE2.0/Image-OE2.6/"+boxtype+"/"
            else:
-           	imagesPath="http://www.demonisat.info/demonisat-e2Img-OE2.0/Image-oe2.5/"+boxtype+"/"
+           	imagesPath="http://demonisat.info/demonisat-e2Img-OE2.0/Image-oe2.5/"+boxtype+"/"
            data=requests.get(imagesPath, headers=headers).content
            regx = b'<a href="(.*?)">(.*?)-..&gt;</a></td><td align="right">(.*?)</td>'
            info=re.findall(regx,data)
