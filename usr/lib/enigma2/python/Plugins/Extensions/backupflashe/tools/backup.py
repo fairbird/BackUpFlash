@@ -19,7 +19,6 @@ from .bftools import logdata, dellog, copylog
         
 BRANDOS = '/var/lib/dpkg/status' ## DreamOS
 BAINIT = '/sbin/bainit'
-NOW = datetime.datetime.now()
 
 class doBackUp(Screen):
 
@@ -58,6 +57,7 @@ class doBackUp(Screen):
         cmdlist = []
         LOG = '/tmp/backupflash.scr'
         logdata("Backup log","start")
+        NOW = datetime.datetime.now()
         logdata("Start Time", NOW.strftime('%H:%M')) ## Print Start time to log file
         if config.backupflashe.cleanba.value:
              if fileExists(BAINIT):
@@ -128,6 +128,7 @@ class doBackUp(Screen):
 
     def dofinish(self):
         cancelBackup = "/tmp/.cancelBackup"
+        NOW = datetime.datetime.now()
         logdata("Finished Time", NOW.strftime('%H:%M')) ## Print Finished time to log file
         if self.image_formats == 'xz':
              IMAGENAME = '%s.tar.xz' % self.image_name
