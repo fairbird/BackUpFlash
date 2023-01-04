@@ -1,8 +1,8 @@
 #!/bin/bash
 ##setup command=wget https://raw.githubusercontent.com/fairbird/BackUpFlash/main/installer.sh -O - | /bin/sh
 
-version=7.5
-description=What is NEW :\n-Fix url download link for BlackHole and Openpli-Unoffical images\n\n**************************\n: ما هو الجديد\n-Openpli-Unoffical و BlackHole إصلاح رابط تحميل صور
+version=7.6
+description=What is NEW :\n-Fix url download link for demonisat images\n\n**************************\n: ما هو الجديد\n-demonisat إصلاح رابط تحميل صور
 
 echo ""
 if [ ! -d '/usr/lib64' ]; then
