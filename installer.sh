@@ -181,8 +181,8 @@ echo "#                 Raed  &  mfaraj57                     #"
 echo "#                     support                           #"
 echo "#   https://www.tunisia-sat.com/forums/threads/3902669/ #"
 echo "#########################################################"
-echo "#             PLEASE RESTART YOUR STB                   #"
-echo "##########################################################"
+echo "#           Your STB Will RESTARTING Now                #"
+echo "#########################################################"
 sleep 3
 killall enigma2
 exit 0
