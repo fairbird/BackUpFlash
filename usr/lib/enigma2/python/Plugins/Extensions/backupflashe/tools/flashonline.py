@@ -456,17 +456,18 @@ class imagesScreen(Screen):
            else:
            	imagesPath="http://demonisat.info/demonisat-e2Img-OE2.0/Image-oe2.5/"+boxtype+"/"
            	regx = b'<a href="(.*?)">(.*?)-..&gt;</a></td><td align="right">(.*?)</td>'
-           data=requests.get(imagesPath, headers=headers).content
-           info=re.findall(regx,data)
-           rimages=[]
-           for href,title,cdate in info:
+           data = requests.get(imagesPath, headers=headers).content
+           info = re.findall(regx, data)
+           rimages = []
+           for href, title, cdate in info:
                cdate=(cdate.decode("utf-8")).split(" ")[0]
                title=title.decode("utf-8")+"-"+cdate
                if PY3:
-               	title=imagesPath+href.decode("utf-8")
+               		title=imagesPath+href.decode("utf-8")
+               		rimages.append((href.decode("utf-8"),title))
                else:
-               	title=imagesPath+href
-               rimages.append((href.decode("utf-8"),title))
+               		title=imagesPath+href
+               		rimages.append((href, title))
            images=[]
            for item in rimages:
                 imageName=item[0]
