@@ -441,7 +441,7 @@ class imagesScreen(Screen):
            elif boxtype == "dm900":
               boxtype = "900"
            elif boxtype == "dm920":
-              boxtype = "920"
+              boxtype = "dreamtwo"
            elif boxtype == "dm7080":
               boxtype = "7080"
            elif boxtype == "dreamone":
@@ -452,10 +452,11 @@ class imagesScreen(Screen):
               pass
            if boxtype=="dreamone" or boxtype=="dreamtwo": 
            	imagesPath="http://demonisat.info/demonisat-e2Img-OE2.0/Image-OE2.6/"+boxtype+"/"
+           	regx = b'<a href="(.*?)">(.*?)..&gt;</a></td><td align="right">(.*?)  </td>'
            else:
            	imagesPath="http://demonisat.info/demonisat-e2Img-OE2.0/Image-oe2.5/"+boxtype+"/"
+           	regx = b'<a href="(.*?)">(.*?)-..&gt;</a></td><td align="right">(.*?)</td>'
            data=requests.get(imagesPath, headers=headers).content
-           regx = b'<a href="(.*?)">(.*?)-..&gt;</a></td><td align="right">(.*?)</td>'
            info=re.findall(regx,data)
            rimages=[]
            for href,title,cdate in info:
