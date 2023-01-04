@@ -3,9 +3,7 @@
 # RAED & mfaraj57 &  (c) 2018
 # Code RAED & mfaraj57
 
-# python3
-from __future__ import print_function
-from .compat import compat_Request, compat_urlopen
+from .compat import compat_Request, compat_urlopen, PY3
 
 from Components.About import about
 from Tools.Directories import fileExists, copyfile, createDir, resolveFilename, SCOPE_PLUGINS
@@ -124,9 +122,9 @@ def get_images2(url,regx):
         try:
             req = compat_Request(url, headers={'User-Agent': 'Mozilla/5.0'}) # add [headers={'User-Agent': 'Mozilla/5.0'}] to fix HTTP Error 403: Forbidden
             response = compat_urlopen(req,timeout=20,context=ssl._create_unverified_context())
-            try:
+            if PY3:
                 data = response.read().decode('utf-8')
-            except Exception as e:
+            else:
                 data = response.read()  
             response.close()
             match = re.findall(str(regx), data, re.M|re.I)
@@ -144,9 +142,9 @@ def get_images_mediafire(url):
             try:
                 req = compat_Request(url, headers={'User-Agent': 'Mozilla/5.0'}) # add [headers={'User-Agent': 'Mozilla/5.0'}] to fix HTTP Error 403: Forbidden
                 response = compat_urlopen(req,timeout=30,context=ssl._create_unverified_context())
-                try:
+                if PY3:
                 	data = response.read().decode('utf-8')
-                except Exception as e:
+                else:
                 	data = response.read()
                 return data
             except:
