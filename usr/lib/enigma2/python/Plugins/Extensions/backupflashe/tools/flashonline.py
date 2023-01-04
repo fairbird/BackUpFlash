@@ -20,7 +20,7 @@ from Components.config import config
 from .skin import *
 from .Console import Console
 from .download import imagedownloadScreen
-from .bftools import logdata, getboxtype, get_images, get_images2, get_images_mediafire, copylog, trace_error
+from .bftools import logdata, getboxtype, get_images, get_images_mediafire, copylog, trace_error
 
 headers = {
     'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10.12; rv:55.0) Gecko/20100101 Firefox/55.0',
