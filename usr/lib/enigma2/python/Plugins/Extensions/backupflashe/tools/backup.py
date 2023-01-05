@@ -11,6 +11,7 @@ from Screens.MessageBox import MessageBox
 from Screens.Screen import Screen
 from Tools.Directories import fileExists
 from enigma import eTimer
+from time import sleep
 import os, datetime
 
 from .Console import Console
@@ -145,4 +146,8 @@ class doBackUp(Screen):
              self.close()
         else:
              self.session.open(MessageBox, _('(%s)\non\n[%s]\n\nfinished. Press (Exit) or (Ok) Button.' % (IMAGENAME, self.device_path)), MessageBox.TYPE_INFO)
+             if config.backupflashe.shutdown.value:
+             	sleep(2)
+                logdata("Shutdown Device") ## Print Shutdown to log file
+             	os.system('shutdown -P -h now')
              self.close()
