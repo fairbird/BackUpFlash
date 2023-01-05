@@ -29,6 +29,8 @@ BRANDOS = '/var/lib/dpkg/status' ## DreamOS
 BAINIT = '/sbin/bainit'
 BAINFO = '/.bainfo'
 
+boxtype = getboxtype()
+
 Ver,lastbuild,enigmaos = getversioninfo()
 
 config.backupflashe = ConfigSubsection()
@@ -41,12 +43,18 @@ config.backupflashe.flashAllow = ConfigYesNo(default=False)
 image_formats = [('xz','xz'), ('gz','gz')]
 config.backupflashe.image_format = ConfigSelection(default = "xz", choices = image_formats)
 xz_options = []
-xz_options.append(( "1","1" ))
-xz_options.append(( "2","2" ))
-xz_options.append(( "3","3" ))       
-xz_options.append(( "4","4" ))
-xz_options.append(( "5","5" ))                                              
-xz_options.append(( "6","6" ))
+if boxtype == "dm520":
+	xz_options.append(( "1","1" ))
+	xz_options.append(( "2","2" ))
+	xz_options.append(( "3","3" ))
+	xz_options.append(( "4","4" ))
+else:
+	xz_options.append(( "1","1" ))
+	xz_options.append(( "2","2" ))
+	xz_options.append(( "3","3" ))
+	xz_options.append(( "4","4" ))
+	xz_options.append(( "5","5" ))                                              
+	xz_options.append(( "6","6" ))
 config.backupflashe.xzcompression = ConfigSelection(default = "1", choices = xz_options)
 config.backupflashe.gzcompression = ConfigSelection(default = "3", choices = xz_options)
 
@@ -57,7 +65,6 @@ k.close()
 getname = getimage_name()
 now = datetime.datetime.now()
 DATETIME = now.strftime('%Y-%m-%d-%H-%M')
-boxtype =getboxtype()
 
 if boxtype == "dm520":
         if cmd.find("root=/dev/sda1") is not -1:
@@ -141,9 +148,9 @@ class full_main(Screen, ConfigListScreen):
             self.list.append(getConfigListEntry(('Path to store Full Backup'), config.backupflashe.device_path, _("This option to set the path of Backup/Flash directory")))
             self.list.append(getConfigListEntry(('Select Format to Compress BackUp'), config.backupflashe.image_format, _("This option to select the type of compress option")))
             if config.backupflashe.image_format.value=="xz":
-                    self.list.append(getConfigListEntry(("xz")+" "+_("Compression")+" "+_("(1-6)"), config.backupflashe.xzcompression, _("This option to set stringe value of Compress image")))
+                    self.list.append(getConfigListEntry(("xz")+" "+_("Compression")+" "+_("(1-6)"), config.backupflashe.xzcompression, _("This option to set stringe value of Compress image (The higher the number, the slower and longer the backup process, but the size is less to the backup)")))
             elif config.backupflashe.image_format.value=="gz":
-                    self.list.append(getConfigListEntry(("gz")+" "+_("Compression")+" "+_("(1-6)"), config.backupflashe.gzcompression, _("This option to set stringe value of Compress image")))
+                    self.list.append(getConfigListEntry(("gz")+" "+_("Compression")+" "+_("(1-6)"), config.backupflashe.gzcompression, _("This option to set stringe value of Compress image (The higher the number, the slower and longer the backup process, but the size is less to the backup)")))
             else:
                     pass
             self.list.append(getConfigListEntry(('Enable shutdown box after backup'), config.backupflashe.shutdown, _("This option to Enable or Disable Shutdown Box After Finished Backup")))
