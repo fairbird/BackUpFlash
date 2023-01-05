@@ -32,8 +32,9 @@ BAINFO = '/.bainfo'
 Ver,lastbuild,enigmaos = getversioninfo()
 
 config.backupflashe = ConfigSubsection()
-config.backupflashe.update = ConfigYesNo(default=True)
 
+config.backupflashe.update = ConfigYesNo(default=True)
+config.backupflashe.shutdown = ConfigYesNo(default=False)
 config.backupflashe.cleanba = ConfigYesNo(default=False)
 config.backupflashe.flashAllow = ConfigYesNo(default=False)
 
@@ -112,7 +113,7 @@ class full_main(Screen, ConfigListScreen):
     def layoutFinished(self):
         if config.backupflashe.update.value:
              self.checkupdates()
-        self.setTitle("Backup And Flash by RAED & mfaraj57 - V" + Ver)
+        self.setTitle("Backup And Flash by RAED & mfaraj57 - V " + Ver)
         self["config"].onSelectionChanged.append(self.updateHelp)
 
     def updateList(self):
@@ -145,9 +146,10 @@ class full_main(Screen, ConfigListScreen):
                     self.list.append(getConfigListEntry(("gz")+" "+_("Compression")+" "+_("(1-6)"), config.backupflashe.gzcompression, _("This option to set stringe value of Compress image")))
             else:
                     pass
+            self.list.append(getConfigListEntry(('Enable shutdown box after backup'), config.backupflashe.shutdown, _("This option to Enable or Disable Shutdown Box After Finished Backup")))
             if (os.path.exists("/.bainfo") or os.path.exists("/.lfinfo") or cmd.find(rootfs) is -1):
-                self.list.append(getConfigListEntry(('Allow To Flash image from External image'), config.backupflashe.flashAllow, _("Warning: the process will delete the image if you are on an external flash\n(it is not recommended to Enable it)\nSafy way to Flash new image Please go to internal flash")))
-            self.list.append(getConfigListEntry(('Clean image from BA symlink Before Backup'), config.backupflashe.cleanba, _("This option for remove BarryAllen symlink from image Before Start Backup")))
+                self.list.append(getConfigListEntry(('Allow to flash image from External image'), config.backupflashe.flashAllow, _("Warning: the process will delete the image if you are on an external flash\n(it is not recommended to Enable it)\nSafy way to Flash new image Please go to internal flash")))
+            self.list.append(getConfigListEntry(('Clean image from BA symlink before backup'), config.backupflashe.cleanba, _("This option for remove BarryAllen symlink from image Before Start Backup")))
             self['config'].list = self.list
             self['config'].l.setList(self.list)
 
