@@ -147,7 +147,7 @@ class doBackUp(Screen):
         else:
              self.session.open(MessageBox, _('(%s)\non\n[%s]\n\nfinished. Press (Exit) or (Ok) Button.' % (IMAGENAME, self.device_path)), MessageBox.TYPE_INFO)
              if config.backupflashe.shutdown.value:
-             	sleep(2)
+                sleep(2)
                 logdata("Shutdown Device") ## Print Shutdown to log file
-             	os.system('shutdown -P -h now')
+                os.system('shutdown -P -h now')
              self.close()
