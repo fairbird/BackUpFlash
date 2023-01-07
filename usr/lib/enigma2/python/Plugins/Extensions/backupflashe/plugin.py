@@ -141,9 +141,9 @@ class full_main(Screen, ConfigListScreen):
             self.list.append(getConfigListEntry(('Path to store Full Backup'), config.backupflashe.device_path, _("This option to set the path of Backup/Flash directory")))
             self.list.append(getConfigListEntry(('Select Format to Compress BackUp'), config.backupflashe.image_format, _("This option to select the type of compress option")))
             if config.backupflashe.image_format.value=="xz":
-                    self.list.append(getConfigListEntry(("xz")+" "+_("Compression")+" "+_("(1-6)"), config.backupflashe.xzcompression, _("This option to set stringe value of Compress image")))
+                    self.list.append(getConfigListEntry(("xz")+" "+_("Compression")+" "+_("(1-6)"), config.backupflashe.xzcompression, _("This option to set stringe value of Compress image (The higher the value, the longer the operation time, but the smaller the backup size)")))
             elif config.backupflashe.image_format.value=="gz":
-                    self.list.append(getConfigListEntry(("gz")+" "+_("Compression")+" "+_("(1-6)"), config.backupflashe.gzcompression, _("This option to set stringe value of Compress image")))
+                    self.list.append(getConfigListEntry(("gz")+" "+_("Compression")+" "+_("(1-6)"), config.backupflashe.gzcompression, _("This option to set stringe value of Compress image (The higher the value, the longer the operation time, but the smaller the backup size)")))
             else:
                     pass
             self.list.append(getConfigListEntry(('Enable shutdown box after backup'), config.backupflashe.shutdown, _("This option to Enable or Disable Shutdown Box After Finished Backup")))
