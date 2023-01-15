@@ -242,7 +242,7 @@ class imagesScreen(Screen):
                 images.append((imageName,imagePath))
 
         if self.teamName=="OpenATV Python2":
-           imagesPath="http://images.mynonpublic.com/openatv/current/index.php?open="+boxtype
+           imagesPath="http://images.mynonpublic.com/openatv/6.4/index.php?open="+boxtype
            regx = b'''<a href='(.*?)'>(.*?)</a>'''
            rimages=get_images(imagesPath,regx)
            for item in rimages:
@@ -250,13 +250,13 @@ class imagesScreen(Screen):
                 imageName2=item[0]
                 if PY3:
                         imageName=imageName.decode()
-                        imagePath =  os.path.join(b'http://images.mynonpublic.com/openatv/current/', imageName2)
+                        imagePath =  os.path.join(b'http://images.mynonpublic.com/openatv/6.4/', imageName2)
                 else:
-                        imagePath =  os.path.join('http://images.mynonpublic.com/openatv/current/', imageName2)
+                        imagePath =  os.path.join('http://images.mynonpublic.com/openatv/6.4/', imageName2)
                 images.append((imageName,imagePath))
 
         if self.teamName=="OpenATV Python3":
-           imagesPath="http://images.mynonpublic.com/openatv/7.1/index.php?open="+boxtype
+           imagesPath="http://images.mynonpublic.com/openatv/current/index.php?open="+boxtype
            regx = b'''<a href='(.*?)'>(.*?)</a>'''
            rimages=get_images(imagesPath,regx)
            logdata("rimages",rimages)
@@ -265,9 +265,9 @@ class imagesScreen(Screen):
                 imageName2=item[0]
                 if PY3:
                         imageName=imageName.decode()
-                        imagePath =  os.path.join(b'http://images.mynonpublic.com/openatv/7.1/', imageName2)
+                        imagePath =  os.path.join(b'http://images.mynonpublic.com/openatv/current/', imageName2)
                 else:
-                        imagePath =  os.path.join('http://images.mynonpublic.com/openatv/7.1/', imageName2)
+                        imagePath =  os.path.join('http://images.mynonpublic.com/openatv/current/', imageName2)
                 images.append((imageName,imagePath))
 
         if self.teamName=="OpenPLI-Unoffical":
