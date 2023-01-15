@@ -29,6 +29,8 @@ BRANDOS = '/var/lib/dpkg/status' ## DreamOS
 BAINIT = '/sbin/bainit'
 BAINFO = '/.bainfo'
 
+boxtype = getboxtype()
+
 Ver,lastbuild,enigmaos = getversioninfo()
 
 config.backupflashe = ConfigSubsection()
@@ -41,12 +43,18 @@ config.backupflashe.flashAllow = ConfigYesNo(default=False)
 image_formats = [('xz','xz'), ('gz','gz')]
 config.backupflashe.image_format = ConfigSelection(default = "xz", choices = image_formats)
 xz_options = []
-xz_options.append(( "1","1" ))
-xz_options.append(( "2","2" ))
-xz_options.append(( "3","3" ))       
-xz_options.append(( "4","4" ))
-xz_options.append(( "5","5" ))                                              
-xz_options.append(( "6","6" ))
+if boxtype == "dm520":
+	xz_options.append(( "1","1" ))
+	xz_options.append(( "2","2" ))
+	xz_options.append(( "3","3" ))
+	xz_options.append(( "4","4" ))
+else:
+	xz_options.append(( "1","1" ))
+	xz_options.append(( "2","2" ))
+	xz_options.append(( "3","3" ))
+	xz_options.append(( "4","4" ))
+	xz_options.append(( "5","5" ))                                              
+	xz_options.append(( "6","6" ))
 config.backupflashe.xzcompression = ConfigSelection(default = "1", choices = xz_options)
 config.backupflashe.gzcompression = ConfigSelection(default = "3", choices = xz_options)
 
@@ -57,7 +65,6 @@ k.close()
 getname = getimage_name()
 now = datetime.datetime.now()
 DATETIME = now.strftime('%Y-%m-%d-%H-%M')
-boxtype =getboxtype()
 
 if boxtype == "dm520":
         if cmd.find("root=/dev/sda1") is not -1:
@@ -252,7 +259,7 @@ class full_main(Screen, ConfigListScreen):
     def checkupdates(self):
         try:
                 from twisted.web.client import getPage, error
-                url = b'https://raw.githubusercontent.com/fairbird/BackUpFlash/main/installer.sh'
+                url = b'https://github.com/fairbird/BackUpFlash/blob/fairbird/installer.sh'
                 getPage(url,timeout=10).addCallback(self.parseData).addErrback(self.errBack)
         except Exception as error:
                 trace_error()
@@ -286,7 +293,7 @@ class full_main(Screen, ConfigListScreen):
         try:
                 if answer:
                            cmdlist = []
-                           cmd='wget https://raw.githubusercontent.com/fairbird/BackUpFlash/main/installer.sh -O - | /bin/sh'
+                           cmd='wget https://github.com/fairbird/BackUpFlash/blob/fairbird/installer.sh -O - | /bin/sh'
                            cmdlist.append(cmd)
                            self.session.open(Console, title='Installing last update, enigma will be started after install', cmdlist=cmdlist, finishedCallback=self.myCallback, closeOnSuccess=False)
         except:

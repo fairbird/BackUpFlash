@@ -652,19 +652,19 @@ class imagesScreen(Screen):
                 images.append((imageName,imagePath))
 
         if self.teamName=="OpenHDF":
-           imagesPath="http://images.hdfreaks.cc/"+boxtype+"/"
+           imagesPath = "http://v7.hdfreaks.cc/" + boxtype + "/"
            regx = b'''<a href="(.*?)">(.*?)</a>'''
-           rimages=get_images(imagesPath,regx)
+           rimages = get_images(imagesPath,regx)
            for item in rimages:
                 imageName=item[1]
                 if PY3:
-                        imageName=imageName.decode()
-                        imagePath = os.path.join("http://images.hdfreaks.cc/"+boxtype+"/", imageName)
+                        imageName = imageName.decode()
+                        imagePath = os.path.join("http://v7.hdfreaks.cc/" + boxtype + "/", imageName)
                 else:
-                        imagePath = os.path.join("http://images.hdfreaks.cc/"+boxtype+"/", imageName)
+                        imagePath = os.path.join("http://v7.hdfreaks.cc/" + boxtype + "/", imageName)
                 if not item[0].endswith(b".zip"):
                     continue
-                images.append((imageName,imagePath))
+                images.append((imageName, imagePath))
 
         if self.teamName=="NonSoloSat":
            imagesPath="https://www.nonsolosat.net/upload/index.php?dir=Dreambox/Nonsolosat%2026/&file="

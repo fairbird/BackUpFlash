@@ -58,8 +58,6 @@ def getimage_version():
 
 def getversioninfo():
     currversion = '1.0'
-    enigmaos = 'all'
-    lastbuild = '01012016'
     version_file = resolveFilename(SCOPE_PLUGINS, 'Extensions/backupflashe/tools/version')
     if os.path.exists(version_file):
         try:
@@ -67,14 +65,9 @@ def getversioninfo():
             for line in fp:
                 if 'version' in line:
                     currversion = line.split('=')[1].strip()
-                if 'enigmaos' in line:
-                    enigmaos = line.split('=')[1].strip()
-                
-                if 'lastbuild' in line:
-                    lastbuild = line.split('=')[1].strip()
         except:
             pass
-    return (currversion, lastbuild, enigmaos)
+    return currversion
 
 def getboxtype():
         boxtype="dm7080hd"
