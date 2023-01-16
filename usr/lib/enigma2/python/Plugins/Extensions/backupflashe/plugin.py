@@ -31,7 +31,7 @@ BAINFO = '/.bainfo'
 
 boxtype = getboxtype()
 
-Ver,lastbuild,enigmaos = getversioninfo()
+Ver = getversioninfo()
 
 config.backupflashe = ConfigSubsection()
 
