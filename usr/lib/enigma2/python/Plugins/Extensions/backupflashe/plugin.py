@@ -10,17 +10,20 @@ from Screens.MessageBox import MessageBox
 from Screens.VirtualKeyBoard import VirtualKeyBoard
 from Screens.Screen import Screen
 from Plugins.Plugin import PluginDescriptor
-from Tools.Directories import fileExists
+from Tools.Directories import resolveFilename, fileExists, pathExists, SCOPE_MEDIA
+from Components.FileList import FileList
 from Components.ActionMap import ActionMap
 from Components.Label import Label
 from Components.MenuList import MenuList
 from Components.Sources.StaticText import StaticText
 from Components.ConfigList import ConfigListScreen
-from Components.config import getConfigListEntry, ConfigSubsection, config, ConfigYesNo, ConfigSelection, NoSave, configfile
+from Components.config import getConfigListEntry, ConfigSubsection, config, ConfigYesNo, ConfigSelection, NoSave, configfile, ConfigText
+from os import listdir as os_listdir
 import datetime
 import os
 
 from Plugins.Extensions.backupflashe.tools.skin import *
+from Plugins.Extensions.backupflashe.tools.backup import *
 from Plugins.Extensions.backupflashe.tools.compat import PY3
 from Plugins.Extensions.backupflashe.tools.Console import Console
 from Plugins.Extensions.backupflashe.tools.bftools import logdata, dellog, copylog, getboxtype, getimage_name, getmDevices, trace_error, getversioninfo
@@ -39,11 +42,12 @@ config.backupflashe.update = ConfigYesNo(default=True)
 config.backupflashe.shutdown = ConfigYesNo(default=False)
 config.backupflashe.cleanba = ConfigYesNo(default=False)
 config.backupflashe.flashAllow = ConfigYesNo(default=False)
+config.backupflashe.path_left = ConfigText(default=resolveFilename(SCOPE_MEDIA))
 
 image_formats = [('xz','xz'), ('gz','gz')]
 config.backupflashe.image_format = ConfigSelection(default = "xz", choices = image_formats)
 xz_options = []
-if boxtype == "dm520":
+if boxtype is "dm520":
 	xz_options.append(( "1","1" ))
 	xz_options.append(( "2","2" ))
 	xz_options.append(( "3","3" ))
@@ -62,11 +66,12 @@ k=open("/proc/cmdline","r")
 cmd=k.read()
 k.close()
 
+mounted_devices = getmDevices()
 getname = getimage_name()
 now = datetime.datetime.now()
 DATETIME = now.strftime('%Y-%m-%d-%H-%M')
 
-if boxtype == "dm520":
+if boxtype is "dm520":
         if cmd.find("root=/dev/sda1") is not -1:
                 rootfs="root=/dev/sda1"
         else:
@@ -74,7 +79,39 @@ if boxtype == "dm520":
 else:
         rootfs="root=/dev/mmcblk0"
 
+
+searchPaths = []
+def initPaths():
+	if fileExists('/proc/mounts'):
+		for line in open('/proc/mounts'):
+			if '/dev/sd' in line or '/dev/disk/by-uuid/' in line or '/dev/mmc' in line:
+				Path = line.split()[1].replace('\\040', ' ').split(',')
+				for dirName in Path:
+					paths = dirName + '/open-multiboot'
+					if os.path.isdir(paths):
+						return searchPaths.append(paths)
+	return ''
+initPaths()
+
+# Path of images on External Flash
+if os.path.isdir("/media/ba/ba"):
+	IMAGLISTEPATH = "/media/ba/ba" # Directory of BarryAllen images
+	ExternalImages = True
+	TEXT_CHOOSE = _("Images from BarryAllen")
+elif os.path.isdir("/media/at"):
+	IMAGLISTEPATH = "/media/at" # Directory of AlanTuring images
+	ExternalImages = True
+	TEXT_CHOOSE = _("Images from AlanTuring")
+elif os.path.isdir(''.join(searchPaths)):
+	IMAGLISTEPATH = ''.join(searchPaths) # Directory of OpenMultiboot images
+	ExternalImages = True
+	TEXT_CHOOSE = _("Images from OpenMultiboot")
+else:
+	IMAGLISTEPATH = "" # No Directory of image
+	ExternalImages = False
+
 class full_main(Screen, ConfigListScreen):
+
     def __init__(self, session):
         global rootfs
         Screen.__init__(self, session)
@@ -82,21 +119,24 @@ class full_main(Screen, ConfigListScreen):
         ConfigListScreen.__init__(self, self.list,on_change = self.changedEntry)
         self.onChangedEntry = []
         self.skin = SKIN_full_main
-        self['key_green'] = Label(_('Flash Image'))
-        self['key_yellow'] = Label(_('Flash online'))
-        self['key_blue'] = Label(_('Backup Image'))
-        self['key_red'] = Label(_('Recovery Mode'))
-        self['lab1'] = Label('Detecting mounted devices')
-        self['key_green'].hide()
-        self['key_blue'].hide()
-        self['key_yellow'].hide()
+        self["key_green"] = Label(_("Flash Image"))
+        self["key_yellow"] = Label(_("Flash online"))
+        self["key_blue"] = Label(_("Backup Image"))
+        self["key_red"] = Label(_("Recovery Mode"))
+        self["lab1"] = Label("Detecting mounted devices")
+        self["key_green"].hide()
+        self["key_blue"].hide()
+        self["key_yellow"].hide()
         self["help"] = StaticText()
-        self['actions'] = ActionMap(['WizardActions', 'ColorActions','MenuActions'], {'green': self.doFlash,
-         'blue': self.nameBackUp,
-         'yellow': self.flashOnline,
-         'menu' :self.showMenuoptions,                                                              
-         'red': self.red,
-         'back': self.close})
+        self["actions"] = ActionMap(["WizardActions", "ColorActions","MenuActions"], 
+        	{
+        		"green": self.doFlash,
+        		"blue": self.BackUpListSelect,
+        		"yellow": self.flashOnline,
+        		"menu" :self.showMenuoptions,                                                              
+        		"red": self.red,
+        		"back": self.close
+         	})
         self.deviceok = True
         self.new_version=Ver
         self.timer = eTimer()
@@ -126,30 +166,28 @@ class full_main(Screen, ConfigListScreen):
     def updateList(self):
         dellog()
         self.checkupdates()
-        mounted_devices = getmDevices()
-        #logdata("mounted devices",mounted_devices)
         if len(mounted_devices) > 0:
             self.deviceok = True
-            self['lab1'].setText(_('Do Flash New Image or Full Backup Image.'))
-            self['key_green'].show()
-            self['key_blue'].show()
-            self['key_yellow'].show()
+            self["lab1"].setText(_("Do Flash New Image or Full Backup Image."))
+            self["key_green"].show()
+            self["key_blue"].show()
+            self["key_yellow"].show()
             config.backupflashe.device_path = ConfigSelection(choices = mounted_devices)
             self.createSetup()
         else:
-            self['lab1'].setText(_('Sorry no device mounted found.\nPlease check your media in devices manager.'))
-            self['key_green'].hide()
-            self['key_blue'].hide()
-            self['key_yellow'].hide()
+            self["lab1"].setText(_("Sorry no device mounted found.\nPlease check your media in devices manager."))
+            self["key_green"].hide()
+            self["key_blue"].hide()
+            self["key_yellow"].hide()
             self.deviceok = False
 
     def createSetup(self):
             self.list = []
             self.list.append(getConfigListEntry(('Path to store Full Backup'), config.backupflashe.device_path, _("This option to set the path of Backup/Flash directory")))
             self.list.append(getConfigListEntry(('Select Format to Compress BackUp'), config.backupflashe.image_format, _("This option to select the type of compress option")))
-            if config.backupflashe.image_format.value=="xz":
+            if config.backupflashe.image_format.value is "xz":
                     self.list.append(getConfigListEntry(("xz")+" "+_("Compression")+" "+_("(1-6)"), config.backupflashe.xzcompression, _("This option to set stringe value of Compress image (The higher the value, the longer the operation time, but the smaller the backup size)")))
-            elif config.backupflashe.image_format.value=="gz":
+            elif config.backupflashe.image_format.value is "gz":
                     self.list.append(getConfigListEntry(("gz")+" "+_("Compression")+" "+_("(1-6)"), config.backupflashe.gzcompression, _("This option to set stringe value of Compress image (The higher the value, the longer the operation time, but the smaller the backup size)")))
             else:
                     pass
@@ -186,11 +224,28 @@ class full_main(Screen, ConfigListScreen):
                         from Plugins.Extensions.backupflashe.tools.flash import doFlash
                         self.session.open(doFlash, device_path)
 
+    def BackUpListSelect(self):
+        list = []
+        list.append(("Backup Current Image", "Do Backup From Current Flash image"))
+        if ExternalImages is True:
+        	list.append(("Backup External Image", "Do Backup From External Flash image"))
+        self.session.openWithCallback(self.BackUpSelect, ChoiceBox, _('Select Backup Option'), list)
+
+    def BackUpSelect(self, select):
+        if select:
+        	if select[0] is "Backup External Image": # BackUp External Flash
+        		self.session.openWithCallback(self.askForTarget, ChoiceBox,_("%s") % TEXT_CHOOSE, self.imagelistbackup())
+        	else: # BackUp Internal Flash
+        		self.nameBackUp()
+        else:
+        	self.close()
+
+## BackUp Internal Flash
     def nameBackUp(self):
         imagename = '%s-%s-%s' % (getname, boxtype, DATETIME)
-        self.session.openWithCallback(self.doBackUp, VirtualKeyBoard, title=_("Please Enter Name For Backup Image"), text="%s" % imagename)
+        self.session.openWithCallback(self.doBackUpInt, VirtualKeyBoard, title=_("Please Enter Name For Backup Image"), text="%s" % imagename)
 
-    def doBackUp(self,target):
+    def doBackUpInt(self, target):
         if target is None:
             return
         else:
@@ -201,19 +256,58 @@ class full_main(Screen, ConfigListScreen):
             		device_path = self['config'].list[0][1].getText()
             		image_formats = self['config'].list[1][1].getText()
             		image_compression_value = self['config'].list[2][1].getText()
-            		#logdata('backup started', "started")
-            		from Plugins.Extensions.backupflashe.tools.backup import doBackUp
-            		self.session.open(doBackUp, image_name, device_path, image_formats, image_compression_value)
+            		self.session.open(doBackUpInternal, image_name, device_path, image_formats, image_compression_value)
             	except:
             		trace_error()
             		pass
+
+## BackUp External Flash
+
+    def imagelistbackup(self):
+    	imageslist = []
+    	for line in os_listdir(IMAGLISTEPATH):
+    		if line.startswith("."):
+                    continue
+    		imageslist.append(( line, line ))
+    	imageslist.sort()
+    	return imageslist
+
+    def askForTarget(self, source):
+    	if source is None:
+            return
+    	else:
+            self.configsSave()
+            self.getname = source[1].rstrip()
+            self.image_path = IMAGLISTEPATH + "/" + self.getname
+            self.imagename = '%s-%s-%s' % (self.getname, boxtype, DATETIME)
+            self.device_path = self['config'].list[0][1].getText()
+            self.image_formats = self['config'].list[1][1].getText()
+            self.image_compression_value = self['config'].list[2][1].getText()
+            self.session.openWithCallback(self.doBackUpExt, VirtualKeyBoard, title=_("Please Enter Name For Backup Image"), text="%s" % self.imagename)
+
+    def doBackUpExt(self, target):
+        if target is None:
+            return
+        else:
+            if self.deviceok:
+            	try:
+            		image_name = target
+            		image_path = self.image_path
+            		device_path = self.device_path
+            		image_formats = self.image_formats
+            		image_compression_value = self.image_compression_value
+            		self.session.open(doBackUpExternal, image_name, image_path, device_path, image_formats, image_compression_value)
+            	except:
+            		trace_error()
+            		pass
+#####
 
     def red(self,):
         self.session.openWithCallback(self.GoRecovery, MessageBox, _('Really shutdown now (To Go to Recovery Mode) ?!!'), MessageBox.TYPE_YESNO)
 
     def GoRecovery(self, answer=False):
         if answer:
-            	b=open("/proc/stb/fp/boot_mode","w")
+            	b = open("/proc/stb/fp/boot_mode","w")
             	b.write("rescue")
             	b.close()
             	quitMainloop(2)
@@ -237,7 +331,7 @@ class full_main(Screen, ConfigListScreen):
         self.list = []
         EnablecheckUpdate = config.backupflashe.update.value
         choices.append(("Install backupflash version %s" %self.new_version,"Install"))
-        if EnablecheckUpdate == False:
+        if EnablecheckUpdate is False:
                 choices.append(("Press Ok to [Enable checking for Online Update]","enablecheckUpdate"))
         else:
                 choices.append(("Press Ok to [Disable checking for Online Update]","disablecheckUpdate")) 
@@ -245,13 +339,13 @@ class full_main(Screen, ConfigListScreen):
 
     def choicesback(self, select):
         if select:
-                if select[1] == "Install":
+                if select[1] is "Install":
                          self.install(True)
-                elif select[1] == "enablecheckUpdate":
+                elif select[1] is "enablecheckUpdate":
                          config.backupflashe.update.value = True
                          config.backupflashe.update.save()
                          configfile.save()
-                elif select[1] == "disablecheckUpdate":
+                elif select[1] is "disablecheckUpdate":
                          config.backupflashe.update.value = False
                          config.backupflashe.update.save()
                          configfile.save()
@@ -282,7 +376,7 @@ class full_main(Screen, ConfigListScreen):
                        if line.startswith("description"):
                           self.new_description = line.split("=")[1]
                           break
-        if float(Ver) == float(self.new_version) or float(Ver)>float(self.new_version):
+        if float(Ver) >= float(self.new_version):
                 logdata("Updates","No new version available")
         else :
                 new_version = self.new_version
@@ -301,6 +395,7 @@ class full_main(Screen, ConfigListScreen):
         
     def myCallback(self,result):
          return
+
 
 def main(session, **kwargs):
         #mounted_devices = getmDevices()

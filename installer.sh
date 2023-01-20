@@ -1,8 +1,8 @@
 #!/bin/bash
 ##setup command=wget https://raw.githubusercontent.com/fairbird/BackUpFlash/main/installer.sh -O - | /bin/sh
 
-version=7.9
-description=What is NEW :\n- Update download links for OpenATV and OpenHDF images\n\n**************************\n: ما هو الجديد\n- OpenHDF و OpenATV تحديث روابط صور
+version=8.0
+description=What is NEW :\n- Adding a new option to the backup process\n(The process of backing up is now either from the current image or from any external image that was installed by the multiboot)\n\n**************************\n: ما هو الجديد\n- إضافة خِيار جديد لعملية الباك أب\n(عملية الباك الان أصبحت إما من على الصورة الحالية او من أي صورة خارجية تم تثبيتها بواسطة الملتيبوت)
 
 echo ""
 if [ ! -d '/usr/lib64' ]; then
