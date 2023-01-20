@@ -80,21 +80,24 @@ else:
         rootfs="root=/dev/mmcblk0"
 
 
+# Path of images on External Flash checking
 searchPaths = []
 def initPaths():
-	if fileExists('/proc/mounts'):
-		for line in open('/proc/mounts'):
-			if '/dev/sd' in line or '/dev/disk/by-uuid/' in line or '/dev/mmc' in line:
-				Path = line.split()[1].replace('\\040', ' ').split(',')
+	if fileExists("/proc/mounts"):
+		for line in open("/proc/mounts"):
+			if "/dev/sd" in line or "/dev/disk/by-uuid/" in line or "/dev/mmc" in line:
+				Path = line.split()[1].replace("\\040", " ").split(",")
 				for dirName in Path:
-					paths = dirName + '/open-multiboot'
-					if os.path.isdir(paths):
-						return searchPaths.append(paths)
-	return ''
-initPaths()
+					if os.path.isdir(dirName + "/open-multiboot"):
+						return searchPaths.append(dirName + "/open-multiboot")
+					elif os.path.isdir(dirName + "/ImageBoot"):
+						return searchPaths.append(dirName + "/ImageBoot")
+	return
 
-# Path of images on External Flash
-if os.path.isdir("/media/ba/ba"):
+initPaths()
+CHECKBOOT = ''.join(searchPaths).split("/")[-1]
+
+if os.path.isdir("/media/ba/ba2"):
 	IMAGLISTEPATH = "/media/ba/ba" # Directory of BarryAllen images
 	ExternalImages = True
 	TEXT_CHOOSE = _("Images from BarryAllen")
@@ -103,12 +106,20 @@ elif os.path.isdir("/media/at"):
 	ExternalImages = True
 	TEXT_CHOOSE = _("Images from AlanTuring")
 elif os.path.isdir(''.join(searchPaths)):
-	IMAGLISTEPATH = ''.join(searchPaths) # Directory of OpenMultiboot images
+	IMAGLISTEPATH = ''.join(searchPaths) # Directory of OpenMultiboot/NeoBoot images
 	ExternalImages = True
-	TEXT_CHOOSE = _("Images from OpenMultiboot")
+	if CHECKBOOT == "open-multiboot":
+		NAMEBOOT = "OpenMultiboot"
+	elif CHECKBOOT == "ImageBoot":
+		NAMEBOOT = "NeoBoot"
+	else:
+		NAMEBOOT = "Unknown"
+	TEXT_CHOOSE = _("Images from %s" % NAMEBOOT)
 else:
 	IMAGLISTEPATH = "" # No Directory of image
 	ExternalImages = False
+####
+
 
 class full_main(Screen, ConfigListScreen):
 
