@@ -96,7 +96,7 @@ initPaths()
 # Path of images on External Flash
 if os.path.isdir("/media/ba/ba"):
 	IMAGLISTEPATH = "/media/ba/ba" # Directory of BarryAllen images
-elif os.path.isdir("/media/at/at"):
+elif os.path.isdir("/media/at"):
 	IMAGLISTEPATH = "/media/at" # Directory of alanturing images
 elif os.path.isdir(''.join(searchPaths)):
 	IMAGLISTEPATH = ''.join(searchPaths) # Directory of OpenMultiboot images
