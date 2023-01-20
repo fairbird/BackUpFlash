@@ -47,7 +47,7 @@ config.backupflashe.path_left = ConfigText(default=resolveFilename(SCOPE_MEDIA))
 image_formats = [('xz','xz'), ('gz','gz')]
 config.backupflashe.image_format = ConfigSelection(default = "xz", choices = image_formats)
 xz_options = []
-if boxtype == "dm520":
+if boxtype is "dm520":
 	xz_options.append(( "1","1" ))
 	xz_options.append(( "2","2" ))
 	xz_options.append(( "3","3" ))
@@ -71,7 +71,7 @@ getname = getimage_name()
 now = datetime.datetime.now()
 DATETIME = now.strftime('%Y-%m-%d-%H-%M')
 
-if boxtype == "dm520":
+if boxtype is "dm520":
         if cmd.find("root=/dev/sda1") is not -1:
                 rootfs="root=/dev/sda1"
         else:
@@ -96,12 +96,19 @@ initPaths()
 # Path of images on External Flash
 if os.path.isdir("/media/ba/ba"):
 	IMAGLISTEPATH = "/media/ba/ba" # Directory of BarryAllen images
+	ExternalImages = True
+	TEXT_CHOOSE = _("Images from BarryAllen")
 elif os.path.isdir("/media/at"):
-	IMAGLISTEPATH = "/media/at" # Directory of alanturing images
+	IMAGLISTEPATH = "/media/at" # Directory of AlanTuring images
+	ExternalImages = True
+	TEXT_CHOOSE = _("Images from AlanTuring")
 elif os.path.isdir(''.join(searchPaths)):
 	IMAGLISTEPATH = ''.join(searchPaths) # Directory of OpenMultiboot images
+	ExternalImages = True
+	TEXT_CHOOSE = _("Images from OpenMultiboot")
 else:
 	IMAGLISTEPATH = "" # No Directory of image
+	ExternalImages = False
 
 class full_main(Screen, ConfigListScreen):
 
@@ -178,9 +185,9 @@ class full_main(Screen, ConfigListScreen):
             self.list = []
             self.list.append(getConfigListEntry(('Path to store Full Backup'), config.backupflashe.device_path, _("This option to set the path of Backup/Flash directory")))
             self.list.append(getConfigListEntry(('Select Format to Compress BackUp'), config.backupflashe.image_format, _("This option to select the type of compress option")))
-            if config.backupflashe.image_format.value=="xz":
+            if config.backupflashe.image_format.value is "xz":
                     self.list.append(getConfigListEntry(("xz")+" "+_("Compression")+" "+_("(1-6)"), config.backupflashe.xzcompression, _("This option to set stringe value of Compress image (The higher the value, the longer the operation time, but the smaller the backup size)")))
-            elif config.backupflashe.image_format.value=="gz":
+            elif config.backupflashe.image_format.value is "gz":
                     self.list.append(getConfigListEntry(("gz")+" "+_("Compression")+" "+_("(1-6)"), config.backupflashe.gzcompression, _("This option to set stringe value of Compress image (The higher the value, the longer the operation time, but the smaller the backup size)")))
             else:
                     pass
@@ -219,14 +226,15 @@ class full_main(Screen, ConfigListScreen):
 
     def BackUpListSelect(self):
         list = []
-        list.append(("Backup Current", "Do Backup From Current Flash image"))
-        list.append(("Backup External", "Do Backup From External Flash image"))
+        list.append(("Backup Current Image", "Do Backup From Current Flash image"))
+        if ExternalImages is True:
+        	list.append(("Backup External Image", "Do Backup From External Flash image"))
         self.session.openWithCallback(self.BackUpSelect, ChoiceBox, _('Select Backup Option'), list)
 
     def BackUpSelect(self, select):
         if select:
-        	if select[0] == "Backup External": # BackUp External Flash
-        		self.session.openWithCallback(self.askForTarget, ChoiceBox,_("select SOURCE Image"), self.imagelistbackup())
+        	if select[0] is "Backup External Image": # BackUp External Flash
+        		self.session.openWithCallback(self.askForTarget, ChoiceBox,_("%s") % TEXT_CHOOSE, self.imagelistbackup())
         	else: # BackUp Internal Flash
         		self.nameBackUp()
         else:
@@ -283,7 +291,6 @@ class full_main(Screen, ConfigListScreen):
         else:
             if self.deviceok:
             	try:
-            		print("Send the commands order to Backup files ***********")
             		image_name = target
             		image_path = self.image_path
             		device_path = self.device_path
@@ -300,7 +307,7 @@ class full_main(Screen, ConfigListScreen):
 
     def GoRecovery(self, answer=False):
         if answer:
-            	b=open("/proc/stb/fp/boot_mode","w")
+            	b = open("/proc/stb/fp/boot_mode","w")
             	b.write("rescue")
             	b.close()
             	quitMainloop(2)
@@ -324,7 +331,7 @@ class full_main(Screen, ConfigListScreen):
         self.list = []
         EnablecheckUpdate = config.backupflashe.update.value
         choices.append(("Install backupflash version %s" %self.new_version,"Install"))
-        if EnablecheckUpdate == False:
+        if EnablecheckUpdate is False:
                 choices.append(("Press Ok to [Enable checking for Online Update]","enablecheckUpdate"))
         else:
                 choices.append(("Press Ok to [Disable checking for Online Update]","disablecheckUpdate")) 
@@ -332,13 +339,13 @@ class full_main(Screen, ConfigListScreen):
 
     def choicesback(self, select):
         if select:
-                if select[1] == "Install":
+                if select[1] is "Install":
                          self.install(True)
-                elif select[1] == "enablecheckUpdate":
+                elif select[1] is "enablecheckUpdate":
                          config.backupflashe.update.value = True
                          config.backupflashe.update.save()
                          configfile.save()
-                elif select[1] == "disablecheckUpdate":
+                elif select[1] is "disablecheckUpdate":
                          config.backupflashe.update.value = False
                          config.backupflashe.update.save()
                          configfile.save()
@@ -369,7 +376,7 @@ class full_main(Screen, ConfigListScreen):
                        if line.startswith("description"):
                           self.new_description = line.split("=")[1]
                           break
-        if float(Ver) == float(self.new_version) or float(Ver)>float(self.new_version):
+        if float(Ver) >= float(self.new_version):
                 logdata("Updates","No new version available")
         else :
                 new_version = self.new_version
