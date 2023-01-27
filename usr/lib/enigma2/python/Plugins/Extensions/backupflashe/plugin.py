@@ -97,12 +97,16 @@ def initPaths():
 initPaths()
 CHECKBOOT = ''.join(searchPaths).split("/")[-1]
 
-if os.path.isdir("/media/ba/ba2"):
+if os.path.isdir("/media/ba/ba"):
 	IMAGLISTEPATH = "/media/ba/ba" # Directory of BarryAllen images
 	ExternalImages = True
 	TEXT_CHOOSE = _("Images from BarryAllen")
 elif os.path.isdir("/media/at"):
 	IMAGLISTEPATH = "/media/at" # Directory of AlanTuring images
+	ExternalImages = True
+	TEXT_CHOOSE = _("Images from AlanTuring")
+elif os.path.isdir("/media/egamiboot/EgamiBootI"):
+	IMAGLISTEPATH = "/media/egamiboot/EgamiBootI" # Directory of Egami images
 	ExternalImages = True
 	TEXT_CHOOSE = _("Images from AlanTuring")
 elif os.path.isdir(''.join(searchPaths)):
