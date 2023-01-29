@@ -2,7 +2,6 @@
 # -*- coding: utf-8 -*-
 # RAED & mfaraj57 (c) 2018
 # Code RAED & mfaraj57
-# Thank you (gutemine) for swaproot tools
 
 from enigma import eTimer, quitMainloop
 from Screens.ChoiceBox import ChoiceBox
@@ -223,21 +222,7 @@ class full_main(Screen, ConfigListScreen):
         self.configsSave()
         
     def doFlash(self):
-        if not config.backupflashe.flashAllow.value and (os.path.exists("/.bainfo") or os.path.exists("/.lfinfo") or cmd.find(rootfs) is -1):
-                self.session.open(MessageBox, "You Disable To flash new image from External image.\nSo Flashing works only in Flash image", MessageBox.TYPE_ERROR)
-        #if os.path.exists("/.bainfo"):
-                #self.session.open(MessageBox, "Sorry, Flashing works only in Flash image", MessageBox.TYPE_ERROR)
-        #elif os.path.exists("/.lfinfo"):
-        #        self.session.open(MessageBox, "Sorry, Flashing works only in Flash image", MessageBox.TYPE_ERROR)
-        #elif cmd.find(rootfs) is -1:
-        #        self.session.open(MessageBox, "Sorry, Flashing works only in Flash image", MessageBox.TYPE_ERROR)
-        else:
-                self.configsSave()
-                if self.deviceok:
-                        device_path = self['config'].list[0][1].getText()
-                        #logdata('selected device path', device_path)
-                        from Plugins.Extensions.backupflashe.tools.flash import doFlash
-                        self.session.open(doFlash, device_path)
+        self.session.open(MessageBox, "Sorry Flash feature not working.\nPlease Flash the image from recovery mode more safe more stable.", MessageBox.TYPE_ERROR,timeout=8)
 
     def BackUpListSelect(self):
         list = []
