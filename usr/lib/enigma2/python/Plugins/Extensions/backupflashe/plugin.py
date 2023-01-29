@@ -206,8 +206,8 @@ class full_main(Screen, ConfigListScreen):
             else:
                     pass
             self.list.append(getConfigListEntry(('Enable shutdown box after backup'), config.backupflashe.shutdown, _("This option to Enable or Disable Shutdown Box After Finished Backup")))
-            if (os.path.exists("/.bainfo") or os.path.exists("/.lfinfo") or cmd.find(rootfs) is -1):
-                self.list.append(getConfigListEntry(('Allow to flash image from External image'), config.backupflashe.flashAllow, _("Warning: the process will delete the image if you are on an external flash\n(it is not recommended to Enable it)\nSafy way to Flash new image Please go to internal flash")))
+            #if (os.path.exists("/.bainfo") or os.path.exists("/.lfinfo") or cmd.find(rootfs) is -1):
+            #    self.list.append(getConfigListEntry(('Allow to flash image from External image'), config.backupflashe.flashAllow, _("Warning: the process will delete the image if you are on an external flash\n(it is not recommended to Enable it)\nSafy way to Flash new image Please go to internal flash")))
             self.list.append(getConfigListEntry(('Clean image from BA symlink before backup'), config.backupflashe.cleanba, _("This option for remove BarryAllen symlink from image Before Start Backup")))
             self['config'].list = self.list
             self['config'].l.setList(self.list)
