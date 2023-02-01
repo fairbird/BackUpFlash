@@ -96,13 +96,12 @@ class teamsScreen(Screen):
         boxtype=getboxtype()
         logdata("boxtype",boxtype)
         teams = []
-        #teams.append(("BlackHole Python2", "BlackHole Python2")) ## No more Url download
         teams.append(("BlackHole Python3", "BlackHole Python3"))
-        #teams.append(("OpenTSimage", "OpenTSimage")) ## No more Url download
+        teams.append(("OpenTSimage Python3", "OpenTSimage Python3"))
         teams.append(("OpenATV Python2", "OpenATV Python2"))
         teams.append(("OpenATV Python3", "OpenATV Python3"))
         #teams.append(("ArEaDeLtA-SaT", "ArEaDeLtA-SaT")) ## No more Team
-        teams.append(("OpenPLI-Unoffical", "OpenPLI-Unoffical"))
+        teams.append(("OpenPLI-Unoffical", "OpenPLI-Unoffical Python3"))
         #teams.append(("OpenESI", "OpenESI")) ## No more Team
         teams.append(("PurE2", "PurE2"))
         teams.append(("Openeight-Unoffical", "Openeight-Unoffical"))
@@ -173,33 +172,6 @@ class imagesScreen(Screen):
         boxtype=getboxtype()
         self.urlimage = ''
 
-        if self.teamName=="BlackHole Python2":
-           if boxtype == "dm920":
-              self.urlimage = 'http://tunisia-dreambox.info/RAED/OE2.5/BH-920/'
-           elif boxtype == "dm520":
-              self.urlimage = 'http://tunisia-dreambox.info/RAED/OE2.5/BH-520/'
-           elif boxtype == "dm7080":
-              self.urlimage = 'http://tunisia-dreambox.info/RAED/OE2.5/BH-7080/'
-           else:
-             return []
-           imagesPath = self.urlimage
-           if boxtype == "dm920":
-           	regx = b'''<a href="/RAED/OE2.5/BH-920/(.*?)">(.*?)</a>'''
-           elif boxtype == "dm520":
-           	regx = b'''<a href="/RAED/OE2.5/BH-520/(.*?)">(.*?)</a>'''
-           elif boxtype == "dm7080":
-           	regx = b'''<a href="/RAED/OE2.5/BH-7080/(.*?)">(.*?)</a>'''
-           rimages=get_images(imagesPath,regx)
-           #logdata("rimages",rimages)
-           for item in rimages:
-                imageName=item[0]
-                if PY3:
-                        imageName=imageName.decode()
-                        imagePath = os.path.join(self.urlimage, imageName)
-                else:
-                        imagePath = os.path.join(self.urlimage, imageName)
-                images.append((imageName,imagePath))
-
         if self.teamName=="BlackHole Python3":
            if boxtype == "dm920":
               key = 'cdmen9tqtpwxk'
@@ -213,32 +185,25 @@ class imagesScreen(Screen):
              return []
            imagesPath='https://www.mediafire.com/api/1.4/folder/get_content.php?r=cfgd&content_type=files&filter=all&order_by=name&order_direction=asc&chunk=1&version=1.5&folder_key=%s&response_format=json' % key
            rimages=get_images_mediafire(imagesPath)
-           logdata("rimages",rimages)
            for item in rimages:
                 imageName=item[0]
                 imagePath=item[1]
                 images.append((imageName,imagePath))
 
-        if self.teamName=="OpenTSimage":
+        if self.teamName=="OpenTSimage Python3":
            if boxtype == "dm920":
-              self.urlimage = 'http://tunisia-dreambox.info/RAED/OE2.5/OpenTS-920/'
+              key = 'sbrjw60if73re'
            elif boxtype == "dm520":
-              self.urlimage = 'http://tunisia-dreambox.info/RAED/OE2.5/OpenTS-520/'
+              key = 'gnxuy5xl3vmjo'
+           elif boxtype == "dm7080":
+              key = 'tb1x6tmtglyw4'
            else:
              return []
-           imagesPath = self.urlimage
-           if boxtype == "dm920":
-           	regx = b'''<a href="/RAED/OE2.5/OpenTS-920/(.*?)">(.*?)</a>'''
-           elif boxtype == "dm520":
-           	regx = b'''<a href="/RAED/OE2.5/OpenTS-520/(.*?)">(.*?)</a>'''
-           rimages=get_images(imagesPath,regx)
+           imagesPath='https://www.mediafire.com/api/1.4/folder/get_content.php?r=cfgd&content_type=files&filter=all&order_by=name&order_direction=asc&chunk=1&version=1.5&folder_key=%s&response_format=json' % key
+           rimages=get_images_mediafire(imagesPath)
            for item in rimages:
                 imageName=item[0]
-                if PY3:
-                        imageName=imageName.decode()
-                        imagePath = os.path.join(self.urlimage, imageName)
-                else:
-                        imagePath = os.path.join(self.urlimage, imageName)
+                imagePath=item[1]
                 images.append((imageName,imagePath))
 
         if self.teamName=="OpenATV Python2":

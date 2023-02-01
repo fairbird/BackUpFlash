@@ -1,8 +1,8 @@
 #!/bin/bash
 ##setup command=wget https://raw.githubusercontent.com/fairbird/BackUpFlash/main/installer.sh -O - | /bin/sh
 
-version=8.2
-description=What is NEW :\n- Delete the swaproot file as requested by the owner of the file and cancel the flash feature through the plugin\n\n**************************\n: ما هو الجديد\n- على حسب طلب صاحب الملف وإلغاء خاصية الفلاش من خلال البلجن swaproot حذف ملف
+version=8.3
+description=What is NEW :\n- Add OpenTSimage py3 download link\n\n**************************\n: ما هو الجديد\n- OpenTSimage py3 إضافة روابط تحميل صورة
 
 echo ""
 if [ ! -d '/usr/lib64' ]; then
