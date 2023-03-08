@@ -566,7 +566,7 @@ class imagesScreen(Screen):
            if boxtype == "dreamone" or boxtype == "dreamtwo":
            	imagesPath="http://download.blue-panel.com/pyro/gemini4-unstable/developer/images/"
            else:
-           	imagesPath="http://download.blue-panel.com/krogoth/gemini4-unstable/developer/"
+           	imagesPath="http://download.blue-panel.com/gemini4/krogoth-gemini4-unstable/developer/images/"
            regx = b'''<a href="(.*?)" class="xz" download='(.*?)'>'''
            rimages=get_images(imagesPath,regx)
            for item in rimages:
@@ -576,12 +576,12 @@ class imagesScreen(Screen):
                 	if boxtype == "dreamone" or boxtype == "dreamtwo":
                 		imagePath = os.path.join('http://download.blue-panel.com/pyro/gemini4-unstable/developer/images/', imageName)
                 	else:
-                		imagePath = os.path.join('http://download.blue-panel.com/krogoth/gemini4-unstable/developer/', imageName)
+                		imagePath = os.path.join('http://download.blue-panel.com/gemini4/krogoth-gemini4-unstable/developer/images/', imageName)
                 else:
                 	if boxtype == "dreamone" or boxtype == "dreamtwo":
                 		imagePath = os.path.join('http://download.blue-panel.com/pyro/gemini4-unstable/developer/images/', imageName)
                 	else:
-                		imagePath = os.path.join('http://download.blue-panel.com/krogoth/gemini4-unstable/developer/', imageName)
+                		imagePath = os.path.join('http://download.blue-panel.com/gemini4/krogoth-gemini4-unstable/developer/images/', imageName)
                 if not boxtype in imageName:
                     continue
                 images.append((imageName,imagePath))
