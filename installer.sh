@@ -45,7 +45,7 @@ echo "##############################################"
 exit 1
 echo ""
 fi
-if python --version 2>&1 | grep -q '^Python 3\.'; then
+if [ -f /usr/bin/python3 ] ; then
 	echo "You have Python3 image"
 	PYTHON=PY3
 	CRYPT=python3-crypt
