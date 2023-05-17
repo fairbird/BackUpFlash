@@ -98,7 +98,7 @@ def get_images(url,regx):
         logdata("images_url",url)
         try:
             req = compat_Request(url, headers={'User-Agent': 'Mozilla/5.0'}) # add [headers={'User-Agent': 'Mozilla/5.0'}] to fix HTTP Error 403: Forbidden
-            response = compat_urlopen(req,timeout=20,context=ssl._create_unverified_context())
+            response = compat_urlopen(req,timeout=5)
             data = response.read()
             response.close()
             match = re.findall(regx,data, re.M|re.I)
@@ -114,7 +114,7 @@ def get_images2(url,regx):
         logdata("images_url",url)
         try:
             req = compat_Request(url, headers={'User-Agent': 'Mozilla/5.0'}) # add [headers={'User-Agent': 'Mozilla/5.0'}] to fix HTTP Error 403: Forbidden
-            response = compat_urlopen(req,timeout=20,context=ssl._create_unverified_context())
+            response = compat_urlopen(req,timeout=5)
             if PY3:
                 data = response.read().decode('utf-8')
             else:
@@ -134,7 +134,7 @@ def get_images_mediafire(url):
         def readnet(url):
             try:
                 req = compat_Request(url, headers={'User-Agent': 'Mozilla/5.0'}) # add [headers={'User-Agent': 'Mozilla/5.0'}] to fix HTTP Error 403: Forbidden
-                response = compat_urlopen(req,timeout=30,context=ssl._create_unverified_context())
+                response = compat_urlopen(req,timeout=10)
                 if PY3:
                 	data = response.read().decode('utf-8')
                 else:
