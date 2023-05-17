@@ -1,8 +1,8 @@
 # Source code from (https://github.com/Taapat/enigma2-plugin-youtube/blob/master/src/compat.py)
 from sys import version_info
+from threading import Thread
 
 PY3 = version_info[0] == 3
-
 
 # Disable certificate verification on python 2.7.9
 if version_info >= (2, 7, 9):
@@ -14,7 +14,6 @@ if version_info[0] == 2:
 	# Python 2
 	compat_str = unicode
 
-	from urllib import urlencode as compat_urlencode
 	from urllib import quote as compat_quote
 	from urllib2 import urlopen
 	from urllib2 import Request as compat_Request
@@ -29,7 +28,6 @@ else:
 	# Python 3
 	compat_str = str
 
-	from urllib.parse import urlencode as compat_urlencode
 	from urllib.parse import quote as compat_quote
 	from urllib.request import urlopen
 	from urllib.request import Request as compat_Request
@@ -40,6 +38,10 @@ else:
 	from urllib.parse import parse_qs as compat_parse_qs
 	from urllib.parse import urlunparse as compat_urlunparse
 	from http.client import HTTPException as compat_HTTPException
+
+
+SUBURI = '&suburi='
+
 
 def compat_urlopen(url, timeout=5):
 	"""
