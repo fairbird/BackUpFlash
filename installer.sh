@@ -49,10 +49,12 @@ if [ -f /usr/bin/python3 ] ; then
 	echo "You have Python3 image"
 	PYTHON=PY3
 	CRYPT=python3-crypt
+	REQUESTS=python3-requests
 else
 	echo "You have Python2 image"
 	PYTHON=PY2
 	CRYPT=python-crypt
+	REQUESTS=python-requests
 fi
 if [ -f $DreamOS ]; then
    STATUS=$DreamOS
@@ -85,6 +87,11 @@ if grep -q $CRYPT $STATUS ; then
 else
 	PYCRYPT="False"
 fi
+if grep -q $REQUESTS $STATUS ; then
+	PYREQUESTS="True"
+else
+	PYREQUESTS="False"
+fi
 # install depend packges if need it
 if [ $wget = 'True' -a $pigz = 'True' -a $xz = 'True' -a $flashscripts = 'True' -a $PYCRYPT = 'True' ]; then
 	echo "All depend packages Installed"
@@ -92,14 +99,14 @@ else
 	if [ -f $DreamOS ]; then
 		dpkg --configure -a;
 		apt-get update;
-		apt-get install wget pigz xz flash-scripts python-requests python-crypt -y;
+		apt-get install wget pigz xz flash-scripts python-requests python-crypt python-requests -y;
 		apt-get install -f -y;
 	elif [ $PYTHON = "PY3" ]; then
 		opkg update
-		opkg install wget pigz xz flash-scripts python3-requests python3-crypt;
+		opkg install wget pigz xz flash-scripts python3-requests python3-crypt python3-requests;
 	elif [ $PYTHON = "PY2" ]; then
 		opkg update;
-		opkg install wget pigz xz flash-scripts python-requests python-crypt;
+		opkg install wget pigz xz flash-scripts python-requests python-crypt python-requests;
 	fi
 fi
 # Make more check depend packges
