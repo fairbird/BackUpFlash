@@ -1,8 +1,8 @@
 #!/bin/bash
 ##setup command=wget https://raw.githubusercontent.com/fairbird/BackUpFlash/main/installer.sh -O - | /bin/sh
 
-version=8.4
-description=What is NEW :\n- Move to Gemini V4.2\n\n**************************\n: ما هو الجديد\n- الإنتقال الى جميني 4.2
+version=8.5
+description=What is NEW :\n- Update compat\n-Update some codes\n\n**************************\n: ما هو الجديد\n- تحديث بعض الاكواد\n- compat تحديث ملف
 
 echo ""
 if [ ! -d '/usr/lib64' ]; then
