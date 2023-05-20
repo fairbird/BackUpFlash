@@ -111,7 +111,7 @@ class teamsScreen(Screen):
         teams.append(("OpenVision Python2", "OpenVision Python2"))
         teams.append(("OpenVision Python3", "OpenVision Python3"))
         teams.append(("OpenHDF", "OpenHDF"))
-        #teams.append(("NonSoloSat", "NonSoloSat")) ## No more Url download
+        teams.append(("NonSoloSat", "NonSoloSat"))
         return teams
 
     def load_images(self):
@@ -632,16 +632,16 @@ class imagesScreen(Screen):
                 images.append((imageName, imagePath))
 
         if self.teamName=="NonSoloSat":
-           imagesPath="https://www.nonsolosat.net/upload/index.php?dir=Dreambox/Nonsolosat%2026/&file="
+           imagesPath="https://www.nonsolosat.net/upload/index.php?dir=Dreambox/Nonsolosat%2028/&file="
            regx = b'''<a class="autoindex_a" href="(.*?)&amp;file=(.*?)">'''
            rimages=get_images(imagesPath,regx)
            for item in rimages:
                 imageName=item[1]
                 if PY3:
                         imageName=imageName.decode()
-                        imagePath = os.path.join('https://www.nonsolosat.net/upload/Image-Nonsolosat/Dreambox/Nonsolosat%2026/', imageName)
+                        imagePath = os.path.join('https://www.nonsolosat.net/upload/Image-Nonsolosat/Dreambox/Nonsolosat%2028/', imageName)
                 else:
-                        imagePath = os.path.join('https://www.nonsolosat.net/upload/Image-Nonsolosat/Dreambox/Nonsolosat%2026/', imageName)
+                        imagePath = os.path.join('https://www.nonsolosat.net/upload/Image-Nonsolosat/Dreambox/Nonsolosat%2028/', imageName)
                 if not boxtype in imageName:
                     	continue
                 images.append((imageName,imagePath))
