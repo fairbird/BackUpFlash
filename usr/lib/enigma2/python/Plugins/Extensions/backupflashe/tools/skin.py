@@ -56,7 +56,7 @@ else:
         	SKIN_full_main = """
 <screen position="center,center" size="1146,600" title="Flash And Full Backup" backgroundColor="#16000000" flags="wfNoBorder">
   <widget source="Title" render="Label" font="Regular;35" foregroundColor="#00bab329" position="28,5" size="1085,45" transparent="1"/>
-  <widget name="config" font="Regular;30" secondfont"Regular;28" secondfont"Regular;28" itemHeight="40" position="28,55" size="1085,280" scrollbarMode="showOnDemand" foregroundColor="#00ffffff" backgroundColor="#16000000" zPosition="1"/>
+  <widget name="config" font="Regular;30" secondfont"Regular;28" itemHeight="40" position="28,55" size="1085,280" scrollbarMode="showOnDemand" foregroundColor="#00ffffff" backgroundColor="#16000000" zPosition="1"/>
   <widget source="help" render="Label" position="28,345" size="1082,130" font="Regular;28" foregroundColor="#00ff2525" backgroundColor="#16000000" valign="center" transparent="1" zPosition="1"/>
   <widget name="lab1" position="28,485" size="1085,63" font="Regular;30" valign="center" foregroundColor="#00ffc435" backgroundColor="#16000000" transparent="1" zPosition="1"/>
   <ePixmap pixmap="{0}/buttons/red35x35.png" position="35,561" size="35,35" alphatest="blend"/>
