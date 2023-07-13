@@ -108,7 +108,7 @@ class teamsScreen(Screen):
         #teams.append(("PKTeam", "PKTeam")) ## No more Url download
         teams.append(("AFF-TitanNit", "AFF-TitanNit"))
         teams.append(("OpenSatlodge", "OpenSatlodge"))
-        teams.append(("OpenVision Python2", "OpenVision Python2"))
+        #teams.append(("OpenVision Python2", "OpenVision Python2")) ## No more Url download
         teams.append(("OpenVision Python3", "OpenVision Python3"))
         teams.append(("OpenHDF", "OpenHDF"))
         teams.append(("NonSoloSat", "NonSoloSat"))
@@ -602,16 +602,16 @@ class imagesScreen(Screen):
                 images.append((imageName,imagePath))
 
         if self.teamName=="OpenVision Python3":
-           imagesPath="https://images.openvision.dedyn.io/12.2/Develop/Vision/Dreambox/"+boxtype+"/"
-           regx = ('''<a href="/12.2/Develop/Vision/Dreambox/%s/(.*?)">(.*?)</a>''' % boxtype).encode()
+           imagesPath="https://images.openvision.dedyn.io/13.1/Develop/Vision/Dreambox/"+boxtype+"/"
+           regx = ('''<a href="/13.1/Develop/Vision/Dreambox/%s/(.*?)">(.*?)</a>''' % boxtype).encode()
            rimages=get_images(imagesPath,regx)
            for item in rimages:
                 imageName=item[1]
                 if PY3:
                         imageName=imageName.decode()
-                        imagePath = os.path.join("https://images.openvision.dedyn.io/12.2/Develop/Vision/Dreambox/"+boxtype+"/", imageName)
+                        imagePath = os.path.join("https://images.openvision.dedyn.io/13.1/Develop/Vision/Dreambox/"+boxtype+"/", imageName)
                 else:
-                        imagePath = os.path.join("https://images.openvision.dedyn.io/12.2/Develop/Vision/Dreambox/"+boxtype+"/", imageName)
+                        imagePath = os.path.join("https://images.openvision.dedyn.io/13.1/Develop/Vision/Dreambox/"+boxtype+"/", imageName)
                 if not item[0].endswith(b".zip"):
                     continue
                 images.append((imageName,imagePath))
