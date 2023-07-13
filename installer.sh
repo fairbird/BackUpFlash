@@ -1,8 +1,8 @@
 #!/bin/bash
 ##setup command=wget https://raw.githubusercontent.com/fairbird/BackUpFlash/main/installer.sh -O - | /bin/sh
 
-version=8.5
-description=What is NEW :\n- Update compat\n-Update some codes\n\n**************************\n: ما هو الجديد\n- تحديث بعض الاكواد\n- compat تحديث ملف
+version=8.6
+description=What is NEW :\n- Update Url download for OpenVsion images\n-Update some codes\n\n**************************\n: ما هو الجديد\n- تحديث بعض الاكواد\n- OpenVsion تحديث رابط تحميل صور فريق
 
 echo ""
 if [ ! -d '/usr/lib64' ]; then
