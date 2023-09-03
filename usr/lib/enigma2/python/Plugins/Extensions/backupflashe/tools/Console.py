@@ -110,7 +110,7 @@ class Console(Screen):
                 self.cancel_msg.close()
             if self.showStartStopText:
                 self['text'].appendText(_('Execution finished!!'))
-            if self.finishedCallback is not None:
+            if self.finishedCallback != None:
                 self.finishedCallback()
             if not self.errorOcurred and self.closeOnSuccess:
                 self.closeConsole()
