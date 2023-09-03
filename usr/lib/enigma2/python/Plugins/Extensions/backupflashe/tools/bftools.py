@@ -144,7 +144,7 @@ def get_images_mediafire(url):
                 trace_error()
                 return None
         data = readnet(url)
-        if data is None:
+        if data == None:
             return []
         jdata = json.loads(data)
         dl = jdata['response']['folder_content']['files']
@@ -271,7 +271,7 @@ def getimage_name():
                                     name=sp[0]
                                     name=name.replace("\n","")
                                     name="Backup-"+name
-        if name is None and os.path.exists("/etc/issue.net"):
+        if name == None and os.path.exists("/etc/issue.net"):
             f=open("/etc/issue.net")
             i=f.read()
             f.close()
@@ -295,20 +295,20 @@ def getimage_name():
                     name="Backup-OpenPLI"
             if "opendreambox" in i.lower():
                     name="Backup-Opendreambox"
-        if name is None:
+        if name == None:
             name="Backup-dreambox"
 
     now = datetime.datetime.now()
     name = name + "-%s" % now.strftime('%Y-%m-%d')
     #image_version=getimage_version()
-    #if image_version is not None and not image_version=="":
+    #if image_version != None and not image_version=="":
     #    name=name+"-"+image_version
     #return (name)
 
     #image_version=getimage_version()
-    #if image_version is not None and not image_version=="":
+    #if image_version != None and not image_version=="":
     #    name=name+"-"+image_version
-    #if name is None:
+    #if name == None:
     #    name="Backup-"
     return (name)
 
