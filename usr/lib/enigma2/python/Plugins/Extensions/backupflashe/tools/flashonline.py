@@ -669,19 +669,19 @@ class imagesScreen(Screen):
         k.close()
         boxtype =getboxtype()
         if boxtype == "dm520":
-                if cmd.find("root=/dev/sda1") is not -1:
+                if cmd.find("root=/dev/sda1") != -1:
                         rootfs="root=/dev/sda1"
                 else:
                         rootfs="root=ubi0:dreambox-rootfs"
         else:
                 rootfs="root=/dev/mmcblk0"
-        if not config.backupflashe.flashAllow.value and (os.path.exists("/.bainfo") or os.path.exists("/.lfinfo") or cmd.find(rootfs) is -1):
+        if not config.backupflashe.flashAllow.value and (os.path.exists("/.bainfo") or os.path.exists("/.lfinfo") or cmd.find(rootfs) == -1):
         	self.session.open(MessageBox, "You Disable To flash new image from External image.\nSo Flashing works only in Flash image", MessageBox.TYPE_ERROR)
         #if os.path.exists("/.bainfo"):
                 #self.session.open(MessageBox, "Sorry, Flashing works only in Flash image", MessageBox.TYPE_ERROR)
         #elif os.path.exists("/.lfinfo"):
         #        self.session.open(MessageBox, "Sorry, Flashing works only in Flash image", MessageBox.TYPE_ERROR)
-        #elif cmd.find(rootfs) is -1:
+        #elif cmd.find(rootfs) == -1:
         #        self.session.open(MessageBox, "Sorry, Flashing works only in Flash image", MessageBox.TYPE_ERROR)
         else:
         	from Plugins.Extensions.backupflashe.tools.flash import flashScript
