@@ -237,7 +237,7 @@ class ProgressScreen(Screen):
             print('finished process')
             self['text'].setText(str)
             self['text'].lastPage()
-            if self.finishedCallback is not None:
+            if self.finishedCallback != None:
                 self.finishedCallback(retval)
             if not retval and self.closeOnSuccess:
                 self.cancel()
