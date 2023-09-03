@@ -46,7 +46,7 @@ config.backupflashe.path_left = ConfigText(default=resolveFilename(SCOPE_MEDIA))
 image_formats = [('xz','xz'), ('gz','gz')]
 config.backupflashe.image_format = ConfigSelection(default = "xz", choices = image_formats)
 xz_options = []
-if boxtype is "dm520":
+if boxtype == "dm520":
 	xz_options.append(( "1","1" ))
 	xz_options.append(( "2","2" ))
 	xz_options.append(( "3","3" ))
@@ -70,8 +70,8 @@ getname = getimage_name()
 now = datetime.datetime.now()
 DATETIME = now.strftime('%Y-%m-%d-%H-%M')
 
-if boxtype is "dm520":
-        if cmd.find("root=/dev/sda1") is not -1:
+if boxtype == "dm520":
+        if cmd.find("root=/dev/sda1") != -1:
                 rootfs="root=/dev/sda1"
         else:
                 rootfs="root=ubi0:dreambox-rootfs"
@@ -199,14 +199,14 @@ class full_main(Screen, ConfigListScreen):
             self.list = []
             self.list.append(getConfigListEntry(('Path to store Full Backup'), config.backupflashe.device_path, _("This option to set the path of Backup/Flash directory")))
             self.list.append(getConfigListEntry(('Select Format to Compress BackUp'), config.backupflashe.image_format, _("This option to select the type of compress option")))
-            if config.backupflashe.image_format.value is "xz":
+            if config.backupflashe.image_format.value == "xz":
                     self.list.append(getConfigListEntry(("xz")+" "+_("Compression")+" "+_("(1-6)"), config.backupflashe.xzcompression, _("This option to set stringe value of Compress image (The higher the value, the longer the operation time, but the smaller the backup size)")))
-            elif config.backupflashe.image_format.value is "gz":
+            elif config.backupflashe.image_format.value == "gz":
                     self.list.append(getConfigListEntry(("gz")+" "+_("Compression")+" "+_("(1-6)"), config.backupflashe.gzcompression, _("This option to set stringe value of Compress image (The higher the value, the longer the operation time, but the smaller the backup size)")))
             else:
                     pass
             self.list.append(getConfigListEntry(('Enable shutdown box after backup'), config.backupflashe.shutdown, _("This option to Enable or Disable Shutdown Box After Finished Backup")))
-            #if (os.path.exists("/.bainfo") or os.path.exists("/.lfinfo") or cmd.find(rootfs) is -1):
+            #if (os.path.exists("/.bainfo") or os.path.exists("/.lfinfo") or cmd.find(rootfs) == -1):
             #    self.list.append(getConfigListEntry(('Allow to flash image from External image'), config.backupflashe.flashAllow, _("Warning: the process will delete the image if you are on an external flash\n(it is not recommended to Enable it)\nSafy way to Flash new image Please go to internal flash")))
             self.list.append(getConfigListEntry(('Clean image from BA symlink before backup'), config.backupflashe.cleanba, _("This option for remove BarryAllen symlink from image Before Start Backup")))
             self['config'].list = self.list
@@ -227,13 +227,13 @@ class full_main(Screen, ConfigListScreen):
     def BackUpListSelect(self):
         list = []
         list.append(("Backup Current Image", "Do Backup From Current Flash image"))
-        if ExternalImages is True:
+        if ExternalImages == True:
         	list.append(("Backup External Image", "Do Backup From External Flash image"))
         self.session.openWithCallback(self.BackUpSelect, ChoiceBox, _('Select Backup Option'), list)
 
     def BackUpSelect(self, select):
         if select:
-        	if select[0] is "Backup External Image": # BackUp External Flash
+        	if select[0] == "Backup External Image": # BackUp External Flash
         		self.session.openWithCallback(self.askForTarget, ChoiceBox,_("%s") % TEXT_CHOOSE, self.imagelistbackup())
         	else: # BackUp Internal Flash
         		self.nameBackUp()
@@ -246,7 +246,7 @@ class full_main(Screen, ConfigListScreen):
         self.session.openWithCallback(self.doBackUpInt, VirtualKeyBoard, title=_("Please Enter Name For Backup Image"), text="%s" % imagename)
 
     def doBackUpInt(self, target):
-        if target is None:
+        if target == None:
             return
         else:
             self.configsSave()
@@ -273,7 +273,7 @@ class full_main(Screen, ConfigListScreen):
     	return imageslist
 
     def askForTarget(self, source):
-    	if source is None:
+    	if source == None:
             return
     	else:
             self.configsSave()
@@ -286,7 +286,7 @@ class full_main(Screen, ConfigListScreen):
             self.session.openWithCallback(self.doBackUpExt, VirtualKeyBoard, title=_("Please Enter Name For Backup Image"), text="%s" % self.imagename)
 
     def doBackUpExt(self, target):
-        if target is None:
+        if target == None:
             return
         else:
             if self.deviceok:
@@ -331,7 +331,7 @@ class full_main(Screen, ConfigListScreen):
         self.list = []
         EnablecheckUpdate = config.backupflashe.update.value
         choices.append(("Install backupflash version %s" %self.new_version,"Install"))
-        if EnablecheckUpdate is False:
+        if EnablecheckUpdate == False:
                 choices.append(("Press Ok to [Enable checking for Online Update]","enablecheckUpdate"))
         else:
                 choices.append(("Press Ok to [Disable checking for Online Update]","disablecheckUpdate")) 
@@ -339,13 +339,13 @@ class full_main(Screen, ConfigListScreen):
 
     def choicesback(self, select):
         if select:
-                if select[1] is "Install":
+                if select[1] == "Install":
                          self.install(True)
-                elif select[1] is "enablecheckUpdate":
+                elif select[1] == "enablecheckUpdate":
                          config.backupflashe.update.value = True
                          config.backupflashe.update.save()
                          configfile.save()
-                elif select[1] is "disablecheckUpdate":
+                elif select[1] == "disablecheckUpdate":
                          config.backupflashe.update.value = False
                          config.backupflashe.update.save()
                          configfile.save()
