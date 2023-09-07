@@ -119,7 +119,7 @@ if sz_w == 1280 :
 <widget name="activityslider" position="20,45" size="510,20" borderWidth="1" transparent="1"/>
 <widget name="package" position="20,10" size="510,29" font="Regular;18" halign="center" valign="center" transparent="1"/>
 <widget name="status" position="20,70" size="510,28" font="Regular;16" halign="center" valign="center" transparent="1"/>
-<widget name="key_green" position="8,107" zPosition="2" size="532,22" font="Regular;22" halign="center" valign="center" foregroundColor="#00389416" backgroundColor="#16000000" transparent="1"/>
+<!--widget name="key_green" position="8,107" zPosition="2" size="532,22" font="Regular;22" halign="center" valign="center" foregroundColor="#00389416" backgroundColor="#16000000" transparent="1"/-->
 <eLabel text="Press Exit Button to cancel Downlaod" position="8,132" zPosition="2" size="532,22" font="Regular;23" halign="center" valign="center" foregroundColor="#00ff2525" backgroundColor="#16000000"/>
 <!--ePixmap pixmap="{0}/buttons/green35x35.png" position="180,125" size="35,35" alphatest="blend"/-->
 </screen>
@@ -131,7 +131,7 @@ else:
 <widget name="activityslider" position="30,48" size="755,30" borderWidth="1" transparent="1"/>
 <widget name="package" position="30,7" size="755,35" font="Regular;27" halign="center" valign="center" transparent="1"/>
 <widget name="status" position="30,90" size="755,40" font="Regular;24" halign="center" valign="center" transparent="1"/>
-<widget name="key_green" position="11,139" zPosition="2" size="784,40" font="Regular;28" halign="center" valign="center" foregroundColor="#00389416" backgroundColor="#16000000" transparent="1"/>
+<!--widget name="key_green" position="11,139" zPosition="2" size="784,40" font="Regular;28" halign="center" valign="center" foregroundColor="#00389416" backgroundColor="#16000000" transparent="1"/-->
 <eLabel text="Press Exit Button to cancel Downlaod" position="11,185" zPosition="2" size="784,40" font="Regular;28" halign="center" valign="center" foregroundColor="#00ff2525" backgroundColor="#16000000"/>
 <!--ePixmap pixmap="{0}/buttons/green35x35.png" position="290,190" size="35,35" alphatest="blend"/-->
 </screen>
