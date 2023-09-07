@@ -43,7 +43,7 @@ class imagedownloadScreen(Screen):
         self['status'] = Label()
         self['package'] = Label()
         if self.canflash:
-           self['key_green'] = Label('Press Green Button to Flash image')
+           self['key_green'] = Label('Download image Finished. Press Exit !!')
         else:
            self['key_green'] = Label(' ') 
         self['key_green'].hide()
@@ -85,7 +85,8 @@ class imagedownloadScreen(Screen):
         print('[BackUpFlash downloader] Download succeeded. ')
         logdata("download data",str(data))
         logdata("download status","Download succeeded.")
-        info = 'Download completed successfully,press (green) to start flashing   '
+        #info = 'Download completed successfully, press (green) to start flashing   '
+        info = ''
         self['status'].setText(info)
         self.setTitle(_('Download completed successfully.'))
         self.downloading = False
