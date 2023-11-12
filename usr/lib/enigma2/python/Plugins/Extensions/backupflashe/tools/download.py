@@ -85,8 +85,7 @@ class imagedownloadScreen(Screen):
         print('[BackUpFlash downloader] Download succeeded. ')
         logdata("download data",str(data))
         logdata("download status","Download succeeded.")
-        #info = 'Download completed successfully, press (green) to start flashing   '
-        info = ''
+        info = 'Download completed successfully, Press (Exit) to go back'
         self['status'].setText(info)
         self.setTitle(_('Download completed successfully.'))
         self.downloading = False
