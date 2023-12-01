@@ -87,7 +87,7 @@ class teamsScreen(Screen):
         teams.append(("Merlin4", "Merlin4"))
         #teams.append(("OoZooN", "OoZooN")) ## No more Team
         teams.append(("Newnigma2", "Newnigma2"))
-        teams.append(("Demonisat", "Demonisat"))
+        #teams.append(("Demonisat", "Demonisat")) ## Server down
         #teams.append(("Powersat", "Powersat")) ## No more Team
         teams.append(("Satlodge", "Satlodge"))
         return teams
@@ -112,6 +112,7 @@ class teamsScreen(Screen):
         teams.append(("OpenVision Python3", "OpenVision Python3"))
         teams.append(("OpenHDF", "OpenHDF"))
         teams.append(("NonSoloSat", "NonSoloSat"))
+        teams.append(("Open-cobralibero Python3", "Open-cobralibero Python3"))
         return teams
 
     def load_images(self):
@@ -224,7 +225,6 @@ class imagesScreen(Screen):
            imagesPath="http://images.mynonpublic.com/openatv/current/index.php?open="+boxtype
            regx = b'''<a href='(.*?)'>(.*?)</a>'''
            rimages=get_images(imagesPath,regx)
-           logdata("rimages",rimages)
            for item in rimages:
                 imageName=item[1]
                 imageName2=item[0]
@@ -238,7 +238,6 @@ class imagesScreen(Screen):
         if self.teamName=="OpenPLI-Unoffical":
            imagesPath='https://www.mediafire.com/api/1.4/folder/get_content.php?r=cfgd&content_type=files&filter=all&order_by=name&order_direction=asc&chunk=1&version=1.5&folder_key=hlw7uznninif5&response_format=json'
            rimages=get_images_mediafire(imagesPath)
-           logdata("rimages",rimages)
            for item in rimages:
                 imageName=item[0]
                 imagePath=item[1]
@@ -249,7 +248,6 @@ class imagesScreen(Screen):
         if self.teamName=="Openeight-Unoffical":
            imagesPath='https://www.mediafire.com/api/1.4/folder/get_content.php?r=cfgd&content_type=files&filter=all&order_by=name&order_direction=asc&chunk=1&version=1.5&folder_key=10ipmypb5ura9&response_format=json'
            rimages=get_images_mediafire(imagesPath)
-           logdata("rimages",rimages)
            for item in rimages:
                 imageName=item[0]
                 imagePath=item[1]
@@ -639,12 +637,29 @@ class imagesScreen(Screen):
                 imageName=item[1]
                 if PY3:
                         imageName=imageName.decode()
-                        imagePath = os.path.join('https://www.nonsolosat.net/upload/Image-Nonsolosat/Dreambox/Nonsolosat%2028/', imageName)
+                        imagePath = os.path.join('https://www.nonsolosat.net/upload/Image-Nonsolosat/Dreambox/Nonsolosat%2028', imageName)
                 else:
                         imagePath = os.path.join('https://www.nonsolosat.net/upload/Image-Nonsolosat/Dreambox/Nonsolosat%2028/', imageName)
                 if not boxtype in imageName:
                     	continue
                 images.append((imageName,imagePath))
+
+        if self.teamName=="Open-cobralibero Python3":
+           imagesPath="https://cobraliberosat.net/UPLOAD/index.php?dir=Dreambox/20.09.2023/"
+           regx = b'''<a class="autoindex_a" href="(.*?)&amp;file=(.*?)">'''
+           rimages=get_images(imagesPath,regx)
+           logdata("rimages",rimages)
+           for item in rimages:
+                imageName=item[1]
+                if PY3:
+                        imageName=imageName.decode()
+                        imagePath = os.path.join('https://cobraliberosat.net/UPLOAD/IMAGE-COBRALIBEROSAT/Dreambox/20.09.2023/', imageName)
+                else:
+                        imagePath = os.path.join('https://cobraliberosat.net/UPLOAD/IMAGE-COBRALIBEROSAT/Dreambox/20.09.2023/', imageName)
+                if not boxtype in imageName:
+                    	continue
+                images.append((imageName,imagePath))
+
         return images
 
     def download(self):
