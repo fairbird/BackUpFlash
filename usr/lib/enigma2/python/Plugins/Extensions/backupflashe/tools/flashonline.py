@@ -637,7 +637,7 @@ class imagesScreen(Screen):
                 imageName=item[1]
                 if PY3:
                         imageName=imageName.decode()
-                        imagePath = os.path.join('https://www.nonsolosat.net/upload/Image-Nonsolosat/Dreambox/Nonsolosat%2028', imageName)
+                        imagePath = os.path.join('https://www.nonsolosat.net/upload/Image-Nonsolosat/Dreambox/Nonsolosat%2028/', imageName)
                 else:
                         imagePath = os.path.join('https://www.nonsolosat.net/upload/Image-Nonsolosat/Dreambox/Nonsolosat%2028/', imageName)
                 if not boxtype in imageName:
