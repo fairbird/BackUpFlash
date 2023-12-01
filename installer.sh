@@ -2,7 +2,7 @@
 ##setup command=wget https://raw.githubusercontent.com/fairbird/BackUpFlash/main/installer.sh -O - | /bin/sh
 
 version=8.8
-description=What is NEW :\n- Add [Open-cobralibero] image to download area\n\n**************************\n: ما هو الجديد\n- لمنطقة التحميل Open-cobralibero إضافة صور فرق
+description=What is NEW :\n- Add Open-cobralibero image to download area\n\n**************************\n: ما هو الجديد\n- لمنطقة التحميل Open-cobralibero إضافة صور فرق
 
 echo ""
 if [ ! -d '/usr/lib64' ]; then
