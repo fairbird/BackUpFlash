@@ -112,7 +112,7 @@ class teamsScreen(Screen):
         teams.append(("OpenVision Python3", "OpenVision Python3"))
         teams.append(("OpenHDF", "OpenHDF"))
         teams.append(("NonSoloSat", "NonSoloSat"))
-        teams.append(("Open-cobralibero Python3", "Open-cobralibero Python3"))
+        #teams.append(("Open-cobralibero Python3", "Open-cobralibero Python3"))
         return teams
 
     def load_images(self):
@@ -286,14 +286,14 @@ class imagesScreen(Screen):
               boxtype='DM520-DM525'
            else:
                boxtype=boxtype.upper()
-           imagesPath="http://images.dream-elite.net/DEP/index.php?dir=" + boxtype + "/"
+           imagesPath="https://images.dream-elite.net/DEP/index.php?dir=" + boxtype + "/"
            regx = b'''<a class="autoindex_a" href="(.*?)&amp;file=(.*?)">'''
            rimages=get_images(imagesPath,regx)
            for item in rimages:
                 imageName=item[1]
                 if PY3:
                         imageName=imageName.decode()
-                imagePath="http://images.dream-elite.net/DEP/"+boxtype.upper()+'/'+imageName
+                imagePath="https://images.dream-elite.net/DEP/"+boxtype.upper()+'/'+imageName
                 images.append((imageName,imagePath.strip()))
 
         if self.teamName=="Dreamboxupdates-Stable":
@@ -348,20 +348,20 @@ class imagesScreen(Screen):
 
         if self.teamName=="Merlin4":
            if boxtype=="dreamone" or boxtype=="dreamtwo":
-              imagesPath = "http://feed.dreamboxtools.de/oe_2.6/deb/images/"
-              regx = b'''<a href="/oe_2.6/deb/images/(.*?)">(.*?)</a>'''
+              imagesPath = "https://merlinfeed.boxpirates.to/images_oe_2.6/"
+              regx = b'''<a href="/images_oe_2.6/(.*?)">(.*?)</a>'''
            else:
-              imagesPath = "http://feed.dreamboxtools.de/oe_2.5/deb/images/"
-              regx = b'''<a href="/oe_2.5/deb/images/(.*?)">(.*?)</a>'''
+              imagesPath = "https://merlinfeed.boxpirates.to/images_oe_2.5/"
+              regx = b'''<a href="/images_oe_2.5/(.*?)">(.*?)</a>'''
            rimages=get_images(imagesPath,regx)
            for item in rimages:
                 imageName=item[1]
                 if PY3:
                         imageName=imageName.decode()
                 if boxtype=="dreamone" or boxtype=="dreamtwo":
-                        imagePath = os.path.join("http://feed.dreamboxtools.de/oe_2.6/deb/images/", imageName)
+                        imagePath = os.path.join("https://merlinfeed.boxpirates.to/images_oe_2.6/", imageName)
                 else:
-                        imagePath = os.path.join("http://feed.dreamboxtools.de/oe_2.5/deb/images/", imageName)
+                        imagePath = os.path.join("https://merlinfeed.boxpirates.to/images_oe_2.5/", imageName)
                 if not boxtype in imageName:
                     continue
                 images.append((imageName,imagePath))
@@ -494,8 +494,10 @@ class imagesScreen(Screen):
         if self.teamName=="PurE2":
            if boxtype == "dreamone" or boxtype == "dreamtwo":
            	imagesPath="https://www.pur-e2.club/OU/images/index.php?dir=6.5/dreambox/TEST-alpha/"
+           elif boxtype == "dm900" or boxtype == "dm920":
+           	imagesPath="https://www.pur-e2.club/OU/images/index.php?dir=7.4/dreambox/"
            else:
-           	imagesPath="http://www.pur-e2.club/OU/images/index.php?dir=6.5/dreambox/"
+           	imagesPath="https://www.pur-e2.club/OU/images/index.php?dir=6.5/dreambox/"
            regx = b'''<a class="autoindex_a" href="(.*?)&amp;file=(.*?)">'''
            rimages=get_images(imagesPath,regx)
            for item in rimages:
@@ -503,14 +505,18 @@ class imagesScreen(Screen):
                 if PY3:
                         imageName=imageName.decode()
                         if boxtype == "dreamone" or boxtype == "dreamtwo":
-                        	imagePath = os.path.join('http://www.pur-e2.club/OU/images/6.5/dreambox/TEST-alpha/', imageName)
+                        	imagePath = os.path.join('https://www.pur-e2.club/OU/images/6.5/dreambox/TEST-alpha/', imageName)
+                        elif boxtype == "dm900" or boxtype == "dm920":
+                        	imagePath = os.path.join('https://www.pur-e2.club/OU/images/7.4/dreambox/', imageName)
                         else:
-                        	imagePath = os.path.join('http://www.pur-e2.club/OU/images/6.5/dreambox/', imageName)
+                        	imagePath = os.path.join('https://www.pur-e2.club/OU/images/6.5/dreambox/', imageName)
                 else:
                         if boxtype == "dreamone" or boxtype == "dreamtwo":
-                        	imagePath = os.path.join('http://www.pur-e2.club/OU/images/6.5/dreambox/TEST-alpha/', imageName)
+                        	imagePath = os.path.join('https://www.pur-e2.club/OU/images/6.5/dreambox/TEST-alpha/', imageName)
+                        elif boxtype == "dm900" or boxtype == "dm920":
+                        	imagePath = os.path.join('https://www.pur-e2.club/OU/images/7.4/dreambox/', imageName)
                         else:
-                        	imagePath = os.path.join('http://www.pur-e2.club/OU/images/6.5/dreambox/', imageName)
+                        	imagePath = os.path.join('https://www.pur-e2.club/OU/images/6.5/dreambox/', imageName)
                 if boxtype == "dreamone" or boxtype == "dreamtwo":
                 	if not boxtype in imageName:
                     		continue
@@ -546,16 +552,16 @@ class imagesScreen(Screen):
               boxtype = 'DM920'
            else:
               pass
-           imagesPath="http://atemio.dyndns.tv/nightly-images/Dreambox/"+boxtype+"/v1.98/"
+           imagesPath="http://atemio.dyndns.tv/nightly-images/Dreambox/"+boxtype+"/v2.02/"
            regx = b'''<a href="(.*?)">(.*?)</a>'''
            rimages=get_images(imagesPath,regx)
            for item in rimages:
                 imageName=item[1]
                 if PY3:
                         imageName=imageName.decode()
-                        imagePath = os.path.join("http://atemio.dyndns.tv/nightly-images/Dreambox/"+boxtype+"/v1.98/", imageName)
+                        imagePath = os.path.join("http://atemio.dyndns.tv/nightly-images/Dreambox/"+boxtype+"/v2.02/", imageName)
                 else:
-                        imagePath = os.path.join("http://atemio.dyndns.tv/nightly-images/Dreambox/"+boxtype+"/v1.98/", imageName)
+                        imagePath = os.path.join("http://atemio.dyndns.tv/nightly-images/Dreambox/"+boxtype+"/v2.02/", imageName)
                 if not item[0].endswith(b".zip"):
                     continue
                 images.append((imageName,imagePath))
