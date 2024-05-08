@@ -552,16 +552,16 @@ class imagesScreen(Screen):
               boxtype = 'DM920'
            else:
               pass
-           imagesPath="http://atemio.dyndns.tv/nightly-images/Dreambox/"+boxtype+"/v2.02/"
+           imagesPath="http://atemio.dyndns.tv/nightly-images/Dreambox/"+boxtype+"/v2.03/"
            regx = b'''<a href="(.*?)">(.*?)</a>'''
            rimages=get_images(imagesPath,regx)
            for item in rimages:
                 imageName=item[1]
                 if PY3:
                         imageName=imageName.decode()
-                        imagePath = os.path.join("http://atemio.dyndns.tv/nightly-images/Dreambox/"+boxtype+"/v2.02/", imageName)
+                        imagePath = os.path.join("http://atemio.dyndns.tv/nightly-images/Dreambox/"+boxtype+"/v2.03/", imageName)
                 else:
-                        imagePath = os.path.join("http://atemio.dyndns.tv/nightly-images/Dreambox/"+boxtype+"/v2.02/", imageName)
+                        imagePath = os.path.join("http://atemio.dyndns.tv/nightly-images/Dreambox/"+boxtype+"/v2.03/", imageName)
                 if not item[0].endswith(b".zip"):
                     continue
                 images.append((imageName,imagePath))
