@@ -61,15 +61,18 @@ class teamsScreen(Screen):
         list1 = []
         list1.append(("DreamOS OE2.5 Images", "DreamOS OE2.5 Images"))
         list1.append(("Open Source OE2.0 Images", "Open Source OE2.0 Images"))
+        list1.append(("Neutrino Images", "Neutrino Images"))
         self.session.openWithCallback(self.get_teams, ChoiceBox, _('select image type'), list1)
 
     def get_teams(self,select):
         self.list=[]
         if select:
-            if select[0]=="Open Source OE2.0 Images":
+            if select[0]=="DreamOS OE2.5 Images":
+               self.teams=self.DreamOS()
+            elif select[0]=="Open Source OE2.0 Images":
                self.teams=self.opensource()
             else:
-               self.teams=self.DreamOS()
+               self.teams=self.neutrino()
             logdata("self.teams",self.teams)
             self['list'].setList(self.teams)
             self['key_green'].show()
@@ -115,6 +118,13 @@ class teamsScreen(Screen):
         #teams.append(("Open-cobralibero Python3", "Open-cobralibero Python3"))
         return teams
 
+    def neutrino(self):
+        boxtype=getboxtype()
+        logdata("boxtype",boxtype)
+        teams = []
+        teams.append(("BPanther", "BPanther"))
+        return teams
+
     def load_images(self):
         idx = self['list'].getSelectionIndex()
         teamName = self.teams[idx][0]
@@ -157,7 +167,7 @@ class imagesScreen(Screen):
     def updateList(self):
         self.images=[]
         self.images=self.getteam_images()
-        logdata("self.images",self.images)   
+        logdata("self.images",self.images)
         if len(self.images)>0:
             self['list'].setList(self.images)
             self['key_green'].show()
@@ -654,7 +664,6 @@ class imagesScreen(Screen):
            imagesPath="https://cobraliberosat.net/UPLOAD/index.php?dir=Dreambox/20.09.2023/"
            regx = b'''<a class="autoindex_a" href="(.*?)&amp;file=(.*?)">'''
            rimages=get_images(imagesPath,regx)
-           logdata("rimages",rimages)
            for item in rimages:
                 imageName=item[1]
                 if PY3:
@@ -664,6 +673,21 @@ class imagesScreen(Screen):
                         imagePath = os.path.join('https://cobraliberosat.net/UPLOAD/IMAGE-COBRALIBEROSAT/Dreambox/20.09.2023/', imageName)
                 if not boxtype in imageName:
                     	continue
+                images.append((imageName,imagePath))
+
+        if self.teamName=="BPanther":
+           imagesPath="https://%s.mbremer.de/FLASH/" % boxtype
+           #logdata("imagesPath",imagesPath)
+           regx = b'''<a href="(.*?)">(.*?)</a>.*?Neutrino Image'''
+           rimages=get_images(imagesPath,regx)
+           #logdata("rimages",rimages)
+           for item in rimages:
+                imageName=item[1]
+                if PY3:
+                        imageName=imageName.decode()
+                        imagePath = os.path.join('https://'+ boxtype +'.mbremer.de/FLASH/', imageName)
+                else:
+                        imagePath = os.path.join('https://'+ boxtype +'.mbremer.de/FLASH/', imageName)
                 images.append((imageName,imagePath))
 
         return images
