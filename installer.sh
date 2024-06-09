@@ -1,8 +1,8 @@
 #!/bin/bash
 ##setup command=wget https://raw.githubusercontent.com/fairbird/BackUpFlash/main/installer.sh -O - | /bin/sh
 
-version=8.9
-description=What is NEW :\n- Update Some team images download link [DreamElite, Merlin4, PurE2, AFF-TitanNit]\n\n**************************\n: ما هو الجديد\n- [DreamElite, Merlin4, PurE2, AFF-TitanNit] تحديث روابط تحميل صور بعض الفرق
+version=9.0
+description=What is NEW :\n- Add new section in the download area for Neutrino Images\n\n**************************\n: ما هو الجديد\n- Neutrino إضافة تفريع جديد بمنطقة التنزيل لصور
 
 echo ""
 if [ ! -d '/usr/lib64' ]; then
