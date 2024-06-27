@@ -6,5 +6,5 @@ Just for DreamBox (DM52X, DM820, DM7080, DM9X0, DreamOne/Two)
 
 To install plugin directly online from telnet be this command / لتثبيت البلجن مباشرة من خلال الإنترنيت بواسطة التلنت بهذا الأمر
 ```
-wget "--no-check-certificate" https://raw.githubusercontent.com/fairbird/backupflash/main/installer.sh -O - | /bin/sh
+wget https://raw.githubusercontent.com/fairbird/backupflash/main/installer.sh -O - | /bin/sh
 ```
