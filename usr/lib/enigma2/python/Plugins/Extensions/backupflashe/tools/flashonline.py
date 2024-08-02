@@ -103,6 +103,7 @@ class teamsScreen(Screen):
         teams.append(("OpenTSimage Python3", "OpenTSimage Python3"))
         teams.append(("OpenATV Python2", "OpenATV Python2"))
         teams.append(("OpenATV Python3", "OpenATV Python3"))
+        teams.append(("OpenVIX Python3", "OpenVIX Python3"))
         #teams.append(("ArEaDeLtA-SaT", "ArEaDeLtA-SaT")) ## No more Team
         teams.append(("OpenPLI-Unoffical", "OpenPLI-Unoffical Python3"))
         #teams.append(("OpenESI", "OpenESI")) ## No more Team
@@ -677,10 +678,8 @@ class imagesScreen(Screen):
 
         if self.teamName=="BPanther":
            imagesPath="https://%s.mbremer.de/FLASH/" % boxtype
-           #logdata("imagesPath",imagesPath)
            regx = b'''<a href="(.*?)">(.*?)</a>.*?Neutrino Image'''
            rimages=get_images(imagesPath,regx)
-           #logdata("rimages",rimages)
            for item in rimages:
                 imageName=item[1]
                 if PY3:
@@ -688,6 +687,21 @@ class imagesScreen(Screen):
                         imagePath = os.path.join('https://'+ boxtype +'.mbremer.de/FLASH/', imageName)
                 else:
                         imagePath = os.path.join('https://'+ boxtype +'.mbremer.de/FLASH/', imageName)
+                images.append((imageName,imagePath))
+
+        if self.teamName=="OpenVIX Python3":
+           imagesPath="https://www.openvix.co.uk/openvix-builds/%s/" % boxtype
+           #logdata("imagesPath",imagesPath)
+           regx = b'''<a href="(.*?)">(.*?).rele..&gt;</a>'''
+           rimages=get_images(imagesPath,regx)
+           #logdata("rimages",rimages)
+           for item in rimages:
+                imageName=item[1]
+                if PY3:
+                        imageName=imageName.decode()
+                        imagePath = os.path.join('https://www.openvix.co.uk/openvix-builds/'+ boxtype +'/', imageName+'.release-'+ boxtype +'_mmc.zip')
+                else:
+                        imagePath = os.path.join('https://www.openvix.co.uk/openvix-builds/'+ boxtype +'/', imageName+'.release-'+ boxtype +'_mmc.zip')
                 images.append((imageName,imagePath))
 
         return images
