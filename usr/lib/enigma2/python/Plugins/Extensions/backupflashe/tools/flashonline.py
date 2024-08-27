@@ -108,7 +108,7 @@ class teamsScreen(Screen):
         teams.append(("OpenPLI-Unoffical", "OpenPLI-Unoffical Python3"))
         #teams.append(("OpenESI", "OpenESI")) ## No more Team
         teams.append(("PurE2", "PurE2"))
-        teams.append(("Openeight-Unoffical", "Openeight-Unoffical"))
+        #teams.append(("Openeight-Unoffical", "Openeight-Unoffical")) ## No more update images
         #teams.append(("PKTeam", "PKTeam")) ## No more Url download
         teams.append(("AFF-TitanNit", "AFF-TitanNit"))
         teams.append(("OpenSatlodge", "OpenSatlodge"))
@@ -247,7 +247,7 @@ class imagesScreen(Screen):
                 images.append((imageName,imagePath))
 
         if self.teamName=="OpenPLI-Unoffical":
-           imagesPath='https://www.mediafire.com/api/1.4/folder/get_content.php?r=cfgd&content_type=files&filter=all&order_by=name&order_direction=asc&chunk=1&version=1.5&folder_key=hlw7uznninif5&response_format=json'
+           imagesPath='https://www.mediafire.com/api/1.4/folder/get_content.php?r=cfgd&content_type=files&filter=all&order_by=name&order_direction=asc&chunk=1&version=1.5&folder_key=5mqob16bb176n&response_format=json'
            rimages=get_images_mediafire(imagesPath)
            for item in rimages:
                 imageName=item[0]
