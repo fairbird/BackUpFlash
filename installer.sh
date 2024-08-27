@@ -1,8 +1,8 @@
 #!/bin/bash
 ##setup command=wget https://raw.githubusercontent.com/fairbird/BackUpFlash/main/installer.sh -O - | /bin/sh
 
-version=9.1
-description=What is NEW :\n- Add OpenVIX py3 download link\n\n**************************\n: ما هو الجديد\n- OpenVIX إضافة روابط تحميل صور
+version=9.2
+description=What is NEW :\n- Update Openpli download links\n\n**************************\n: ما هو الجديد\n- Openpli تحديث روابط تحميل صور
 
 echo ""
 if [ ! -d '/usr/lib64' ]; then
