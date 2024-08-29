@@ -1,8 +1,8 @@
 #!/bin/bash
 ##setup command=wget https://raw.githubusercontent.com/fairbird/BackUpFlash/main/installer.sh -O - | /bin/sh
 
-version=9.2
-description=What is NEW :\n- Update Openpli download links\n\n**************************\n: ما هو الجديد\n- Openpli تحديث روابط تحميل صور
+version=9.3
+description=What is NEW :\n- Add TeamBlue image link\n\n**************************\n: ما هو الجديد\n- TeamBlue إضافة رابط تحميل صور
 
 echo ""
 if [ ! -d '/usr/lib64' ]; then

@@ -99,24 +99,27 @@ class teamsScreen(Screen):
         boxtype=getboxtype()
         logdata("boxtype",boxtype)
         teams = []
-        teams.append(("BlackHole Python3", "BlackHole Python3"))
-        teams.append(("OpenTSimage Python3", "OpenTSimage Python3"))
-        teams.append(("OpenATV Python2", "OpenATV Python2"))
-        teams.append(("OpenATV Python3", "OpenATV Python3"))
-        teams.append(("OpenVIX Python3", "OpenVIX Python3"))
-        #teams.append(("ArEaDeLtA-SaT", "ArEaDeLtA-SaT")) ## No more Team
-        teams.append(("OpenPLI-Unoffical", "OpenPLI-Unoffical Python3"))
-        #teams.append(("OpenESI", "OpenESI")) ## No more Team
+        teams.append((_("________________ Python3 Images ________________"), ))
+        teams.append(("BlackHole", "BlackHole"))
+        teams.append(("OpenTSimage", "OpenTSimage"))
+        teams.append(("OpenPLI-Unoffical", "OpenPLI-Unoffical"))
+        teams.append(("OpenATV", "OpenATV Python3"))
+        teams.append(("OpenVIX", "OpenVIX"))
         teams.append(("PurE2", "PurE2"))
-        #teams.append(("Openeight-Unoffical", "Openeight-Unoffical")) ## No more update images
-        #teams.append(("PKTeam", "PKTeam")) ## No more Url download
+        teams.append(("OpenVision", "OpenVision"))
+        teams.append(("TeamBlue", "TeamBlue"))
+        #teams.append(("Open-cobralibero Python3", "Open-cobralibero Python3"))
+        teams.append((_("________________ Python2 Images ________________"), ))
+        teams.append(("OpenATV", "OpenATV Python2"))
         teams.append(("AFF-TitanNit", "AFF-TitanNit"))
         teams.append(("OpenSatlodge", "OpenSatlodge"))
-        #teams.append(("OpenVision Python2", "OpenVision Python2")) ## No more Url download
-        teams.append(("OpenVision Python3", "OpenVision Python3"))
         teams.append(("OpenHDF", "OpenHDF"))
         teams.append(("NonSoloSat", "NonSoloSat"))
-        #teams.append(("Open-cobralibero Python3", "Open-cobralibero Python3"))
+        #teams.append(("ArEaDeLtA-SaT", "ArEaDeLtA-SaT")) ## No more Team
+        #teams.append(("OpenESI", "OpenESI")) ## No more Team
+        #teams.append(("Openeight-Unoffical", "Openeight-Unoffical")) ## No more update images
+        #teams.append(("PKTeam", "PKTeam")) ## No more Url download
+        #teams.append(("OpenVision Python2", "OpenVision Python2")) ## No more Url download
         return teams
 
     def neutrino(self):
@@ -184,7 +187,7 @@ class imagesScreen(Screen):
         boxtype=getboxtype()
         self.urlimage = ''
 
-        if self.teamName=="BlackHole Python3":
+        if self.teamName=="BlackHole":
            if boxtype == "dm920":
               key = 'cdmen9tqtpwxk'
            elif boxtype == "dm520":
@@ -202,7 +205,7 @@ class imagesScreen(Screen):
                 imagePath=item[1]
                 images.append((imageName,imagePath))
 
-        if self.teamName=="OpenTSimage Python3":
+        if self.teamName=="OpenTSimage":
            if boxtype == "dm920":
               key = 'sbrjw60if73re'
            elif boxtype == "dm520":
@@ -258,6 +261,16 @@ class imagesScreen(Screen):
 
         if self.teamName=="Openeight-Unoffical":
            imagesPath='https://www.mediafire.com/api/1.4/folder/get_content.php?r=cfgd&content_type=files&filter=all&order_by=name&order_direction=asc&chunk=1&version=1.5&folder_key=10ipmypb5ura9&response_format=json'
+           rimages=get_images_mediafire(imagesPath)
+           for item in rimages:
+                imageName=item[0]
+                imagePath=item[1]
+                if not boxtype in imageName:
+                	continue
+                images.append((imageName,imagePath))
+
+        if self.teamName=="TeamBlue":
+           imagesPath='https://www.mediafire.com/api/1.4/folder/get_content.php?r=cfgd&content_type=files&filter=all&order_by=name&order_direction=asc&chunk=1&version=1.5&folder_key=nzy14rrzawbw4&response_format=json'
            rimages=get_images_mediafire(imagesPath)
            for item in rimages:
                 imageName=item[0]
@@ -601,7 +614,7 @@ class imagesScreen(Screen):
                     continue
                 images.append((imageName,imagePath))
 
-        if self.teamName=="OpenVision Python2":
+        if self.teamName=="OpenVision":
            imagesPath="https://images.openvision.dedyn.io/12.2/EOL/Vision/Dreambox/"+boxtype+"/"
            regx = ('''<a href="/12.2/EOL/Vision/Dreambox/%s/(.*?)">(.*?)</a>''' % boxtype).encode()
            rimages=get_images(imagesPath,regx)
@@ -616,7 +629,7 @@ class imagesScreen(Screen):
                     continue
                 images.append((imageName,imagePath))
 
-        if self.teamName=="OpenVision Python3":
+        if self.teamName=="OpenVision":
            imagesPath="https://images.openvision.dedyn.io/13.1/Develop/Vision/Dreambox/"+boxtype+"/"
            regx = ('''<a href="/13.1/Develop/Vision/Dreambox/%s/(.*?)">(.*?)</a>''' % boxtype).encode()
            rimages=get_images(imagesPath,regx)
@@ -661,7 +674,7 @@ class imagesScreen(Screen):
                     	continue
                 images.append((imageName,imagePath))
 
-        if self.teamName=="Open-cobralibero Python3":
+        if self.teamName=="Open-cobralibero":
            imagesPath="https://cobraliberosat.net/UPLOAD/index.php?dir=Dreambox/20.09.2023/"
            regx = b'''<a class="autoindex_a" href="(.*?)&amp;file=(.*?)">'''
            rimages=get_images(imagesPath,regx)
@@ -689,7 +702,7 @@ class imagesScreen(Screen):
                         imagePath = os.path.join('https://'+ boxtype +'.mbremer.de/FLASH/', imageName)
                 images.append((imageName,imagePath))
 
-        if self.teamName=="OpenVIX Python3":
+        if self.teamName=="OpenVIX":
            imagesPath="https://www.openvix.co.uk/openvix-builds/%s/" % boxtype
            #logdata("imagesPath",imagesPath)
            regx = b'''<a href="(.*?)">(.*?).rele..&gt;</a>'''
