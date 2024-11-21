@@ -83,16 +83,16 @@ class teamsScreen(Screen):
         boxtype=getboxtype()
         logdata("boxtype",boxtype)
         teams = []
-        teams.append(("Dreamboxupdates-Stable", "Dreamboxupdates-Stable"))
-        teams.append(("Dreamboxupdates-UnStable", "Dreamboxupdates-UnStable"))
-        teams.append(("Gemini4", "Gemini4"))
-        teams.append(("DreamElite", "DreamElite"))
-        teams.append(("Merlin4", "Merlin4"))
-        #teams.append(("OoZooN", "OoZooN")) ## No more Team
-        teams.append(("Newnigma2", "Newnigma2"))
-        #teams.append(("Demonisat", "Demonisat")) ## Server down
-        #teams.append(("Powersat", "Powersat")) ## No more Team
-        teams.append(("Satlodge", "Satlodge"))
+        teams.append((_("Dreamboxupdates-Stable"), "Dreamboxupdates-Stable"))
+        teams.append((_("Dreamboxupdates-UnStable"), "Dreamboxupdates-UnStable"))
+        teams.append((_("Gemini4"), "Gemini4"))
+        teams.append((_("DreamElite"), "DreamElite"))
+        teams.append((_("Merlin4"), "Merlin4"))
+        #teams.append((_("OoZooN"), "OoZooN")) ## No more Team
+        teams.append((_("Newnigma2"), "Newnigma2"))
+        #teams.append((_("Demonisat"), "Demonisat")) ## Server down
+        #teams.append((_("Powersat"), "Powersat")) ## No more Team
+        teams.append((_("Satlodge"), "Satlodge"))
         return teams
 
     def opensource(self):
@@ -100,26 +100,26 @@ class teamsScreen(Screen):
         logdata("boxtype",boxtype)
         teams = []
         teams.append((_("________________ Python3 Images ________________"), ))
-        teams.append(("BlackHole", "BlackHole"))
-        teams.append(("OpenTSimage", "OpenTSimage"))
-        teams.append(("OpenPLI-Unoffical", "OpenPLI-Unoffical"))
-        teams.append(("OpenATV", "OpenATV Python3"))
-        teams.append(("OpenVIX", "OpenVIX"))
-        teams.append(("PurE2", "PurE2"))
-        teams.append(("OpenVision", "OpenVision"))
-        teams.append(("TeamBlue", "TeamBlue"))
-        #teams.append(("Open-cobralibero Python3", "Open-cobralibero Python3"))
+        teams.append((_("BlackHole"), "BlackHole"))
+        teams.append((_("OpenTSimage"), "OpenTSimage"))
+        teams.append((_("OpenPLI-Unoffical"), "OpenPLI-Unoffical"))
+        teams.append((_("OpenATV"), "OpenATV-Python3"))
+        teams.append((_("OpenVIX"), "OpenVIX"))
+        teams.append((_("PurE2"), "PurE2"))
+        teams.append((_("OpenVision"), "OpenVision"))
+        teams.append((_("TeamBlue"), "TeamBlue"))
+        #teams.append((_("Open-cobralibero"), "Open-cobralibero Python3"))
         teams.append((_("________________ Python2 Images ________________"), ))
-        teams.append(("OpenATV", "OpenATV Python2"))
-        teams.append(("AFF-TitanNit", "AFF-TitanNit"))
-        teams.append(("OpenSatlodge", "OpenSatlodge"))
-        teams.append(("OpenHDF", "OpenHDF"))
-        teams.append(("NonSoloSat", "NonSoloSat"))
-        #teams.append(("ArEaDeLtA-SaT", "ArEaDeLtA-SaT")) ## No more Team
-        #teams.append(("OpenESI", "OpenESI")) ## No more Team
-        #teams.append(("Openeight-Unoffical", "Openeight-Unoffical")) ## No more update images
-        #teams.append(("PKTeam", "PKTeam")) ## No more Url download
-        #teams.append(("OpenVision Python2", "OpenVision Python2")) ## No more Url download
+        teams.append((_("OpenATV"), "OpenATV-Python2"))
+        teams.append((_("AFF-TitanNit"), "AFF-TitanNit"))
+        teams.append((_("OpenSatlodge"), "OpenSatlodge"))
+        teams.append((_("OpenHDF"), "OpenHDF"))
+        teams.append((_("NonSoloSat"), "NonSoloSat"))
+        #teams.append((_("ArEaDeLtA-SaT"), "ArEaDeLtA-SaT")) ## No more Team
+        #teams.append((_("OpenESI"), "OpenESI")) ## No more Team
+        #teams.append((_("Openeight-Unoffical"), "Openeight-Unoffical")) ## No more update images
+        #teams.append((_("PKTeam"), "PKTeam")) ## No more Url download
+        #teams.append((_("OpenVision"), "OpenVision Python2")) ## No more Url download
         return teams
 
     def neutrino(self):
@@ -139,7 +139,7 @@ class imagesScreen(Screen):
     def __init__(self, session,device_path,teamName, imagesPath):
         Screen.__init__(self, session)
         self.skin = SKIN_doFlash
-        self.teamName=teamName
+        self.teamName=imagesPath
         self.imagesPath=imagesPath
         self.device_path=device_path
         self.list = []
@@ -221,8 +221,8 @@ class imagesScreen(Screen):
                 imagePath=item[1]
                 images.append((imageName,imagePath))
 
-        if self.teamName=="OpenATV Python2":
-           imagesPath="http://images.mynonpublic.com/openatv/6.4/index.php?open="+boxtype
+        if self.teamName=="OpenATV-Python2":
+           imagesPath="https://images.mynonpublic.com/openatv/6.4/index.php?open="+boxtype
            regx = b'''<a href='(.*?)'>(.*?)</a>'''
            rimages=get_images(imagesPath,regx)
            for item in rimages:
@@ -230,13 +230,13 @@ class imagesScreen(Screen):
                 imageName2=item[0]
                 if PY3:
                         imageName=imageName.decode()
-                        imagePath =  os.path.join(b'http://images.mynonpublic.com/openatv/6.4/', imageName2)
+                        imagePath =  os.path.join(b'https://images.mynonpublic.com/openatv/6.4/', imageName2)
                 else:
-                        imagePath =  os.path.join('http://images.mynonpublic.com/openatv/6.4/', imageName2)
+                        imagePath =  os.path.join('https://images.mynonpublic.com/openatv/6.4/', imageName2)
                 images.append((imageName,imagePath))
 
-        if self.teamName=="OpenATV Python3":
-           imagesPath="http://images.mynonpublic.com/openatv/current/index.php?open="+boxtype
+        if self.teamName=="OpenATV-Python3":
+           imagesPath="https://images.mynonpublic.com/openatv/7.5/index.php?open="+boxtype
            regx = b'''<a href='(.*?)'>(.*?)</a>'''
            rimages=get_images(imagesPath,regx)
            for item in rimages:
@@ -244,9 +244,9 @@ class imagesScreen(Screen):
                 imageName2=item[0]
                 if PY3:
                         imageName=imageName.decode()
-                        imagePath =  os.path.join(b'http://images.mynonpublic.com/openatv/current/', imageName2)
+                        imagePath =  os.path.join(b'https://images.mynonpublic.com/openatv/7.5/', imageName2)
                 else:
-                        imagePath =  os.path.join('http://images.mynonpublic.com/openatv/current/', imageName2)
+                        imagePath =  os.path.join('https://images.mynonpublic.com/openatv/7.5/', imageName2)
                 images.append((imageName,imagePath))
 
         if self.teamName=="OpenPLI-Unoffical":
