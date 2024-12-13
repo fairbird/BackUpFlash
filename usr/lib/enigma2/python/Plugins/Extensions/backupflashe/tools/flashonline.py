@@ -103,6 +103,7 @@ class teamsScreen(Screen):
         teams.append((_("BlackHole"), "BlackHole"))
         teams.append((_("OpenTSimage"), "OpenTSimage"))
         teams.append((_("OpenPLI-Unoffical"), "OpenPLI-Unoffical"))
+        teams.append((_("OpenBH-Unoffical"), "OpenBH-Unoffical"))
         teams.append((_("OpenATV"), "OpenATV-Python3"))
         teams.append((_("OpenVIX"), "OpenVIX"))
         teams.append((_("PurE2"), "PurE2"))
@@ -271,6 +272,16 @@ class imagesScreen(Screen):
 
         if self.teamName=="TeamBlue":
            imagesPath='https://www.mediafire.com/api/1.4/folder/get_content.php?r=cfgd&content_type=files&filter=all&order_by=name&order_direction=asc&chunk=1&version=1.5&folder_key=nzy14rrzawbw4&response_format=json'
+           rimages=get_images_mediafire(imagesPath)
+           for item in rimages:
+                imageName=item[0]
+                imagePath=item[1]
+                if not boxtype in imageName:
+                	continue
+                images.append((imageName,imagePath))
+
+        if self.teamName=="OpenBH-Unoffical":
+           imagesPath='https://www.mediafire.com/api/1.4/folder/get_content.php?r=cfgd&content_type=files&filter=all&order_by=name&order_direction=asc&chunk=1&version=1.5&folder_key=sdvi12arjgsuj&response_format=json'
            rimages=get_images_mediafire(imagesPath)
            for item in rimages:
                 imageName=item[0]
