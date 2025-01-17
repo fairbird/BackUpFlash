@@ -106,6 +106,7 @@ class teamsScreen(Screen):
         teams.append((_("OpenBH-Unoffical"), "OpenBH-Unoffical"))
         teams.append((_("OpenATV"), "OpenATV-Python3"))
         teams.append((_("OpenVIX"), "OpenVIX"))
+        teams.append((_("OpenVIX-Unoffical"), "OpenVIX-Unoffical"))
         teams.append((_("PurE2"), "PurE2"))
         teams.append((_("OpenVision"), "OpenVision"))
         teams.append((_("TeamBlue"), "TeamBlue"))
@@ -726,6 +727,16 @@ class imagesScreen(Screen):
                         imagePath = os.path.join('https://www.openvix.co.uk/openvix-builds/'+ boxtype +'/', imageName+'.release-'+ boxtype +'_mmc.zip')
                 else:
                         imagePath = os.path.join('https://www.openvix.co.uk/openvix-builds/'+ boxtype +'/', imageName+'.release-'+ boxtype +'_mmc.zip')
+                images.append((imageName,imagePath))
+
+        if self.teamName=="OpenVIX-Unoffical":
+           imagesPath='https://www.mediafire.com/api/1.4/folder/get_content.php?r=cfgd&content_type=files&filter=all&order_by=name&order_direction=asc&chunk=1&version=1.5&folder_key=q1ds8bogfa994&response_format=json'
+           rimages=get_images_mediafire(imagesPath)
+           for item in rimages:
+                imageName=item[0]
+                imagePath=item[1]
+                if not boxtype in imageName:
+                	continue
                 images.append((imageName,imagePath))
 
         return images
