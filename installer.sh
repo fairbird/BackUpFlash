@@ -1,8 +1,8 @@
 #!/bin/bash
 ##setup command=wget https://raw.githubusercontent.com/fairbird/BackUpFlash/main/installer.sh -O - | /bin/sh
 
-version=9.6
-description=What is NEW :\n- Add Url Download for OpenVix-Unoffical-\n\n**************************\n: ما هو الجديد\n- OpenVix-Unoffical إضافة رابط تحميل إلى صور
+version=9.7
+description=What is NEW :\n- Update url for AFF-TitanNit to new version-\n\n**************************\n: ما هو الجديد\n- للإصدار الجديد AFF-TitanNit تحديث رابط تحميل الصور لفريق
 
 echo ""
 if [ ! -d '/usr/lib64' ]; then
