@@ -1,6 +1,6 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
-# RAED & mfaraj57 &  (c) 2018
+# RAED & mfaraj57 &  (c) 2025
 # Code RAED & mfaraj57
 
 # python3
