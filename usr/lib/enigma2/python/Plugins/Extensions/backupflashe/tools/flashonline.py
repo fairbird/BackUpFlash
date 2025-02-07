@@ -1,6 +1,6 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
-# RAED & mfaraj57 &  (c) 2018
+# RAED & mfaraj57 &  (c) 2025
 # Code RAED & mfaraj57
 
 # python3
@@ -108,12 +108,12 @@ class teamsScreen(Screen):
 		teams.append((_("OpenVIX"), "OpenVIX"))
 		teams.append((_("OpenVIX-Unoffical"), "OpenVIX-Unoffical"))
 		teams.append((_("PurE2"), "PurE2"))
-		teams.append((_("OpenVision"), "OpenVision"))
 		teams.append((_("TeamBlue"), "TeamBlue"))
+		teams.append((_("AFF-TitanNit"), "AFF-TitanNit"))
+		teams.append((_("OpenVision"), "OpenVision"))
 		#teams.append((_("Open-cobralibero"), "Open-cobralibero Python3"))
 		teams.append((_("________________ Python2 Images ________________"), ))
 		teams.append((_("OpenATV"), "OpenATV-Python2"))
-		teams.append((_("AFF-TitanNit"), "AFF-TitanNit"))
 		teams.append((_("OpenSatlodge"), "OpenSatlodge"))
 		teams.append((_("OpenHDF"), "OpenHDF"))
 		teams.append((_("NonSoloSat"), "NonSoloSat"))
@@ -589,16 +589,16 @@ class imagesScreen(Screen):
 				boxtype = 'DM920'
 			else:
 				pass
-			imagesPath="http://atemio.dyndns.tv/nightly-images/Dreambox/"+boxtype+"/v2.03/"
+			imagesPath="http://atemio.dyndns.tv/nightly-images/Dreambox/"+boxtype+"/v2.04/"
 			regx = b'''<a href="(.*?)">(.*?)</a>'''
 			rimages=get_images(imagesPath,regx)
 			for item in rimages:
 				imageName=item[1]
 				if PY3:
 					imageName=imageName.decode()
-					imagePath = os.path.join("http://atemio.dyndns.tv/nightly-images/Dreambox/"+boxtype+"/v2.03/", imageName)
+					imagePath = os.path.join("http://atemio.dyndns.tv/nightly-images/Dreambox/"+boxtype+"/v2.04/", imageName)
 				else:
-					imagePath = os.path.join("http://atemio.dyndns.tv/nightly-images/Dreambox/"+boxtype+"/v2.03/", imageName)
+					imagePath = os.path.join("http://atemio.dyndns.tv/nightly-images/Dreambox/"+boxtype+"/v2.04/", imageName)
 				if not item[0].endswith(b".zip"):
 					continue
 				images.append((imageName,imagePath))
