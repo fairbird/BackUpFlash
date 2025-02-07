@@ -1,6 +1,6 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
-# RAED & mfaraj57 &  (c) 2025
+# RAED & mfaraj57 &  (c) 2018
 # Code RAED & mfaraj57
 
 # python3
@@ -99,7 +99,7 @@ class teamsScreen(Screen):
 		boxtype=getboxtype()
 		logdata("boxtype",boxtype)
 		teams = []
-		teams.append((_("________________ Python3 Images ________________"), ))
+		#teams.append((_("________________ Python3 Images ________________"), ))
 		teams.append((_("BlackHole"), "BlackHole"))
 		teams.append((_("OpenTSimage"), "OpenTSimage"))
 		teams.append((_("OpenPLI-Unoffical"), "OpenPLI-Unoffical"))
@@ -108,15 +108,15 @@ class teamsScreen(Screen):
 		teams.append((_("OpenVIX"), "OpenVIX"))
 		teams.append((_("OpenVIX-Unoffical"), "OpenVIX-Unoffical"))
 		teams.append((_("PurE2"), "PurE2"))
+		teams.append((_("OpenSatlodge"), "OpenSatlodge"))
 		teams.append((_("TeamBlue"), "TeamBlue"))
+		teams.append((_("OpenHDF"), "OpenHDF"))
 		teams.append((_("AFF-TitanNit"), "AFF-TitanNit"))
 		teams.append((_("OpenVision"), "OpenVision"))
 		#teams.append((_("Open-cobralibero"), "Open-cobralibero Python3"))
-		teams.append((_("________________ Python2 Images ________________"), ))
-		teams.append((_("OpenATV"), "OpenATV-Python2"))
-		teams.append((_("OpenSatlodge"), "OpenSatlodge"))
-		teams.append((_("OpenHDF"), "OpenHDF"))
-		teams.append((_("NonSoloSat"), "NonSoloSat"))
+		#teams.append((_("________________ Python2 Images ________________"), ))
+		#teams.append((_("OpenATV"), "OpenATV-Python2"))
+		#teams.append((_("NonSoloSat"), "NonSoloSat"))
 		#teams.append((_("ArEaDeLtA-SaT"), "ArEaDeLtA-SaT")) ## No more Team
 		#teams.append((_("OpenESI"), "OpenESI")) ## No more Team
 		#teams.append((_("Openeight-Unoffical"), "Openeight-Unoffical")) ## No more update images
@@ -524,7 +524,7 @@ class imagesScreen(Screen):
 					imagePath = os.path.join('http://webplus.sat-lodge.it/Dreambox920/', imageName)
 				else:
 					imagePath = os.path.join('http://webplus.sat-lodge.it/Dreambox920/', imageName)
-				if not item[1].endswith(b".zip"):
+				if not item[1].endswith(b"unstable.tar.bz2"):
 					continue
 				images.append((imageName,imagePath))
 
