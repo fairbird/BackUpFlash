@@ -3,6 +3,7 @@
 
 version=9.7
 description=What is NEW :\n- Update url for AFF-TitanNit to new version-\n\n**************************\n: ما هو الجديد\n- للإصدار الجديد AFF-TitanNit تحديث رابط تحميل الصور لفريق
+description=What is NEW :\n- Update url for OpenATV and OpenSatlodge to new version-\n\n**************************\n: ما هو الجديد\n- للإصدار الجديد OpenSatlodge و OpenATV تحديث رابط تحميل الصور لفريق
 
 echo ""
 if [ ! -d '/usr/lib64' ]; then
