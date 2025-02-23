@@ -722,12 +722,12 @@ class imagesScreen(Screen):
 			rimages=get_images(imagesPath,regx)
 			#logdata("rimages",rimages)
 			for item in rimages:
-				imageName=item[1]
+				imageName=item[0]
 				if PY3:
 					imageName=imageName.decode()
-					imagePath = os.path.join('https://www.openvix.co.uk/openvix-builds/'+ boxtype +'/', imageName+'.release-'+ boxtype +'_mmc.zip')
+					imagePath = os.path.join('https://www.openvix.co.uk/openvix-builds/'+ boxtype +'/', imageName)
 				else:
-					imagePath = os.path.join('https://www.openvix.co.uk/openvix-builds/'+ boxtype +'/', imageName+'.release-'+ boxtype +'_mmc.zip')
+					imagePath = os.path.join('https://www.openvix.co.uk/openvix-builds/'+ boxtype +'/', imageName)
 				images.append((imageName,imagePath))
 
 		if self.teamName=="OpenVIX-Unoffical":
