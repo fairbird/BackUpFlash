@@ -239,7 +239,7 @@ class imagesScreen(Screen):
 				images.append((imageName,imagePath))
 
 		if self.teamName=="OpenATV-Python3":
-			imagesPath="https://images.mynonpublic.com/openatv/7.6/index.php?open="+boxtype
+			imagesPath="https://images.mynonpublic.com/openatv/7.5/index.php?open="+boxtype
 			regx = b'''<a href='(.*?)'>(.*?)</a>'''
 			rimages=get_images(imagesPath,regx)
 			for item in rimages:
@@ -247,9 +247,9 @@ class imagesScreen(Screen):
 				imageName2=item[0]
 				if PY3:
 					imageName=imageName.decode()
-					imagePath =  os.path.join(b'https://images.mynonpublic.com/openatv/7.6/', imageName2)
+					imagePath =  os.path.join(b'https://images.mynonpublic.com/openatv/7.5/', imageName2)
 				else:
-					imagePath =  os.path.join('https://images.mynonpublic.com/openatv/7.6/', imageName2)
+					imagePath =  os.path.join('https://images.mynonpublic.com/openatv/7.5/', imageName2)
 				images.append((imageName,imagePath))
 
 		if self.teamName=="OpenPLI-Unoffical":
@@ -722,12 +722,12 @@ class imagesScreen(Screen):
 			rimages=get_images(imagesPath,regx)
 			#logdata("rimages",rimages)
 			for item in rimages:
-				imageName=item[1]
+				imageName=item[0]
 				if PY3:
 					imageName=imageName.decode()
-					imagePath = os.path.join('https://www.openvix.co.uk/openvix-builds/'+ boxtype +'/', imageName+'.release-'+ boxtype +'_mmc.zip')
+					imagePath = os.path.join('https://www.openvix.co.uk/openvix-builds/'+ boxtype +'/', imageName)
 				else:
-					imagePath = os.path.join('https://www.openvix.co.uk/openvix-builds/'+ boxtype +'/', imageName+'.release-'+ boxtype +'_mmc.zip')
+					imagePath = os.path.join('https://www.openvix.co.uk/openvix-builds/'+ boxtype +'/', imageName)
 				images.append((imageName,imagePath))
 
 		if self.teamName=="OpenVIX-Unoffical":
