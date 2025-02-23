@@ -1,7 +1,7 @@
 #!/bin/bash
 ##setup command=wget https://raw.githubusercontent.com/fairbird/BackUpFlash/main/installer.sh -O - | /bin/sh
 
-version=9.7
+version=9.9
 description=What is NEW :\n- Fix url for OpenVix-\n\n**************************\n: ما هو الجديد\n- OpenVix إصلاح رابط تحميل الصور لفريق
 
 echo ""
