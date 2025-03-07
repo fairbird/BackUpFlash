@@ -1,8 +1,8 @@
 #!/bin/bash
 ##setup command=wget https://raw.githubusercontent.com/fairbird/BackUpFlash/main/installer.sh -O - | /bin/sh
 
-version=9.9
-description=What is NEW :\n- Fix url for OpenVix-\n\n**************************\n: ما هو الجديد\n- OpenVix إصلاح رابط تحميل الصور لفريق
+version=10.0
+description=What is NEW :\n- Add new url download for opendroid-\n\n**************************\n: ما هو الجديد\n- opendroid إضافة رابط تحميل جديد لصور لفريق
 
 echo ""
 if [ ! -d '/usr/lib64' ]; then
