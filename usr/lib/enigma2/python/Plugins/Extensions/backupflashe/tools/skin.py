@@ -5,11 +5,9 @@
 from enigma import getDesktop
 from Screens.Screen import Screen
 from Components.Pixmap import Pixmap
-from .bftools import getversioninfo
 import os
 from Tools.Directories import resolveFilename, SCOPE_PLUGINS
 
-Ver,lastbuild,enigmaos = getversioninfo()
 
 def DreamOS():
 	if os.path.exists('/var/lib/dpkg/status'):
