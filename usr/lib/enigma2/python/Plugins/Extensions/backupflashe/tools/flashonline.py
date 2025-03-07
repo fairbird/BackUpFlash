@@ -108,6 +108,7 @@ class teamsScreen(Screen):
 		teams.append((_("OpenVIX"), "OpenVIX"))
 		teams.append((_("OpenVIX-Unoffical"), "OpenVIX-Unoffical"))
 		teams.append((_("PurE2"), "PurE2"))
+		teams.append((_("OpenDroid"), "OpenDroid"))
 		teams.append((_("OpenSatlodge"), "OpenSatlodge"))
 		teams.append((_("TeamBlue"), "TeamBlue"))
 		teams.append((_("OpenHDF"), "OpenHDF"))
@@ -717,10 +718,8 @@ class imagesScreen(Screen):
 
 		if self.teamName=="OpenVIX":
 			imagesPath="https://www.openvix.co.uk/openvix-builds/%s/" % boxtype
-			#logdata("imagesPath",imagesPath)
 			regx = b'''<a href="(.*?)">(.*?).rele..&gt;</a>'''
 			rimages=get_images(imagesPath,regx)
-			#logdata("rimages",rimages)
 			for item in rimages:
 				imageName=item[0]
 				if PY3:
@@ -738,6 +737,21 @@ class imagesScreen(Screen):
 				imagePath=item[1]
 				if not boxtype in imageName:
 					continue
+				images.append((imageName,imagePath))
+
+		if self.teamName=="OpenDroid":
+			imagesPath=f"https://opendroid.org/Dreambox/index.php?open={boxtype}"
+			#logdata("imagesPath",imagesPath)
+			regx = b'''<a href='.*?/(.*?)'>(.*?)</a><br>'''
+			rimages=get_images(imagesPath,regx)
+			#logdata("rimages",rimages)
+			for item in rimages:
+				imageName=item[0]
+				if PY3:
+					imageName=imageName.decode()
+					imagePath = os.path.join(f'https://opendroid.org/Dreambox/{boxtype}/', imageName)
+				else:
+					imagePath = os.path.join(f'https://opendroid.org/Dreambox/{boxtype}/', imageName)
 				images.append((imageName,imagePath))
 
 		return images
