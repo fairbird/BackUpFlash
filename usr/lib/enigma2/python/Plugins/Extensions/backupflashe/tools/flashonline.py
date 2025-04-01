@@ -103,6 +103,7 @@ class teamsScreen(Screen):
 		teams.append((_("BlackHole"), "BlackHole"))
 		teams.append((_("OpenTSimage"), "OpenTSimage"))
 		teams.append((_("OpenPLI-Unoffical"), "OpenPLI-Unoffical"))
+		teams.append((_("OpenPLi9xstar-japhar"), "OpenPLi9xstar-japhar"))
 		teams.append((_("OpenBH-Unoffical"), "OpenBH-Unoffical"))
 		teams.append((_("OpenATV"), "OpenATV-Python3"))
 		teams.append((_("OpenVIX"), "OpenVIX"))
@@ -259,6 +260,21 @@ class imagesScreen(Screen):
 			for item in rimages:
 				imageName=item[0]
 				imagePath=item[1]
+				if not boxtype in imageName:
+					continue
+				images.append((imageName,imagePath))
+
+		if self.teamName=="OpenPLi9xstar-japhar":
+			imagesPath = "http://openpli9xstar.japhar.net/OpenPLi9xstar/"
+			regx = b'''<a href="http://openpli9xstar.japhar.net/OpenPLi9xstar/(.*?)">(.*?)</a>'''
+			rimages=get_images(imagesPath,regx)
+			for item in rimages:
+				imageName=item[1]
+				imageName = imageName.replace(b" (Original)", b"").replace(b" (Japhar)", b"")
+				logdata("imageName",imageName)
+				if PY3:
+					imageName=imageName.decode()
+				imagePath = os.path.join("http://openpli9xstar.japhar.net/OpenPLi9xstar/", imageName)
 				if not boxtype in imageName:
 					continue
 				images.append((imageName,imagePath))
