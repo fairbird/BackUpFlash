@@ -88,11 +88,11 @@ class teamsScreen(Screen):
 		teams.append((_("Gemini4"), "Gemini4"))
 		teams.append((_("DreamElite"), "DreamElite"))
 		teams.append((_("Merlin4"), "Merlin4"))
-		#teams.append((_("OoZooN"), "OoZooN")) ## No more Team
+		teams.append((_("Satlodge"), "Satlodge"))
 		teams.append((_("Newnigma2"), "Newnigma2"))
+		#teams.append((_("OoZooN"), "OoZooN")) ## No more Team
 		#teams.append((_("Demonisat"), "Demonisat")) ## Server down
 		#teams.append((_("Powersat"), "Powersat")) ## No more Team
-		teams.append((_("Satlodge"), "Satlodge"))
 		return teams
 
 	def opensource(self):
