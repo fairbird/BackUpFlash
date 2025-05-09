@@ -87,7 +87,7 @@ class ProgressScreen(Screen):
 		self.flashingtime = self.flashingtime + 10
 		if self.process_finished == False:
 			rsize = 0
-			tarimage = '%s/tmp/rootfs.tar' % self.device_path
+			tarimage = '%s/rootfs.tar' % self.device_path
 			try:
 				self.tarimage_size = os.path.getsize(str(tarimage).strip())
 			except:
@@ -220,7 +220,7 @@ class ProgressScreen(Screen):
 			if os.path.exists('/tmp/bbackup.scr'):
 				os.remove('/tmp/bbackup.scr')
 			if retval :
-				tarimage="%s/tmp/rootfs.tar" % self.device_path
+				tarimage="%s/rootfs.tar" % self.device_path
 				if os.path.exists(self.imagePath):
 					 os.remove(self.imagePath)
 				if os.path.exists(tarimage):
@@ -266,11 +266,11 @@ class ProgressScreen(Screen):
 		return
 
 	def abort(self, answer = False):
-		os.system("touch /tmp/.cancelBackup")
-		PLUGINROOT = resolveFilename(SCOPE_PLUGINS, 'Extensions/backupflashe')
-		PLUGINBACKUP = resolveFilename(SCOPE_PLUGINS, 'Extensions/dBackup')
 		if answer:
-			tarimage = '%s/tmp/rootfs.tar' % self.device_path
+			PLUGINROOT = resolveFilename(SCOPE_PLUGINS, 'Extensions/backupflashe')
+			PLUGINBACKUP = resolveFilename(SCOPE_PLUGINS, 'Extensions/dBackup')
+			os.system("touch /tmp/.cancelBackup")
+			#tarimage = '%s/rootfs.tar' % self.device_path
 			os.system("kill -9 $(ps aux | grep backupflash.sh | awk '{print $2}')")
 			self.container.sendCtrlC()
 			self.container.sendEOF()
@@ -278,8 +278,8 @@ class ProgressScreen(Screen):
 				os.system('mv %s %s' % (PLUGINBACKUP, PLUGINROOT))
 			#if os.path.exists(self.imagePath): #these lines delete image from path of image (not recommanded)
 			#    os.remove(self.imagePath)
-			if os.path.exists(tarimage):
-				os.remove(tarimage)
+			#if os.path.exists(tarimage):
+			#	os.remove(tarimage)
 			try:
 				self.appClosed_conn = None
 				self.dataAvail_conn = None
