@@ -1,8 +1,8 @@
 #!/bin/bash
 ##setup command=wget https://raw.githubusercontent.com/fairbird/BackUpFlash/main/installer.sh -O - | /bin/sh
 
-version=10.1
-description=What is NEW :\n- Add url download for OpenPLI-Japhar Team-\n\n**************************\n: ما هو الجديد\n- OpenPLI-Japhar-Team إضافة رابط تحميل لصور فريق
+version=10.2
+description=What is NEW :\n- Support new Chkroot MultiBoot-\n\n**************************\n: ما هو الجديد\n- Chkroot MultiBoot دعم الملتيبوت الجديد
 
 echo ""
 if [ ! -d '/usr/lib64' ]; then
