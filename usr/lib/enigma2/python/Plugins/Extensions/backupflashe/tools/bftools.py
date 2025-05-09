@@ -313,17 +313,19 @@ def getimage_name():
 	return (name)
 
 def getmDevices():
-		myusb = myusb1 = myhdd = myhdd2 = mysdcard = mysd = myuniverse = myba = mydata =''
+		myusb = myusb1 = myhdd = myhdd1 = mysdcard = mysd = myuniverse = myba = myba1 = mydata = mydata1 = ''
 		mdevices = []
 		myusb=None
 		myusb1=None
 		myhdd=None
-		myhdd2=None
+		myhdd1=None
 		mysdcard=None
 		mysd=None
 		myuniverse=None
 		myba=None
+		myba1=None
 		mydata=None
+		mydata1=None
 		if fileExists('/proc/mounts'):
 			f = open('/proc/mounts', 'r')
 			for line in f.readlines():
@@ -337,12 +339,11 @@ def getmDevices():
 					   os.system('mkdir -p /media/usb1/backup')
 				elif line.find('/media/hdd') != -1:
 					myhdd = '/media/hdd/backup'
+					myhdd1 = '/media/hdd/images'
 					if not os.path.exists('/media/hdd/backup'):
 					   os.system('mkdir -p /media/hdd/backup')
-				elif line.find('/media/hdd2') != -1:
-					myhdd2 = '/media/hdd2/backup'
-					if not os.path.exists('/media/hdd2/backup'):
-					   os.system('mkdir -p /media/hdd2/backup')
+					if not os.path.exists('/media/hdd/images'):
+					   os.system('mkdir -p /media/hdd/images')
 				elif line.find('/media/sdcard') != -1:
 					mysdcard = '/media/sdcard/backup'
 					if not os.path.exists('/media/sdcard/backup'):
@@ -357,12 +358,18 @@ def getmDevices():
 					   os.system('mkdir -p /universe/backup')
 				elif line.find('/media/ba') != -1:
 					myba = '/media/ba/backup'
+					myba1 = '/media/ba/images'
 					if not os.path.exists('/media/ba/backup'):
 					   os.system('mkdir -p /media/ba/backup')
+					if not os.path.exists('/media/ba/images'):
+					   os.system('mkdir -p /media/ba/images')
 				elif line.find('/data') != -1:
 					mydata = '/data/backup'
+					mydata1 = '/data/images'
 					if not os.path.exists('/data/backup'):
 					   os.system('mkdir -p /data/backup')
+					if not os.path.exists('/data/images'):
+					   os.system('mkdir -p /data/images')
 			f.close()
 		if myusb:
 			mdevices.append((myusb, myusb))
@@ -370,8 +377,8 @@ def getmDevices():
 			mdevices.append((myusb1, myusb1))
 		if myhdd:
 			mdevices.append((myhdd, myhdd))
-		if myhdd2:
-			mdevices.append((myhdd2, myhdd2))
+		if myhdd1:
+			mdevices.append((myhdd1, myhdd1))
 		if mysdcard:
 			mdevices.append((mysdcard, mysdcard))
 		if mysd:
@@ -380,6 +387,10 @@ def getmDevices():
 			mdevices.append((myuniverse, myuniverse))
 		if myba:
 			mdevices.append((myba, myba))
+		if myba1:
+			mdevices.append((myba1, myba1))
 		if mydata:
 			mdevices.append((mydata, mydata))
+		if mydata1:
+			mdevices.append((mydata1, mydata1))
 		return mdevices

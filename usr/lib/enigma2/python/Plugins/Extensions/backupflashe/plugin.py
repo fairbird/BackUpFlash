@@ -41,10 +41,11 @@ config.backupflashe.update = ConfigYesNo(default=True)
 config.backupflashe.shutdown = ConfigYesNo(default=False)
 config.backupflashe.cleanba = ConfigYesNo(default=False)
 config.backupflashe.flashAllow = ConfigYesNo(default=False)
+config.backupflashe.Zipcompression = ConfigYesNo(default=False)
 config.backupflashe.path_left = ConfigText(
 	default=resolveFilename(SCOPE_MEDIA))
 
-image_formats = [('xz', 'xz'), ('gz', 'gz')]
+image_formats = [('xz', 'xz'), ('bz2', 'bz2')]
 config.backupflashe.image_format = ConfigSelection(
 	default="xz", choices=image_formats)
 xz_options = []
@@ -62,7 +63,7 @@ else:
 	xz_options.append(("6", "6"))
 config.backupflashe.xzcompression = ConfigSelection(
 	default="1", choices=xz_options)
-config.backupflashe.gzcompression = ConfigSelection(
+config.backupflashe.bz2compression = ConfigSelection(
 	default="3", choices=xz_options)
 
 k = open("/proc/cmdline", "r")
@@ -214,11 +215,13 @@ class full_main(Screen, ConfigListScreen):
 		if config.backupflashe.image_format.value == "xz":
 			self.list.append(getConfigListEntry(("xz")+" "+_("Compression")+" "+_("(1-6)"), config.backupflashe.xzcompression, _(
 				"This option to set stringe value of Compress image (The higher the value, the longer the operation time, but the smaller the backup size)")))
-		elif config.backupflashe.image_format.value == "gz":
-			self.list.append(getConfigListEntry(("gz")+" "+_("Compression")+" "+_("(1-6)"), config.backupflashe.gzcompression, _(
-				"This option to set stringe value of Compress image (The higher the value, the longer the operation time, but the smaller the backup size)")))
+		#elif config.backupflashe.image_format.value == "bz2":
+		#	self.list.append(getConfigListEntry(("bz2")+" "+_("Compression")+" "+_("(1-6)"), config.backupflashe.bz2compression, _(
+		#		"This option to set stringe value of Compress image (The higher the value, the longer the operation time, but the smaller the backup size)")))
 		else:
 			pass
+		self.list.append(getConfigListEntry(('Compression image as Zip'), config.backupflashe.Zipcompression, _(
+			"This option to Compression image inside Zip file")))
 		self.list.append(getConfigListEntry(('Enable shutdown box after backup'), config.backupflashe.shutdown, _(
 			"This option to Enable or Disable Shutdown Box After Finished Backup")))
 		# if (os.path.exists("/.bainfo") or os.path.exists("/.lfinfo") or cmd.find(rootfs) == -1):
