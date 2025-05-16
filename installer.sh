@@ -1,8 +1,8 @@
 #!/bin/bash
 ##setup command=wget https://raw.githubusercontent.com/fairbird/BackUpFlash/main/installer.sh -O - | /bin/sh
 
-version=10.2
-description=What is NEW :\n- Support new Chkroot MultiBoot-\n\n**************************\n: ما هو الجديد\n- Chkroot MultiBoot دعم الملتيبوت الجديد
+version=10.3
+description=What is NEW :\n- Add new feature (Convert image) to support Chkroot MultiBoot -\n\n**************************\n: ما هو الجديد\n- Chkroot MultiBoot إضافة خاصية جديدة لتحويل الصورة لدعم الملتيبوت
 
 echo ""
 if [ ! -d '/usr/lib64' ]; then
