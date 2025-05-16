@@ -17,7 +17,7 @@ from Screens.Standby import TryQuitMainloop
 from Tools.Directories import resolveFilename, SCOPE_PLUGINS
 import os
 from .skin import *
-from .bftools import logdata, copylog, getboxtype, getimage_name
+from .bftools import logdata, copylog, getboxtype, getimage_name, trace_error
 
 backup_progress = 0
 flash_progress = 0
@@ -43,6 +43,8 @@ class ProgressScreen(Screen):
 		self.session = session
 		if endstr == '':
 			self.processType = 'backup'
+		elif endstr == 'Convert image':
+			self.processType = 'convert'
 		else:
 			self.processType = 'flash'
 		st = os.statvfs('/')
@@ -87,7 +89,10 @@ class ProgressScreen(Screen):
 		self.flashingtime = self.flashingtime + 10
 		if self.process_finished == False:
 			rsize = 0
-			tarimage = '%s/rootfs.tar' % self.device_path
+			try:
+				tarimage = '%s/rootfs.tar' % self.device_path
+			except:
+				tarimage = '%s/rootfs.tar.xz' % self.device_path
 			try:
 				self.tarimage_size = os.path.getsize(str(tarimage).strip())
 			except:
@@ -110,16 +115,22 @@ class ProgressScreen(Screen):
 			else: #dm820,dm7080
 				gfactor=3
 				xfactor=4.5
-			self.setTitle('Extracting ' + str(float(self.tarimage_size / 1067008)) + ' MB')
+			try:
+				self.setTitle('Extracting ' + str(float(self.tarimage_size / 1067008)) + ' MB')
+			except:
+				pass
 			gfactor=.3
 			xfactor=.3
-			if self.tarimage_size > 0:
-				if self.imagePath.endswith(".gz"):
-				   flash_progress=int(100*gfactor*self.tarimage_size /self.image_size)
-				else:
-				   flash_progress=int(100*xfactor*self.tarimage_size /self.image_size)
-				self.slider.setValue( flash_progress)
-				self.TimerFlashing.start(1000, True)
+			try:
+				if self.tarimage_size > 0:
+					if self.imagePath.endswith(".bz2"):
+				   		flash_progress=int(100*gfactor*self.tarimage_size /self.image_size)
+					else:
+				   		flash_progress=int(100*xfactor*self.tarimage_size /self.image_size)
+					self.slider.setValue( flash_progress)
+					self.TimerFlashing.start(1000, True)
+			except:
+				pass
 		else:
 			flash_progress_progress = 0
 			self.TimerFlashing = eTimer()
@@ -151,7 +162,7 @@ class ProgressScreen(Screen):
 				self.root_size = 0
 				backup_progress = 3
 			if self.image_size > 0:
-				if self.imagePath.endswith(".gz"):
+				if self.imagePath.endswith(".bz2"):
 				   backup_progress =  int(550*gfactor*self.image_size /(root_size))
 				else:
 				   backup_progress =  int(500*xfactor*self.image_size /(root_size))
@@ -184,6 +195,20 @@ class ProgressScreen(Screen):
 				self.TimerBackup.callback.append(self.checkbackupProgress)
 			self.TimerBackup.start(10000, True)
 			startstr = 'Backup started for (%s)' % imagename.replace("Backup-","")
+		elif self.processType == 'convert':
+			self.backuptime = 0
+			self.TimerBackup = eTimer()
+			try:
+				self.TimerBackup.stop()
+			except:
+				pass
+
+			if not os.path.exists('/var/lib/opkg/status'):
+				self.TimerBackup_conn = self.TimerBackup.timeout.connect(self.checkbackupProgress)
+			else:
+				self.TimerBackup.callback.append(self.checkbackupProgress)
+			self.TimerBackup.start(10000, True)
+			startstr = 'Convert started for (%s)' % self.imagePath.split('/')[-1]
 		else:
 			self.flashingtime = 0
 			self.TimerFlashing = eTimer()
@@ -211,6 +236,9 @@ class ProgressScreen(Screen):
 			self.instance.show()
 			if retval and not self.processType == 'backup':
 				pass
+			elif not retval and self.processType == 'convert':
+				str = self.endstr
+				self['text'].setText(str)
 			elif not retval and self.processType == 'flash':
 				str = self.endstr
 				self['text'].setText(str)
@@ -220,7 +248,10 @@ class ProgressScreen(Screen):
 			if os.path.exists('/tmp/bbackup.scr'):
 				os.remove('/tmp/bbackup.scr')
 			if retval :
-				tarimage="%s/rootfs.tar" % self.device_path
+				try:
+					tarimage="%s/rootfs.tar" % self.device_path
+				except:
+					tarimage="%s/rootfs.tar.xz" % self.device_path
 				if os.path.exists(self.imagePath):
 					 os.remove(self.imagePath)
 				if os.path.exists(tarimage):
@@ -231,6 +262,9 @@ class ProgressScreen(Screen):
 			if self.processType == 'flash':
 				self.TimerFlashing = eTimer()
 				self.TimerFlashing.stop()
+			elif self.processType == 'convert':
+				self.TimerBackup = eTimer()
+				self.TimerBackup.stop()
 			else:
 				self.TimerBackup = eTimer()
 				self.TimerBackup.stop()
