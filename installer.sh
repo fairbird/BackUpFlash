@@ -50,11 +50,13 @@ if [ -f /usr/bin/python3 ] ; then
 	PYTHON=PY3
 	CRYPT=python3-crypt
 	REQUESTS=python3-requests
+	p7zip=7zip
 else
 	echo "You have Python2 image"
 	PYTHON=PY2
 	CRYPT=python-crypt
 	REQUESTS=python-requests
+	p7zip=p7zip
 fi
 if [ -f $DreamOS ]; then
    STATUS=$DreamOS
@@ -115,25 +117,19 @@ else
 	fi
 fi
 # Make more check depend packges
-if grep -q wget $STATUS ; then
+if grep -q "wget" $STATUS ; then
      echo ""
 else
      echo "Missing (wget) package"
 exit 1
 fi
-if grep -q pigz $STATUS ; then
+if grep -q "pigz" $STATUS ; then
      echo ""
 else
      echo "Missing (pigz) package"
 exit 1
 fi
-if grep -q p7zip $STATUS ; then
-     echo ""
-else
-     echo "Missing (7zip) package"
-exit 1
-fi
-if grep -q flash-scripts $STATUS ; then
+if grep -q "flash-scripts" $STATUS ; then
      echo ""
 else
      echo "Missing (flash-scripts) package"
@@ -143,6 +139,11 @@ if grep -q $CRYPT $STATUS ; then
      echo ""
 else
      echo "Missing ($CRYPT) package"
+exit 1
+if grep -q $p7zip $STATUS ; then
+     echo ""
+else
+     echo "Missing ($p7zip) package"
 exit 1
 fi
 
