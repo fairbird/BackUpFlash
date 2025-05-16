@@ -50,13 +50,11 @@ if [ -f /usr/bin/python3 ] ; then
 	PYTHON=PY3
 	CRYPT=python3-crypt
 	REQUESTS=python3-requests
-	p7zip=7zip
 else
 	echo "You have Python2 image"
 	PYTHON=PY2
 	CRYPT=python-crypt
 	REQUESTS=python-requests
-	p7zip=p7zip
 fi
 if [ -f $DreamOS ]; then
    STATUS=$DreamOS
@@ -106,11 +104,11 @@ else
 	if [ -f $DreamOS ]; then
 		dpkg --configure -a;
 		apt-get update;
-		apt-get install wget pigz xz p7zip flash-scripts python-requests python-crypt python-requests -y;
+		apt-get install wget pigz xz 7zip p7zip flash-scripts python-requests python-crypt python-requests -y;
 		apt-get install -f -y;
 	elif [ $PYTHON = "PY3" ]; then
 		opkg update
-		opkg install wget pigz xz 7zip flash-scripts python3-requests python3-crypt python3-requests;
+		opkg install wget pigz xz 7zip p7zip flash-scripts python3-requests python3-crypt python3-requests;
 	elif [ $PYTHON = "PY2" ]; then
 		opkg update;
 		opkg install wget pigz xz 7zip p7zip flash-scripts python-requests python-crypt python-requests;
@@ -129,6 +127,12 @@ else
      echo "Missing (pigz) package"
 exit 1
 fi
+if grep -q "7zip" $STATUS || grep -q "p7zip" $STATUS ; then
+     echo ""
+else
+     echo "Missing (7zip) or (p7zip) package"
+exit 1
+fi
 if grep -q "flash-scripts" $STATUS ; then
      echo ""
 else
@@ -139,12 +143,6 @@ if grep -q $CRYPT $STATUS ; then
      echo ""
 else
      echo "Missing ($CRYPT) package"
-exit 1
-fi
-if grep -q $p7zip $STATUS ; then
-     echo ""
-else
-     echo "Missing ($p7zip) package"
 exit 1
 fi
 
