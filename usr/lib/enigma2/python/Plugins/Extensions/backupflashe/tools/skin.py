@@ -143,7 +143,7 @@ if sz_w == 1280 :
 <widget source="Title" render="Label" font="Regular;24" foregroundColor="#00bab329" backgroundColor="#16000000" position="10,5" size="530,25" transparent="1"/>
 <eLabel text="" position="10,31" zPosition="3" size="531,1" font="Regular;5" halign="center" valign="center" foregroundColor="#00ffffff" backgroundColor="#00ffffff"/>
 <widget name="text" position="10,32" size="530,75" font="Regular;18" backgroundColor="#16000000"/>
-<eLabel text="Press Exit Button to cancel BackUp job" position="10,108" zPosition="2" size="531,26" font="Regular;22" halign="center" valign="center" foregroundColor="#00ff2525" backgroundColor="#16000000"/>
+<eLabel text="Press Exit Button to cancel job" position="10,108" zPosition="2" size="531,26" font="Regular;22" halign="center" valign="center" foregroundColor="#00ff2525" backgroundColor="#16000000"/>
 <eLabel text="Press Ok Button to Hide/Show Screen" position="10,133" zPosition="2" size="531,26" font="Regular;22" halign="center" valign="center" foregroundColor="#00bab329" backgroundColor="#16000000"/>
 <widget name="slider" position="0,162" size="550,15" borderWidth="1" transparent="1" />
 </screen>"""
@@ -153,7 +153,7 @@ else:
 <widget source="Title" render="Label" font="Regular;30" foregroundColor="#00bab329" backgroundColor="#16000000" position="20,5" size="815,35" transparent="1"/>
 <eLabel text="" position="20,41" zPosition="3" size="815,2" font="Regular;5" halign="center" valign="center" foregroundColor="#00ffffff" backgroundColor="#00ffffff"/>
 <widget name="text" position="20,45" size="815,115" font="Regular;28" backgroundColor="#16000000"/>
-<eLabel text="Press Exit Button to cancel BackUp job" position="32,163" zPosition="2" size="784,35" font="Regular;28" halign="center" valign="center" foregroundColor="#00ff2525" backgroundColor="#16000000"/>
+<eLabel text="Press Exit Button to cancel job" position="32,163" zPosition="2" size="784,35" font="Regular;28" halign="center" valign="center" foregroundColor="#00ff2525" backgroundColor="#16000000"/>
 <eLabel text="Press Ok Button to Hide/Show Screen" position="32,200" zPosition="2" size="784,35" font="Regular;28" halign="center" valign="center" foregroundColor="#00bab329" backgroundColor="#16000000"/>
 <widget name="slider" position="0,238" size="850,20" borderWidth="1" transparent="1"/>
 </screen>"""
