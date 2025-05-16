@@ -140,6 +140,7 @@ if grep -q $CRYPT $STATUS ; then
 else
      echo "Missing ($CRYPT) package"
 exit 1
+fi
 if grep -q $p7zip $STATUS ; then
      echo ""
 else
