@@ -184,7 +184,7 @@ class doBackUpInternal(Screen):
 					sleep(2)
 					logdata("Shutdown Device") ## Print Shutdown to log file
 					os.system('shutdown -P -h now')
-					self.close()
+			self.close()
 
 
 ## BackUp External Flash
@@ -345,4 +345,4 @@ class doBackUpExternal(Screen):
 					sleep(2)
 					logdata("Shutdown Device") ## Print Shutdown to log file
 					os.system('shutdown -P -h now')
-					self.close()
+			self.close()
