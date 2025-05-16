@@ -23,6 +23,7 @@ import os
 
 from Plugins.Extensions.backupflashe.tools.skin import *
 from Plugins.Extensions.backupflashe.tools.backup import *
+from Plugins.Extensions.backupflashe.tools.convert import *
 from Plugins.Extensions.backupflashe.tools.compat import PY3
 from Plugins.Extensions.backupflashe.tools.Console import Console
 from Plugins.Extensions.backupflashe.tools.bftools import logdata, dellog, copylog, getboxtype, getimage_name, getmDevices, trace_error, getversioninfo
@@ -143,7 +144,8 @@ class full_main(Screen, ConfigListScreen):
 		self.onChangedEntry = []
 		self.skin = SKIN_full_main
 		self["key_green"] = Label(_("Flash Image"))
-		self["key_yellow"] = Label(_("Flash online"))
+		#self["key_yellow"] = Label(_("Flash online"))
+		self["key_yellow"] = Label(_("Convert Image"))
 		self["key_blue"] = Label(_("Backup Image"))
 		self["key_red"] = Label(_("Recovery Mode"))
 		self["lab1"] = Label("Detecting mounted devices")
@@ -155,7 +157,8 @@ class full_main(Screen, ConfigListScreen):
 									{
 			"green": self.doFlash,
 			"blue": self.BackUpListSelect,
-			"yellow": self.flashOnline,
+			#"yellow": self.flashOnline,
+			"yellow": self.convertimage,
 			"menu": self.showMenuoptions,
 			"red": self.red,
 			"back": self.close
@@ -246,19 +249,15 @@ class full_main(Screen, ConfigListScreen):
 
 	def BackUpListSelect(self):
 		list = []
-		list.append(("Backup Current Image",
-					"Do Backup From Current Flash image"))
+		list.append(("Backup Current Image", "Do Backup From Current Flash image"))
 		if ExternalImages == True:
-			list.append(("Backup External Image",
-						"Do Backup From External Flash image"))
-		self.session.openWithCallback(
-			self.BackUpSelect, ChoiceBox, _('Select Backup Option'), list)
+			list.append(("Backup External Image", "Do Backup From External Flash image"))
+		self.session.openWithCallback(self.BackUpSelect, ChoiceBox, _('Select Backup Option'), list)
 
 	def BackUpSelect(self, select):
 		if select:
 			if select[0] == "Backup External Image":  # BackUp External Flash
-				self.session.openWithCallback(self.askForTarget, ChoiceBox, _(
-					"%s") % TEXT_CHOOSE, self.imagelistbackup())
+				self.session.openWithCallback(self.askForTarget, ChoiceBox, _("%s") % TEXT_CHOOSE, self.imagelistbackup())
 			else:  # BackUp Internal Flash
 				self.nameBackUp()
 		else:
@@ -330,6 +329,28 @@ class full_main(Screen, ConfigListScreen):
 					trace_error()
 					pass
 #####
+
+
+	def convertimage(self,):
+		self.session.openWithCallback(self.askForconvert, ChoiceBox, _("Choose an image to convert to zip compress"), self.imagelist())
+
+	def imagelist(self):
+		device_path = self['config'].list[0][1].getText()
+		imageslist = []
+		for line in os_listdir(device_path):
+			if line.endswith(".xz"):
+				imageslist.append((line, line))
+				imageslist.sort()
+		return imageslist
+
+	def askForconvert(self, source):
+		if source == None:
+			return
+		else:
+			self.configsSave()
+			getname = source[1].rstrip()
+			device_path = self['config'].list[0][1].getText()
+			self.session.open(doConvert, device_path, getname)
 
 	def red(self,):
 		self.session.openWithCallback(self.GoRecovery, MessageBox, _(
