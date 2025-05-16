@@ -77,6 +77,11 @@ if which xz > /dev/null ; then
 else
 	xz="False"
 fi
+if which 7za > /dev/null ; then
+	zip="True"
+else
+	zip="False"
+fi
 if grep -q flash-scripts $STATUS ; then
 	flashscripts="True"
 else
@@ -93,20 +98,20 @@ else
 	PYREQUESTS="False"
 fi
 # install depend packges if need it
-if [ $wget = 'True' -a $pigz = 'True' -a $xz = 'True' -a $flashscripts = 'True' -a $PYCRYPT = 'True' ]; then
+if [ $wget = 'True' -a $pigz = 'True' -a $zip = 'True' -a $flashscripts = 'True' -a $PYCRYPT = 'True' ]; then
 	echo "All depend packages Installed"
 else
 	if [ -f $DreamOS ]; then
 		dpkg --configure -a;
 		apt-get update;
-		apt-get install wget pigz xz flash-scripts python-requests python-crypt python-requests -y;
+		apt-get install wget pigz xz p7zip flash-scripts python-requests python-crypt python-requests -y;
 		apt-get install -f -y;
 	elif [ $PYTHON = "PY3" ]; then
 		opkg update
-		opkg install wget pigz xz flash-scripts python3-requests python3-crypt python3-requests;
+		opkg install wget pigz xz 7zip flash-scripts python3-requests python3-crypt python3-requests;
 	elif [ $PYTHON = "PY2" ]; then
 		opkg update;
-		opkg install wget pigz xz flash-scripts python-requests python-crypt python-requests;
+		opkg install wget pigz xz 7zip p7zip flash-scripts python-requests python-crypt python-requests;
 	fi
 fi
 # Make more check depend packges
@@ -122,10 +127,10 @@ else
      echo "Missing (pigz) package"
 exit 1
 fi
-if grep -q xz $STATUS ; then
+if grep -q 7za $STATUS ; then
      echo ""
 else
-     echo "Missing (xz) package"
+     echo "Missing (7zip) package"
 exit 1
 fi
 if grep -q flash-scripts $STATUS ; then
