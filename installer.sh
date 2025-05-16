@@ -127,7 +127,7 @@ else
      echo "Missing (pigz) package"
 exit 1
 fi
-if grep -q 7za $STATUS ; then
+if grep -q p7zip $STATUS ; then
      echo ""
 else
      echo "Missing (7zip) package"
