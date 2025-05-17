@@ -142,9 +142,9 @@ class full_main(Screen, ConfigListScreen):
 		ConfigListScreen.__init__(self, self.list, on_change=self.changedEntry)
 		self.onChangedEntry = []
 		self.skin = SKIN_full_main
-		self["key_green"] = Label(_("Flash Image"))
-		#self["key_yellow"] = Label(_("Flash online"))
-		self["key_yellow"] = Label(_("Convert Image"))
+		#self["key_green"] = Label(_("Flash Image"))
+		self["key_green"] = Label(_("Convert Image"))
+		self["key_yellow"] = Label(_("Flash online"))
 		self["key_blue"] = Label(_("Backup Image"))
 		self["key_red"] = Label(_("Recovery Mode"))
 		self["lab1"] = Label("Detecting mounted devices")
@@ -154,10 +154,10 @@ class full_main(Screen, ConfigListScreen):
 		self["help"] = StaticText()
 		self["actions"] = ActionMap(["WizardActions", "ColorActions", "MenuActions"],
 									{
-			"green": self.doFlash,
+			#"green": self.doFlash,
+			"green": self.convertimage,
 			"blue": self.BackUpListSelect,
-			#"yellow": self.flashOnline,
-			"yellow": self.convertimage,
+			"yellow": self.flashOnline,
 			"menu": self.showMenuoptions,
 			"red": self.red,
 			"back": self.close
