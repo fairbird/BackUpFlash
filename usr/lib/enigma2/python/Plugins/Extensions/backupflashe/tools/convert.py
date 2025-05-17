@@ -66,12 +66,12 @@ class doConvert(Screen):
 			NAMEIMAGE = "Dreambox"
 		name = self.getname.lower()
 		if name.endswith('.rootfs.tar.xz'):
-			ZIPNAME = "{}".format(self.getname.split(".rootfs.tar.xz")[0])
+			REALNAME = "{}".format(self.getname.split(".rootfs.tar.xz")[0])
 		elif name.endswith('.tar.xz'):
-			ZIPNAME = "{}".format(self.getname.split(".tar.xz")[0])
+			REALNAME = "{}".format(self.getname.split(".tar.xz")[0])
 		IMAGENAMEPATH = os.path.join(self.device_path, self.getname)
 		BUILDFOLDER = os.path.join(self.device_path, build_folder)
-		IMAGENAME = os.path.join(self.device_path, ZIPNAME)
+		IMAGENAME = os.path.join(self.device_path, REALNAME)
 		self.IMAGENAMEPATH = IMAGENAMEPATH
 		if self.device_path:
 			if os.path.exists(SCRIPT):
@@ -91,7 +91,7 @@ class doConvert(Screen):
 				os.system('echo "echo \\"%s \\n \\l\\" > %s/tmp_image/etc/issue" >> %s' % (NAMEIMAGE, BUILDFOLDER, SCRIPT))
 				os.system('echo "echo \\"\\n \\l\\" >> %s/tmp_image/etc/issue" >> %s' % (BUILDFOLDER, SCRIPT))
 				os.system('echo "cp -f %s/tmp_image/boot/Image.gz-4.9" "%s/%s/kernel.bin" >> %s' % (BUILDFOLDER, BUILDFOLDER, boxtype, SCRIPT))
-				os.system('echo "echo %s > %s/%s/imageversion" >> %s' % (IMAGENAME, BUILDFOLDER, boxtype, SCRIPT))
+				os.system('echo "echo %s > %s/%s/imageversion" >> %s' % (REALNAME, BUILDFOLDER, boxtype, SCRIPT))
 				os.system('echo "tar -cjf "%s/rootfs.tar.bz2" -C "%s/*"" >> %s' % (BUILDFOLDER, BUILDFOLDER, SCRIPT))
 			else:
 				os.system('echo "#!/bin/bash\n" > %s' % SCRIPT)
@@ -100,7 +100,7 @@ class doConvert(Screen):
 				os.system('echo "xz -dc %s > %s/rootfs.tar" >> %s' % (IMAGENAMEPATH, BUILDFOLDER, SCRIPT))
 				os.system('echo "bzip2 %s/rootfs.tar" >> %s' % (BUILDFOLDER, SCRIPT))
 				os.system('echo "touch %s/%s/kernel.bin" >> %s' % (BUILDFOLDER, boxtype, SCRIPT))
-				os.system('echo "echo %s > %s/%s/eimageversion.txt" >> %s' % (IMAGENAME, BUILDFOLDER, boxtype, SCRIPT))
+				os.system('echo "echo %s > %s/%s/eimageversion.txt" >> %s' % (REALNAME, BUILDFOLDER, boxtype, SCRIPT))
 			os.system('echo "mv %s/rootfs.tar.bz2 %s/%s" >> %s' % (BUILDFOLDER, BUILDFOLDER, boxtype, SCRIPT))
 			os.system('echo "chmod 777 -R %s/%s/*" >> %s' % (BUILDFOLDER, boxtype, SCRIPT))
 			os.system('echo "7za a -r %s.zip %s/%s" >> %s' % (IMAGENAME, BUILDFOLDER, boxtype, SCRIPT))
