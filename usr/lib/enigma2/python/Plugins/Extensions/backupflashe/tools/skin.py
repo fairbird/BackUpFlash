@@ -1,6 +1,4 @@
-# RAED & mfaraj57 &  (c) 2018
-# Code RAED & mfaraj57
-# Update 17-11-2018 Add download images option
+# RAED (c) 2015 - 2025
 
 from enigma import getDesktop
 from Screens.Screen import Screen
