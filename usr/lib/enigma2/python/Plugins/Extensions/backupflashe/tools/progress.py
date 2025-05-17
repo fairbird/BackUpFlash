@@ -1,7 +1,6 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
-# RAED  (c) 2025
-# Code RAED & mfaraj57
+# RAED & mfaraj57 (c) 2015 - 2025
 
 # python3
 from __future__ import print_function

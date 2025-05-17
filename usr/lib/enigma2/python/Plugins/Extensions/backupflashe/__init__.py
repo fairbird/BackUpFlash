@@ -1,3 +1,7 @@
+#!/usr/bin/python
+# -*- coding: utf-8 -*-
+# RAED & mfaraj57 (c) 2015 - 2025
+
 import os
 from Tools.Directories import fileExists, resolveFilename, SCOPE_PLUGINS
 

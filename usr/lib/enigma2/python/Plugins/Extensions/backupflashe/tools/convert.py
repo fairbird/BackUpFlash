@@ -11,7 +11,7 @@ from Screens.Screen import Screen
 from Tools.Directories import fileExists, resolveFilename, SCOPE_PLUGINS
 from enigma import eTimer
 from time import sleep
-import os, datetime
+import os, datetime, re
 
 from .Console import Console
 from .progress import ProgressScreen 
@@ -22,12 +22,6 @@ boxtype = getboxtype()
 cancelBackup = "/tmp/.cancelBackup"
 LOG = '/tmp/backupflash.scr'
 SCRIPT = '/tmp/backupflash_Convert.sh'
-
-# Ensure compatibility with Python 2 and 3
-try:
-	basestring  # Python 2
-except NameError:
-	basestring = str  # Python 3
 
 
 class doConvert(Screen):
@@ -54,6 +48,10 @@ class doConvert(Screen):
 			self.timer_conn = self.timer.timeout.connect(self.doConvertjob)
 		self.timer.start(6, 1)
 
+	def checkonetwoimage(self):
+		name = self.getname.lower()  # Convert to lowercase for case-insensitive check
+		return any(x in name for x in ['dreamone', 'dreamtwo', 'dreambox', 'AIO'])
+
 	def doConvertjob(self):
 		self.timer.stop()
 		cmdlist = []
@@ -61,10 +59,19 @@ class doConvert(Screen):
 		NOW = datetime.datetime.now()
 		logdata("Start Time", NOW.strftime('%H:%M')) ## Print Start time to log file
 		build_folder = 'build_folder'
-		ZIPNAME = "{}.zip".format(self.getname.split(".rootfs.tar.xz")[0])
+		match = re.match(r"^(.*?)-\d+\.tar\.xz$", self.getname)
+		if match:
+			NAMEIMAGE = match.group(1)
+		else:
+			NAMEIMAGE = "Dreambox"
+		name = self.getname.lower()
+		if name.endswith('.rootfs.tar.xz'):
+			REALNAME = "{}".format(self.getname.split(".rootfs.tar.xz")[0])
+		elif name.endswith('.tar.xz'):
+			REALNAME = "{}".format(self.getname.split(".tar.xz")[0])
 		IMAGENAMEPATH = os.path.join(self.device_path, self.getname)
 		BUILDFOLDER = os.path.join(self.device_path, build_folder)
-		IMAGEZIPNAME = os.path.join(self.device_path, ZIPNAME)
+		IMAGENAME = os.path.join(self.device_path, REALNAME)
 		self.IMAGENAMEPATH = IMAGENAMEPATH
 		if self.device_path:
 			if os.path.exists(SCRIPT):
@@ -74,16 +81,29 @@ class doConvert(Screen):
 			mytitle = _('Convert image')
 			cmdlist.append('exec > /tmp/backupflash.scr')
 			cmdlist.append('Convert (%s) on [%s]\n\n\n' % (self.getname, self.device_path))
-			os.system('echo "#!/bin/bash\n" > %s' % SCRIPT)
-			os.system('echo "mkdir -p %s" >> %s' % (BUILDFOLDER, SCRIPT))
-			os.system('echo "mkdir -p %s/box" >> %s' % (BUILDFOLDER, SCRIPT))
-			os.system('echo "xz -dc %s > %s/rootfs.tar" >> %s' % (IMAGENAMEPATH, BUILDFOLDER, SCRIPT))
-			os.system('echo "bzip2 %s/rootfs.tar" >> %s' % (BUILDFOLDER, SCRIPT))
-			os.system('echo "mv %s/rootfs.tar.bz2 %s/box" >> %s' % (BUILDFOLDER, BUILDFOLDER, SCRIPT))
-			os.system('echo "touch %s/box/kernel.bin" >> %s' % (BUILDFOLDER, SCRIPT))
-			os.system('echo "echo %s > %s/box/eimageversion.txt" >> %s' % (self.getname, BUILDFOLDER, SCRIPT))
-			os.system('echo "chmod 777 -R %s/box/*" >> %s' % (BUILDFOLDER, SCRIPT))
-			os.system('echo "7za a -r %s %s/box/*" >> %s' % (IMAGEZIPNAME, BUILDFOLDER, SCRIPT))
+			if self.checkonetwoimage():
+				os.system('echo "#!/bin/bash\n" > %s' % SCRIPT)
+				os.system('echo "mkdir -p %s" >> %s' % (BUILDFOLDER, SCRIPT))
+				os.system('echo "mkdir -p %s/%s" >> %s' % (BUILDFOLDER, boxtype, SCRIPT))
+				os.system('echo "mkdir -p %s/tmp_image" >> %s' % (BUILDFOLDER, SCRIPT))
+				os.system('echo "tar -xf %s -C %s/tmp_image" >> %s' % (IMAGENAMEPATH, BUILDFOLDER, SCRIPT))
+				os.system('echo "chmod 777 -R %s/tmp_image" >> %s' % (BUILDFOLDER, SCRIPT))
+				os.system('echo "echo \\"%s \\n \\l\\" > %s/tmp_image/etc/issue" >> %s' % (NAMEIMAGE, BUILDFOLDER, SCRIPT))
+				os.system('echo "echo \\"\\n \\l\\" >> %s/tmp_image/etc/issue" >> %s' % (BUILDFOLDER, SCRIPT))
+				os.system('echo "cp -f %s/tmp_image/boot/Image.gz-4.9" "%s/%s/kernel.bin" >> %s' % (BUILDFOLDER, BUILDFOLDER, boxtype, SCRIPT))
+				os.system('echo "echo %s > %s/%s/imageversion" >> %s' % (REALNAME, BUILDFOLDER, boxtype, SCRIPT))
+				os.system('echo "tar -cjf "%s/rootfs.tar.bz2" -C "%s/*"" >> %s' % (BUILDFOLDER, BUILDFOLDER, SCRIPT))
+			else:
+				os.system('echo "#!/bin/bash\n" > %s' % SCRIPT)
+				os.system('echo "mkdir -p %s" >> %s' % (BUILDFOLDER, SCRIPT))
+				os.system('echo "mkdir -p %s/%s" >> %s' % (BUILDFOLDER, boxtype, SCRIPT))
+				os.system('echo "xz -dc %s > %s/rootfs.tar" >> %s' % (IMAGENAMEPATH, BUILDFOLDER, SCRIPT))
+				os.system('echo "bzip2 %s/rootfs.tar" >> %s' % (BUILDFOLDER, SCRIPT))
+				os.system('echo "touch %s/%s/kernel.bin" >> %s' % (BUILDFOLDER, boxtype, SCRIPT))
+				os.system('echo "echo %s > %s/%s/eimageversion.txt" >> %s' % (REALNAME, BUILDFOLDER, boxtype, SCRIPT))
+			os.system('echo "mv %s/rootfs.tar.bz2 %s/%s" >> %s' % (BUILDFOLDER, BUILDFOLDER, boxtype, SCRIPT))
+			os.system('echo "chmod 777 -R %s/%s/*" >> %s' % (BUILDFOLDER, boxtype, SCRIPT))
+			os.system('echo "7za a -r %s.zip %s/%s" >> %s' % (IMAGENAME, BUILDFOLDER, boxtype, SCRIPT))
 			os.system('echo "rm -r %s" >> %s' % (BUILDFOLDER, SCRIPT))
 			#os.system('echo "rm -f %s" >> %s' % (SCRIPT, SCRIPT))
 			os.system('echo "\n" >> %s' % SCRIPT)
@@ -99,7 +119,11 @@ class doConvert(Screen):
 
 	def dofinish(self):
 		NOW = datetime.datetime.now()
-		ZIPNAME = "{}.zip".format(self.getname.split(".rootfs.tar.xz")[0])
+		name = self.getname.lower()
+		if name.endswith('.rootfs.tar.xz'):
+			ZIPNAME = "{}.zip".format(self.getname.split(".rootfs.tar.xz")[0])
+		elif name.endswith('.tar.xz'):
+			ZIPNAME = "{}.zip".format(self.getname.split(".tar.xz")[0])
 		IMAGEZIPNAME = os.path.join(self.device_path, ZIPNAME)
 		build_folder = 'build_folder'
 		BUILDFOLDER = os.path.join(self.device_path, build_folder)

@@ -1,7 +1,6 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
-# RAED & mfaraj57 (c) 2018
-# Code RAED & mfaraj57
+# RAED & mfaraj57 (c) 2018 - 2025
 
 from enigma import eTimer, quitMainloop
 from Screens.ChoiceBox import ChoiceBox

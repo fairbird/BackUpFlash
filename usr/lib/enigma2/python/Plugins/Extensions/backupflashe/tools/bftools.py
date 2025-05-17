@@ -1,7 +1,6 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
-# RAED & mfaraj57 &  (c) 2018
-# Code RAED & mfaraj57
+# RAED & mfaraj57 (c) 2015 - 2025
 
 from .compat import compat_Request, compat_urlopen, PY3
 
