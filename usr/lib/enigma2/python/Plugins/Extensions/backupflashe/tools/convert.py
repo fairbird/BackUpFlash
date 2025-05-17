@@ -1,7 +1,6 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
-# RAED & mfaraj57 (c) 2018
-# Code RAED & mfaraj57
+# RAED (c) 2025
 
 from Components.Label import Label
 from Components.config import config
