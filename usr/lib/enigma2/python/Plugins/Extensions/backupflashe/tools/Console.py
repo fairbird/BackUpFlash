@@ -1,6 +1,6 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
-# RAED & mfaraj57 &  (c) 2018
+# RAED & mfaraj57 &  (c) 2015 - 2025
 
 from __future__ import print_function
 from .compat import PY3
