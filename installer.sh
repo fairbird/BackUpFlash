@@ -10,9 +10,7 @@ if [ ! -d '/usr/lib64' ]; then
 else
 	LIBPATH='/usr/lib64'
 fi
-# Find name of device
-DreamOS=/var/lib/dpkg/status
-
+#########################
 if [ `uname -r | grep dm7080 | wc -l` -gt 0 ]; then
         echo "[Your device is MIPS - DM7080]"
         echo ""
@@ -45,73 +43,97 @@ echo "##############################################"
 exit 1
 echo ""
 fi
+
+# check depends packges
+if [ -f /var/lib/dpkg/status ]; then
+   STATUS=/var/lib/dpkg/status
+   OSTYPE=DreamOs
+else
+   STATUS=/var/lib/opkg/status
+   OSTYPE=Opensource
+fi
+
 if [ -f /usr/bin/python3 ] ; then
 	echo "You have Python3 image"
 	PYTHON=PY3
-	CRYPT=python3-crypt
-	REQUESTS=python3-requests
+	CRYPT='python3-crypt'
+	REQUESTS='python3-requests'
 else
 	echo "You have Python2 image"
 	PYTHON=PY2
-	CRYPT=python-crypt
-	REQUESTS=python-requests
+	CRYPT='python-crypt'
+	REQUESTS='python-requests'
 fi
-if [ -f $DreamOS ]; then
-   STATUS=$DreamOS
-else
-   STATUS=/var/lib/opkg/status
-fi
-# check depends packges if installed
-if grep -q wget $STATUS ; then
-	wget="True"
-else
-	wget="False"
-fi
-if grep -q pigz $STATUS ; then
-	pigz="True"
-else
-	pigz="False"
-fi
-if which xz > /dev/null ; then
-	xz="True"
-else
-	xz="False"
-fi
-if which 7za > /dev/null ; then
-	zip="True"
-else
-	zip="False"
-fi
-if grep -q flash-scripts $STATUS ; then
-	flashscripts="True"
-else
-	flashscripts="False"
-fi
-if grep -q $CRYPT $STATUS ; then
-	PYCRYPT="True"
-else
-	PYCRYPT="False"
-fi
-if grep -q $REQUESTS $STATUS ; then
-	PYREQUESTS="True"
-else
-	PYREQUESTS="False"
-fi
+
+wget='wget'
+pigz='pigz'
+xz='xz'
+zip='7za'
+p7zip='p7zip'
+flashscripts='flash-scripts'
+
 # install depend packges if need it
-if [ $wget = 'True' -a $pigz = 'True' -a $zip = 'True' -a $flashscripts = 'True' -a $PYCRYPT = 'True' ]; then
+if grep -qs "Package: $CRYPT" "$STATUS" && \
+	grep -qs "Package: $REQUESTS" "$STATUS" && \
+	grep -qs "Package: $REQUESTS" "$STATUS" && \
+	grep -qs "Package: $wget" "$STATUS" && \
+	grep -qs "Package: $xz" "$STATUS" && \
+	grep -qs "Package: $zip" "$STATUS" && \
+	grep -qs "Package: $flashscripts" "$STATUS" && \
+	grep -qs "Package: $REQUESTS" "$STATUS" && \
+	grep -qs "Package: $REQUESTS" "$STATUS" && \
+	grep -qs "Package: $pigz" "$STATUS" || grep -qs "Package: $p7zip" "$STATUS"; then
+	echo ""
 	echo "All depend packages Installed"
 else
-	if [ -f $DreamOS ]; then
-		dpkg --configure -a;
-		apt-get update;
-		apt-get install wget pigz xz 7zip p7zip flash-scripts python-requests python-crypt python-requests -y;
-		apt-get install -f -y;
-	elif [ $PYTHON = "PY3" ]; then
-		opkg update
-		opkg install wget pigz xz 7zip p7zip flash-scripts python3-requests python3-crypt python3-requests;
-	elif [ $PYTHON = "PY2" ]; then
-		opkg update;
-		opkg install wget pigz xz 7zip p7zip flash-scripts python-requests python-crypt python-requests;
+	opkg update
+	if grep -qs "Package: $CRYPT" cat $STATUS ; then
+		echo ""
+	else
+		echo "Need to install $Packagerequests"
+		opkg install $CRYPT
+	fi
+	if grep -qs "Package: $REQUESTS" cat $STATUS ; then
+		echo ""
+	else
+		echo "Need to install $REQUESTS"
+		opkg install $REQUESTS
+	fi
+	if grep -qs "Package: $wget" cat $STATUS ; then
+		echo ""
+	else
+		echo "Need to install $wget"
+		opkg install $wget
+	fi
+	if grep -qs "Package: $pigz" cat $STATUS ; then
+		echo ""
+	else
+		echo "Need to install $pigz"
+		opkg install $pigz
+	fi
+	if grep -qs "Package: $p7zip" cat $STATUS ; then
+		echo ""
+	else
+		echo "Need to install $p7zip"
+		opkg install $p7zip
+	fi
+	if grep -qs "Package: $xz" cat $STATUS ; then
+		echo ""
+	else
+		echo "Need to install $xz"
+		opkg install $xz
+	fi
+	if grep -qs "Package: $zip" cat $STATUS ; then
+		echo ""
+	else
+		echo "Need to install $zip"
+		opkg install $zip
+	fi
+	if grep -qs "Package: $flashscripts" cat $STATUS ; then
+		echo ""
+	else
+		echo "Need to install $flashscripts"
+		opkg install $flashscripts
 	fi
 fi
 # Make more check depend packges
@@ -174,7 +196,7 @@ if [ -f "/media/ba/ba.sh" -a "$LIBPATH/enigma2/python/Plugins/Extensions/backupf
 mv /usr/lib/enigma2/python/Plugins/Extensions/backupflashe /media/ba
 ln -s /media/ba/backupflashe /usr/lib/enigma2/python/Plugins/Extensions
 fi
-##
+#
 set +e
 cd ..
 sync
