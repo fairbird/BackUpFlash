@@ -185,7 +185,7 @@ class full_main(Screen, ConfigListScreen):
 	def layoutFinished(self):
 		if config.backupflashe.update.value:
 			self.checkupdates()
-		self.setTitle("Backup And Flash by RAED & mfaraj57 - V " + Ver)
+		self.setTitle("Backup And Flash by RAED - V " + Ver)
 		self["config"].onSelectionChanged.append(self.updateHelp)
 
 	def updateList(self):
@@ -193,7 +193,7 @@ class full_main(Screen, ConfigListScreen):
 		self.checkupdates()
 		if len(mounted_devices) > 0:
 			self.deviceok = True
-			self["lab1"].setText(_("Do Flash New Image or Full Backup Image."))
+			self["lab1"].setText(_("Do (Full Backup) or (Convert) or (Download) Images or (Go to Recovery Mode)"))
 			self["key_green"].show()
 			self["key_blue"].show()
 			self["key_yellow"].show()
