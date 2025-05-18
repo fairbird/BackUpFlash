@@ -496,7 +496,7 @@ class full_main(Screen, ConfigListScreen):
 		return
 
 
-def main(session, **kwargs,):
+def main(session, **kwargs):
 	# mounted_devices = getmDevices()
 	# if len(mounted_devices) > 0:
 	session.open(full_main)
