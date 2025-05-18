@@ -210,15 +210,25 @@ class full_main(Screen, ConfigListScreen):
 		self["config"].onSelectionChanged.append(self.updateHelp)
 
 	def showMissingPackages(self):
-		self.session.open(MessageBox, "Some packages are not installed..\n\nBackup or Convert or Download images may not work.\n\nLook in '/tmp/backupflash.log' for missing packages.", MessageBox.TYPE_INFO, timeout=8)
+		missing = []
 		if not XZ_:
 			logdata("Missing packages", "xz")
+			missing.append("xz")
 		if not PIGZ_:
 			logdata("Missing packages", "pigz")
+			missing.append("pigz")
 		if not ZIP_:
 			logdata("Missing packages", "p7zip or 7zip")
+			missing.append("p7zip or 7zip")
 		if not WGET_:
 			logdata("Missing packages", "wget")
+			missing.append("wget")
+		if missing:
+			message = "These packages are not installed:\n\n" + "\n".join("- %s" % pkg for pkg in missing)
+		else:
+			message = "All required packages are installed."
+		message += "\n\nBackup or Convert or Download images may not work.\n\nLook in '/tmp/backupflash.log' for missing packages."
+		self.session.open(MessageBox, message, MessageBox.TYPE_INFO, timeout=8)
 
 	def updateList(self):
 		dellog()
