@@ -22,10 +22,11 @@ import os
 
 from Plugins.Extensions.backupflashe.tools.skin import *
 from Plugins.Extensions.backupflashe.tools.backup import *
+from Plugins.Extensions.backupflashe.tools.bftools import *
 from Plugins.Extensions.backupflashe.tools.convert import *
 from Plugins.Extensions.backupflashe.tools.compat import PY3
 from Plugins.Extensions.backupflashe.tools.Console import Console
-from Plugins.Extensions.backupflashe.tools.bftools import logdata, dellog, copylog, getboxtype, getimage_name, getmDevices, trace_error, getversioninfo
+
 
 BRANDOS = '/var/lib/dpkg/status'  # DreamOS
 BAINIT = '/sbin/bainit'
@@ -34,6 +35,8 @@ BAINFO = '/.bainfo'
 boxtype = getboxtype()
 
 Ver = getversioninfo()
+
+XZ_, PIGZ_, ZIP_, WGET_ = get_package()
 
 config.backupflashe = ConfigSubsection()
 
@@ -186,7 +189,36 @@ class full_main(Screen, ConfigListScreen):
 		if config.backupflashe.update.value:
 			self.checkupdates()
 		self.setTitle("Backup And Flash by RAED - V " + Ver)
+		missing = []
+		if not XZ_:
+			missing.append("xz")
+		if not PIGZ_:
+			missing.append("pigz")
+		if not ZIP_:
+			missing.append("p7zip or 7zip")
+		if not WGET_:
+			missing.append("wget")
+		if missing:
+			self.msg_timer = eTimer()
+			try:
+				self.msg_timer_conn = self.msg_timer.timeout.connect
+			except:
+				self.msg_timer.callback.append
+			self.msg_timer.callback.append(self.showMissingPackages)
+			self.msg_timer.start(100, True)
+
 		self["config"].onSelectionChanged.append(self.updateHelp)
+
+	def showMissingPackages(self):
+		self.session.open(MessageBox, "Some packages are not installed..\n\nBackup or Convert or Download images may not work.\n\nLook in '/tmp/backupflash.log' for missing packages.", MessageBox.TYPE_ERROR, timeout=8)
+		if not XZ_:
+			logdata("Missing packages", "xz")
+		if not PIGZ_:
+			logdata("Missing packages", "pigz")
+		if not ZIP_:
+			logdata("Missing packages", "p7zip or 7zip")
+		if not WGET_:
+			logdata("Missing packages", "wget")
 
 	def updateList(self):
 		dellog()
@@ -454,7 +486,7 @@ class full_main(Screen, ConfigListScreen):
 		return
 
 
-def main(session, **kwargs):
+def main(session, **kwargs,):
 	# mounted_devices = getmDevices()
 	# if len(mounted_devices) > 0:
 	session.open(full_main)
