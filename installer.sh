@@ -68,21 +68,18 @@ fi
 wget='wget'
 pigz='pigz'
 xz='xz'
-zip='7za'
+zip='7zip'
 p7zip='p7zip'
 flashscripts='flash-scripts'
 
 # install depend packges if need it
 if grep -qs "Package: $CRYPT" "$STATUS" && \
 	grep -qs "Package: $REQUESTS" "$STATUS" && \
-	grep -qs "Package: $REQUESTS" "$STATUS" && \
 	grep -qs "Package: $wget" "$STATUS" && \
 	grep -qs "Package: $xz" "$STATUS" && \
-	grep -qs "Package: $zip" "$STATUS" && \
+	grep -qs "Package: $pigz" "$STATUS" && \
 	grep -qs "Package: $flashscripts" "$STATUS" && \
-	grep -qs "Package: $REQUESTS" "$STATUS" && \
-	grep -qs "Package: $REQUESTS" "$STATUS" && \
-	grep -qs "Package: $pigz" "$STATUS" || grep -qs "Package: $p7zip" "$STATUS"; then
+	grep -qs "Package: $zip" "$STATUS" || grep -qs "Package: $p7zip" "$STATUS"; then
 	echo ""
 	echo "All depend packages Installed"
 else
@@ -90,7 +87,7 @@ else
 	if grep -qs "Package: $CRYPT" cat $STATUS ; then
 		echo ""
 	else
-		echo "Need to install $Packagerequests"
+		echo "Need to install $CRYPT"
 		opkg install $CRYPT
 	fi
 	if grep -qs "Package: $REQUESTS" cat $STATUS ; then
@@ -117,17 +114,17 @@ else
 		echo "Need to install $p7zip"
 		opkg install $p7zip
 	fi
+ 	if grep -qs "Package: $zip" cat $STATUS ; then
+		echo ""
+	else
+		echo "Need to install $zip"
+		opkg install $zip
+	fi
 	if grep -qs "Package: $xz" cat $STATUS ; then
 		echo ""
 	else
 		echo "Need to install $xz"
 		opkg install $xz
-	fi
-	if grep -qs "Package: $zip" cat $STATUS ; then
-		echo ""
-	else
-		echo "Need to install $zip"
-		opkg install $zip
 	fi
 	if grep -qs "Package: $flashscripts" cat $STATUS ; then
 		echo ""
