@@ -17,6 +17,11 @@ if not fileExists('/usr/lib64'):
 else:
 	LIBPATH='/usr/lib64'
 
+if os.path.isfile('/var/lib/dpkg/status'):
+	STATUS = '/var/lib/dpkg/status'
+else:
+	STATUS = '/var/lib/opkg/status'
+
 #def logdata(label, txt):
 #    try:
 #        bfile=open(logfile, 'a')
@@ -24,6 +29,7 @@ else:
 #        bfile.close()
 #    except:
 #        pass
+
 
 def logdata(label='', data=None):
 	try:
@@ -33,9 +39,23 @@ def logdata(label='', data=None):
 	except:
 		pass
 
+
 def dellog():
 	if os.path.exists(logfile):
 		os.remove(logfile)
+
+
+def trace_error():
+	try:
+		traceback.print_exc(file=sys.stdout)
+		if os.path.exists(logfile):
+			pass
+		else:
+			return
+		traceback.print_exc(file=open(logfile, 'a'))
+	except:
+		pass
+
 
 def copylog(device_path):
 	try:
@@ -48,12 +68,14 @@ def copylog(device_path):
 	except:
 			  pass
 
+
 def getimage_version():
 	try:
 	  image_version=about.getEnigmaVersionString()
 	  return image_version.strip()
 	except:
 		return None
+
 
 def getversioninfo():
 	currversion = '1.0'
@@ -68,22 +90,24 @@ def getversioninfo():
 			pass
 	return currversion
 
+
 def getboxtype():
-		boxtype="dm7080hd"
-		if os.path.exists('/proc/stb/info/model'):
-			f = open('/proc/stb/info/model')
-			boxtype = f.read()
-			f.close()
-			boxtype = boxtype.replace('\n', '').replace('\\l', '')
-			if boxtype == "dm525":
-					boxtype="dm520"
-			if boxtype == "one":
-					boxtype="dreamone"
-			if boxtype == "two":
-					boxtype="dreamtwo"
-		if boxtype.strip()=="":
-		   boxtype=getHostName()
-		return boxtype
+	boxtype="dm7080hd"
+	if os.path.exists('/proc/stb/info/model'):
+		f = open('/proc/stb/info/model')
+		boxtype = f.read()
+		f.close()
+		boxtype = boxtype.replace('\n', '').replace('\\l', '')
+		if boxtype == "dm525":
+			boxtype="dm520"
+		if boxtype == "one":
+			boxtype="dreamone"
+		if boxtype == "two":
+			boxtype="dreamtwo"
+	if boxtype.strip()=="":
+		boxtype=getHostName()
+	return boxtype
+
 
 def getHostName():
 	try:
@@ -92,90 +116,105 @@ def getHostName():
 	except:
 		return ""
 
+
+def get_package():
+	XZ_ = False
+	PIGZ_ = False
+	ZIP_ = False
+	WGET_ = False
+	try:
+		with open(STATUS, 'r') as f:
+			for line in f:
+				line = line.strip()  # Strip newline characters
+				if line.startswith('Package: xz'):
+					XZ_ = True
+				elif line.startswith('Package: pigz'):
+					PIGZ_ = True
+				elif line.startswith('Package: p7zip') or line.startswith('Package: 7zip'):
+					ZIP_ = True
+				elif line.startswith('Package: wget'):
+					WGET_ = True
+	except IOError:
+		print("Error reading status file")
+	return (XZ_, PIGZ_, ZIP_, WGET_)  # Always return a tuple
+
+
 def get_images(url,regx):
-		images = []
-		logdata("images_url",url)
-		try:
-			req = compat_Request(url, headers={'User-Agent': 'Mozilla/5.0'}) # add [headers={'User-Agent': 'Mozilla/5.0'}] to fix HTTP Error 403: Forbidden
-			response = compat_urlopen(req,timeout=5)
-			data = response.read()
-			response.close()
-			match = re.findall(regx,data, re.M|re.I)
-			for item1,item2 in match:
-				images.append((item1,item2))
-			return images
-		except:
-			trace_error()
-			return []
+	images = []
+	logdata("images_url",url)
+	try:
+		req = compat_Request(url, headers={'User-Agent': 'Mozilla/5.0'}) # add [headers={'User-Agent': 'Mozilla/5.0'}] to fix HTTP Error 403: Forbidden
+		response = compat_urlopen(req,timeout=5)
+		data = response.read()
+		response.close()
+		match = re.findall(regx,data, re.M|re.I)
+		for item1,item2 in match:
+			images.append((item1,item2))
+		return images
+	except:
+		trace_error()
+		return []
+
 
 def get_images2(url,regx):
-		images = []
-		logdata("images_url",url)
+	images = []
+	logdata("images_url",url)
+	try:
+		req = compat_Request(url, headers={'User-Agent': 'Mozilla/5.0'}) # add [headers={'User-Agent': 'Mozilla/5.0'}] to fix HTTP Error 403: Forbidden
+		response = compat_urlopen(req,timeout=5)
+		if PY3:
+			data = response.read().decode('utf-8')
+		else:
+			data = response.read()  
+		response.close()
+		match = re.findall(str(regx), data, re.M|re.I)
+		for item1,item2 in match:
+			images.append((item1,item2))
+		return images
+	except:
+		trace_error()
+		return []
+
+
+def get_images_mediafire(url):
+	images = []
+	logdata("images_url",url)
+	def readnet(url):
 		try:
 			req = compat_Request(url, headers={'User-Agent': 'Mozilla/5.0'}) # add [headers={'User-Agent': 'Mozilla/5.0'}] to fix HTTP Error 403: Forbidden
-			response = compat_urlopen(req,timeout=5)
+			response = compat_urlopen(req,timeout=10)
 			if PY3:
 				data = response.read().decode('utf-8')
 			else:
-				data = response.read()  
-			response.close()
-			match = re.findall(str(regx), data, re.M|re.I)
-			for item1,item2 in match:
-				images.append((item1,item2))
-			return images
+				data = response.read()
+			return data
 		except:
 			trace_error()
-			return []
+			return None
+	data = readnet(url)
+	if data == None:
+		return []
+	jdata = json.loads(data)
+	dl = jdata['response']['folder_content']['files']
+	images=[]
+	for item in dl:
+		dl = item['links']['normal_download']
+		name = os.path.split(dl)[1]
+		data = readnet(dl)
+		regx = 'href="(.*?)"'
+		try:
+			hrefs = re.findall(str(regx), data, re.M|re.I)
+		except Exception as e:
+			hrefs = re.findall(regx, data, re.M|re.I)
+		for href in hrefs:
+			if not "download" in href:
+				continue
+			name = os.path.split(href)[1]
+			images.append((name,href))
+			break
+	print(images)       
+	return  images
 
-def get_images_mediafire(url):
-		images = []
-		logdata("images_url",url)
-		def readnet(url):
-			try:
-				req = compat_Request(url, headers={'User-Agent': 'Mozilla/5.0'}) # add [headers={'User-Agent': 'Mozilla/5.0'}] to fix HTTP Error 403: Forbidden
-				response = compat_urlopen(req,timeout=10)
-				if PY3:
-					data = response.read().decode('utf-8')
-				else:
-					data = response.read()
-				return data
-			except:
-				trace_error()
-				return None
-		data = readnet(url)
-		if data == None:
-			return []
-		jdata = json.loads(data)
-		dl = jdata['response']['folder_content']['files']
-		images=[]
-		for item in dl:
-				dl = item['links']['normal_download']
-				name = os.path.split(dl)[1]
-				data = readnet(dl)
-				regx = 'href="(.*?)"'
-				try:
-					hrefs = re.findall(str(regx), data, re.M|re.I)
-				except Exception as e:
-					hrefs = re.findall(regx, data, re.M|re.I)
-				for href in hrefs:
-						if not "download" in href:
-						   continue
-						name = os.path.split(href)[1]
-						images.append((name,href))
-						break
-		print(images)       
-		return  images
-
-def trace_error():
-	try:
-		traceback.print_exc(file=sys.stdout)
-		if os.path.exists(logfile):
-			pass
-		else:
-			return
-		traceback.print_exc(file=open(logfile, 'a'))
-	except:
-		pass
 
 def getimage_name():
 	GP3='%s/enigma2/python/Plugins/Bp/geminimain' % LIBPATH
@@ -310,6 +349,7 @@ def getimage_name():
 	#if name == None:
 	#    name="Backup-"
 	return (name)
+
 
 def getmDevices():
 		myusb = myusb1 = myhdd = myhdd1 = mysdcard = mysd = myuniverse = myba = myba1 = mydata = mydata1 = ''
