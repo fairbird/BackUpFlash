@@ -264,8 +264,9 @@ class full_main(Screen, ConfigListScreen):
 		#		"This option to set stringe value of Compress image (The higher the value, the longer the operation time, but the smaller the backup size)")))
 		else:
 			pass
-		self.list.append(getConfigListEntry(('Compression image as Zip'), config.backupflashe.Zipcompression, _(
-			"This option to Compression image inside Zip file")))
+		if config.backupflashe.image_format.value == "bz2":
+			self.list.append(getConfigListEntry(('Compression image as Zip'), config.backupflashe.Zipcompression, _(
+				"This option to Compression image inside Zip file")))
 		self.list.append(getConfigListEntry(('Enable shutdown box after backup'), config.backupflashe.shutdown, _(
 			"This option to Enable or Disable Shutdown Box After Finished Backup")))
 		# if (os.path.exists("/.bainfo") or os.path.exists("/.lfinfo") or cmd.find(rootfs) == -1):
