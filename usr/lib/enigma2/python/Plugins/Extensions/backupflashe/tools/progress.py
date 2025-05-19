@@ -304,7 +304,8 @@ class ProgressScreen(Screen):
 			PLUGINBACKUP = resolveFilename(SCOPE_PLUGINS, 'Extensions/dBackup')
 			os.system("touch /tmp/.cancelBackup")
 			#tarimage = '%s/rootfs.tar' % self.device_path
-			os.system("kill -9 $(ps aux | grep backupflash.sh | awk '{print $2}')")
+			#os.system("kill -9 $(ps aux | grep backupflash.sh | awk '{print $2}')")
+			os.system("kill -9 $(ps aux | grep imagebackup.sh | awk '{print $2}')")
 			self.container.sendCtrlC()
 			self.container.sendEOF()
 			if os.path.exists(PLUGINBACKUP):
