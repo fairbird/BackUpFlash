@@ -59,6 +59,8 @@ class doConvert(Screen):
 		NOW = datetime.datetime.now()
 		logdata("Start Time", NOW.strftime('%H:%M')) ## Print Start time to log file
 		build_folder = 'build_folder'
+		IMAGENAME = 'rootfs.tar'
+		IMAGENAMEBZ2 = 'rootfs.tar.bz2'
 		match = re.match(r"^(.*?)-\d+\.tar\.xz$", self.getname)
 		if match:
 			NAMEIMAGE = match.group(1)
@@ -71,8 +73,16 @@ class doConvert(Screen):
 			REALNAME = "{}".format(self.getname.split(".tar.xz")[0])
 		IMAGENAMEPATH = os.path.join(self.device_path, self.getname)
 		BUILDFOLDER = os.path.join(self.device_path, build_folder)
+		IMAGENAMEPATH_TMP = os.path.join(self.device_path, IMAGENAME)
+		IMAGENAMEPATHBZ2_TMP = os.path.join(self.device_path, IMAGENAMEBZ2)
 		IMAGENAME = os.path.join(self.device_path, REALNAME)
 		self.IMAGENAMEPATH = IMAGENAMEPATH
+		if fileExists(BUILDFOLDER):
+			os.remove(BUILDFOLDER)
+		if fileExists(IMAGENAMEPATH_TMP):
+			os.remove(IMAGENAMEPATH_TMP)
+		if fileExists(IMAGENAMEPATHBZ2_TMP):
+			os.remove(IMAGENAMEPATHBZ2_TMP)
 		if self.device_path:
 			if os.path.exists(SCRIPT):
 				os.remove(SCRIPT)
@@ -129,12 +139,16 @@ class doConvert(Screen):
 		BUILDFOLDER = os.path.join(self.device_path, build_folder)
 		logdata("Finished Time", NOW.strftime('%H:%M')) ## Print Finished time to log file
 		if fileExists(cancelBackup):
-			if os.path.exists(BUILDFOLDER):
-				os.system("rm -r %s" % BUILDFOLDER)
-			if os.path.exists(IMAGEZIPNAME):
-				os.remove(IMAGEZIPNAME)
-			if os.path.exists(SCRIPT):
-				os.remove(SCRIPT)
+			try:
+				os.remove(cancelBackup)
+				if os.path.exists(BUILDFOLDER):
+					os.system("rm -r %s" % BUILDFOLDER)
+				if os.path.exists(IMAGEZIPNAME):
+					os.remove(IMAGEZIPNAME)
+				if os.path.exists(SCRIPT):
+					os.remove(SCRIPT)
+			except:
+				pass
 			logdata(".\n.\nCancelled Converting !!!!!!")
 			self.close()
 		else:
