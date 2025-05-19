@@ -90,7 +90,6 @@ else:
 # Path of images on External Flash checking
 searchPaths = []
 
-
 def initPaths():
 	if fileExists("/proc/mounts"):
 		for line in open("/proc/mounts"):
@@ -232,7 +231,6 @@ class full_main(Screen, ConfigListScreen):
 
 	def updateList(self):
 		dellog()
-		self.checkupdates()
 		if len(mounted_devices) > 0:
 			self.deviceok = True
 			self["lab1"].setText(_("Do (Full Backup) or (Convert) or (Download) Images or (Go to Recovery Mode)"))
@@ -254,6 +252,8 @@ class full_main(Screen, ConfigListScreen):
 		self.list = []
 		self.list.append(getConfigListEntry(('Path to store Full Backup'), config.backupflashe.device_path, _(
 			"This option to set the path of Backup/Flash directory")))
+		self.list.append(getConfigListEntry(('Enable/Disable online update'), config.backupflashe.update, _(
+			"This option to Enable or Disable check of online update")))
 		self.list.append(getConfigListEntry(('Select Format to Compress BackUp'), config.backupflashe.image_format, _(
 			"This option to select the type of compress option")))
 		if config.backupflashe.image_format.value == "xz":
@@ -421,30 +421,13 @@ class full_main(Screen, ConfigListScreen):
 	def showMenuoptions(self):
 		choices = []
 		self.list = []
-		EnablecheckUpdate = config.backupflashe.update.value
-		choices.append(("Install backupflash version %s" %
-					   self.new_version, "Install"))
-		if EnablecheckUpdate == False:
-			choices.append(
-				("Press Ok to [Enable checking for Online Update]", "enablecheckUpdate"))
-		else:
-			choices.append(
-				("Press Ok to [Disable checking for Online Update]", "disablecheckUpdate"))
-		self.session.openWithCallback(
-			self.choicesback, ChoiceBox, _('select task'), choices)
+		choices.append(("Install/Reinstgall backupflash version %s" % self.new_version, "Install"))
+		self.session.openWithCallback(self.choicesback, ChoiceBox, _('select task'), choices)
 
 	def choicesback(self, select):
 		if select:
 			if select[1] == "Install":
 				self.install(True)
-			elif select[1] == "enablecheckUpdate":
-				config.backupflashe.update.value = True
-				config.backupflashe.update.save()
-				configfile.save()
-			elif select[1] == "disablecheckUpdate":
-				config.backupflashe.update.value = False
-				config.backupflashe.update.save()
-				configfile.save()
 
 	def checkupdates(self):
 		try:
