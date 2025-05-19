@@ -1,8 +1,8 @@
 #!/bin/bash
 ##setup command=wget https://raw.githubusercontent.com/fairbird/BackUpFlash/main/installer.sh -O - | /bin/sh
 
-version=10.7
-description=What is NEW :\n- Add a warning message for required packages if they are not installed. -\n\n**************************\n: ما هو الجديد\n- إضافة رسالة تنبيه للحزم المطلوبة إذا لم تكن مثبته
+version=10.8
+description=What is NEW :\n- Some fixes and improvements. -\n\n**************************\n: ما هو الجديد\n- بعض التصحيحات والتحسينات
 
 echo ""
 if [ ! -d '/usr/lib64' ]; then
