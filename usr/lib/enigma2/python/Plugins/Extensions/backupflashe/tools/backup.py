@@ -27,7 +27,7 @@ LOG = '/tmp/backupflash.scr'
 ## BackUp Internal Flash
 class doBackUpInternal(Screen):
 
-	def __init__(self, session, image_name = None, device_path = None, image_formats = None, image_compression_value = 0):
+	def __init__(self, session, image_name = None, device_path = None, image_compression_value = 0):
 		Screen.__init__(self, session)
 		self.list = []
 		self['key_red'] = Label(_('Cancel'))
@@ -41,7 +41,6 @@ class doBackUpInternal(Screen):
 			})
 		self.image_name = image_name
 		self.device_path = device_path
-		self.image_formats = image_formats
 		self.image_compression_value = image_compression_value
 		self.deviceok = True
 		self.timer = eTimer()
@@ -53,11 +52,11 @@ class doBackUpInternal(Screen):
 
 	def doBackUpjob(self):
 		if fileExists("/tmp/root"):
-			 os.system('umount /tmp/root >> %s 2>&1')
+			os.system('umount /tmp/root >> %s 2>&1')
 		if not fileExists("/tmp/root/usr"):
-			 os.system("rm -r /tmp/root >> %s 2>&1")
+			os.system("rm -r /tmp/root >> %s 2>&1")
 		if fileExists("/tmp/.cancelBackup"):
-			 os.system("rm -f /tmp/.cancelBackup")
+			os.system("rm -f /tmp/.cancelBackup")
 		self.timer.stop()
 		cmdlist = []
 		logdata("Backup log","start")
@@ -65,11 +64,10 @@ class doBackUpInternal(Screen):
 		logdata("Start Time", NOW.strftime('%H:%M')) ## Print Start time to log file
 		if os.path.exists("/etc/init.d/openvpn"):
 			os.system('/etc/init.d/openvpn stop >> >> %s' % LOG)
-		if self.image_formats == 'xz':
+		if config.backupflashe.image_format.value == 'xz':
 			IMAGENAME = '%s.tar.xz' % self.image_name
+			compression_value = self.image_compression_value
 			IMAGENAMEPATH = os.path.join(self.device_path, IMAGENAME)
-			self.IMAGENAMEPATH = IMAGENAMEPATH
-			compression_value=self.image_compression_value
 			if fileExists(BRANDOS):
 			   COMMANDTAR = 'tar --exclude=smg.sock --exclude msg.sock -cf - -C /tmp/root . | xz -%s -T 0 -c - > %s' % (compression_value, IMAGENAMEPATH)
 			else:
@@ -82,24 +80,33 @@ class doBackUpInternal(Screen):
 			BUILDFOLDER = 'build_folder/%s' % boxtype
 			KERNELFILE = '/tmp/root/kernel.bin'
 			IMAGEVERSION = '/tmp/imageversion'
-			DEVICENAMEPATH = os.path.join(self.device_path, BUILDFOLDER)
 			IMAGENAMEPATH = os.path.join(self.device_path, IMAGENAME)
+			BUILDFOLDER_TMP = os.path.join(self.device_path, "build_folder")
+			DEVICENAMEPATH = os.path.join(self.device_path, BUILDFOLDER)
 			IMAGENAMEPATHBZ2 = os.path.join(self.device_path, IMAGENAMEBZ2)
 			IMAGENAMEPATH2 = os.path.join(self.device_path, IMAGENAME2)
 			IMAGENAMEPATHZIP = os.path.join(self.device_path, IMAGENAMEZIP)
+			try:
+				if fileExists(IMAGENAMEPATH):
+					os.remove(IMAGENAMEPATH)
+				if fileExists(IMAGENAMEPATHBZ2):
+					os.remove(IMAGENAMEPATHBZ2)
+				if fileExists(BUILDFOLDER_TMP):
+					os.remove(BUILDFOLDER_TMP)
+			except:
+				pass
 			compression_value = self.image_compression_value
 			if fileExists(BRANDOS):
-			   COMMANDTAR = 'tar -cf - --exclude=smg.sock --exclude msg.sock --exclude ./boot/kernel.img --exclude ./.resizerootfs --exclude ./.resize-rootfs --exclude ./.resize-linuxrootfs --exclude ./.resize-userdata -C /tmp/root . > %s && bzip2 %s' % (IMAGENAMEPATH, IMAGENAMEPATH)
+				COMMANDTAR = 'tar -cf - --exclude=smg.sock --exclude msg.sock --exclude ./boot/kernel.img --exclude ./.resizerootfs --exclude ./.resize-rootfs --exclude ./.resize-linuxrootfs --exclude ./.resize-userdata -C /tmp/root . > %s && bzip2 %s' % (IMAGENAMEPATH, IMAGENAMEPATH)
 			else:
-			   COMMANDTAR = 'tar -cf - --exclude ./boot/kernel.img --exclude ./.resizerootfs --exclude ./.resize-rootfs --exclude ./.resize-linuxrootfs --exclude ./.resize-userdata -C /tmp/root . > %s && bzip2 %s' % (IMAGENAMEPATH, IMAGENAMEPATH)
-		IMAGENAMEPATH = os.path.join(self.device_path, IMAGENAME)
-		self.IMAGENAMEPATH = IMAGENAMEPATH
+				COMMANDTAR = 'tar -cf - --exclude ./boot/kernel.img --exclude ./.resizerootfs --exclude ./.resize-rootfs --exclude ./.resize-linuxrootfs --exclude ./.resize-userdata -C /tmp/root . > %s && bzip2 %s' % (IMAGENAMEPATH, IMAGENAMEPATH)
 		script_path = resolveFilename(SCOPE_PLUGINS, 'Extensions/backupflashe/tools/imagebackup.sh')
 		os.system('chmod 755 "%s"' % script_path)
 		os.system('"%s"' % script_path)
 
 		if self.device_path:
 			mytitle = _('Backup image')
+			self.IMAGENAMEPATH = IMAGENAMEPATH
 			cmdlist.append('exec > /tmp/backupflash.scr')
 			cmdlist.append('Backup (%s) on [%s]\n\n\n ' % (IMAGENAME, self.device_path))
 			cmdlist.append('umount /tmp/root >> %s 2>&1' % LOG)
@@ -110,9 +117,10 @@ class doBackUpInternal(Screen):
 				cmdlist.append("rm -f /tmp/root/home/root/ba.sh; rm -f /tmp/root/sbin/bainit; rm -f /tmp/root/sbin/ba.sh; rm -f /tmp/root/sbin/init; ln -s /etc/alternatives/init /tmp/root/sbin/init; rm -f /tmp/root/etc/alternatives/init; ln -s /lib/systemd/systemd /tmp/root/etc/alternatives/init")
 			cmdlist.append(COMMANDTAR)
 			cmdlist.append('chmod 777 %s >> %s' % (IMAGENAMEPATH, LOG))
-			if self.image_formats == 'bz2' and config.backupflashe.Zipcompression.value == False:
+			if config.backupflashe.image_format.value == 'bz2' and config.backupflashe.Zipcompression.value == False:
 				cmdlist.append('mv %s.bz2 %s >> %s' % (IMAGENAMEPATH, IMAGENAMEPATH2, LOG))
-			if self.image_formats == 'bz2' and config.backupflashe.Zipcompression.value == True:
+			if config.backupflashe.image_format.value == 'bz2' and config.backupflashe.Zipcompression.value == True:
+				print(" Start Zip *************************************")
 				cmdlist.append('mkdir -p %s >> %s' % (DEVICENAMEPATH, LOG))
 				cmdlist.append('dd if=/dev/mmcblk0p1 of=%s >> %s' % (KERNELFILE, LOG))
 				cmdlist.append('mv %s %s >> %s' % (KERNELFILE, DEVICENAMEPATH, LOG))
@@ -130,6 +138,7 @@ class doBackUpInternal(Screen):
 					cmdlist.append('7za a -r %s %s* >> %s' % (IMAGENAMEPATHZIP, DEVICENAMEPATH, LOG))
 				else:
 					cmdlist.append('7za a -r -bt -bd -bso0 %s %s* >> %s' % (IMAGENAMEPATHZIP, DEVICENAMEPATH, LOG))
+					print(f" Start Zip2 ************************************* {cmdlist.append('7za a -r -bt -bd -bso0 %s %s* >> %s' % (IMAGENAMEPATHZIP, DEVICENAMEPATH, LOG))}")
 				cmdlist.append('rm -r %s/build_folder >> %s' % (self.device_path, LOG))
 			if os.path.exists("/etc/init.d/openvpn"):
 				cmdlist.append('/etc/init.d/openvpn start >> %s' % LOG)
@@ -146,29 +155,31 @@ class doBackUpInternal(Screen):
 		logdata("Finished Time", NOW.strftime('%H:%M')) ## Print Finished time to log file
 		rootfsNAME = 'rootfs.tar'
 		rootfsNAMEbz2 = 'rootfs.tar.bz2'
+		IMAGENAME = None
+		IMAGENAMEPATH = None
 		IMAGENAMEPATH2 = os.path.join(self.device_path, rootfsNAME)
-		IMAGENAMEPATH3 = os.path.join(self.device_path, rootfsNAMEbz2)
-		if self.image_formats == 'xz':
+		IMAGENAMEPATH3 = os.path.join(self.device_path, rootfsNAMEbz2)		
+		if config.backupflashe.image_format.value == 'xz':
 			IMAGENAME = '%s.tar.xz' % self.image_name
 			IMAGENAMEPATH = os.path.join(self.device_path, IMAGENAME)
-		elif self.image_formats == 'bz2' and config.backupflashe.Zipcompression.value == False:
+		elif config.backupflashe.image_format.value == 'bz2' and config.backupflashe.Zipcompression.value == False:
 			IMAGENAME = '%s.tar.bz2' % self.image_name
 			IMAGENAMEPATH = os.path.join(self.device_path, IMAGENAME)
-		elif self.image_formats == 'bz2' and config.backupflashe.Zipcompression.value == True:
+		elif config.backupflashe.image_format.value == 'bz2' and config.backupflashe.Zipcompression.value == True:
 			IMAGENAME = '%s_usb.zip' % self.image_name
 			BUILDFOLDER = 'build_folder/%s' % boxtype
 			IMAGENAMEPATH = os.path.join(self.device_path, IMAGENAME)
 			DEVICENAMEPATH = os.path.join(self.device_path, BUILDFOLDER)
 		if fileExists(cancelBackup):
-			if os.path.exists(cancelBackup):
-			 	os.remove(cancelBackup)
-			if os.path.exists(IMAGENAMEPATH):
-			 	os.remove(IMAGENAMEPATH)
-			if os.path.exists(IMAGENAMEPATH2):
-			 	os.remove(IMAGENAMEPATH2)
-			if os.path.exists(IMAGENAMEPATH3):
-			 	os.remove(IMAGENAMEPATH3)
 			try:
+				os.system("kill -9 $(ps aux | grep imagebackup.sh | awk '{print $2}')")
+				os.remove(cancelBackup)
+				if IMAGENAMEPATH and fileExists(IMAGENAMEPATH):
+			 		os.remove(IMAGENAMEPATH)
+				if fileExists(IMAGENAMEPATH2):
+			 		os.remove(IMAGENAMEPATH2)
+				if fileExists(IMAGENAMEPATH3):
+			 		os.remove(IMAGENAMEPATH3)
 				if os.path.exists(DEVICENAMEPATH):
 			 		os.remove(DEVICENAMEPATH)
 			except:
@@ -204,7 +215,6 @@ class doBackUpExternal(Screen):
 		self.image_name = image_name
 		self.image_path = image_path
 		self.device_path = device_path
-		self.image_formats = image_formats
 		self.image_compression_value = image_compression_value
 		self.deviceok = True
 		self.timer = eTimer()
@@ -216,20 +226,19 @@ class doBackUpExternal(Screen):
 
 	def doBackUpjob(self):
 		if fileExists("/tmp/root"):
-			 os.system('umount /tmp/root >> %s 2>&1')
+			os.system('umount /tmp/root >> %s 2>&1')
 		if not fileExists("/tmp/root/usr"):
-			 os.system("rm -r /tmp/root >> %s 2>&1")
+			os.system("rm -r /tmp/root >> %s 2>&1")
 		if fileExists("/tmp/.cancelBackup"):
-			 os.system("rm -f /tmp/.cancelBackup")
+			os.system("rm -f /tmp/.cancelBackup")
 		self.timer.stop()
 		cmdlist = []
 		logdata("Backup log","start")
 		NOW = datetime.datetime.now()
 		logdata("Start Time", NOW.strftime('%H:%M')) ## Print Start time to log file
-		if self.image_formats == 'xz':
+		if config.backupflashe.image_format.value == 'xz':
 			IMAGENAME = '%s.tar.xz' % self.image_name
 			IMAGENAMEPATH = os.path.join(self.device_path, IMAGENAME)
-			self.IMAGENAMEPATH = IMAGENAMEPATH
 			compression_value=self.image_compression_value
 			if fileExists(BRANDOS):
 			   COMMANDTAR = 'tar --exclude=smg.sock --exclude msg.sock -cf - -C /tmp/root . | xz -%s -T 0 -c - > %s' % (compression_value, IMAGENAMEPATH)
@@ -243,24 +252,33 @@ class doBackUpExternal(Screen):
 			BUILDFOLDER = 'build_folder/%s' % boxtype
 			KERNELFILE = '/tmp/root/kernel.bin'
 			IMAGEVERSION = '/tmp/imageversion'
+			BUILDFOLDER_TMP = os.path.join(self.device_path, "build_folder")
 			DEVICENAMEPATH = os.path.join(self.device_path, BUILDFOLDER)
 			IMAGENAMEPATH = os.path.join(self.device_path, IMAGENAME)
 			IMAGENAMEPATHBZ2 = os.path.join(self.device_path, IMAGENAMEBZ2)
 			IMAGENAMEPATH2 = os.path.join(self.device_path, IMAGENAME2)
 			IMAGENAMEPATHZIP = os.path.join(self.device_path, IMAGENAMEZIP)
+			try:
+				if fileExists(IMAGENAMEPATH):
+					os.remove(IMAGENAMEPATH)
+				if fileExists(IMAGENAMEPATHBZ2):
+					os.remove(IMAGENAMEPATHBZ2)
+				if fileExists(BUILDFOLDER_TMP):
+					os.remove(BUILDFOLDER_TMP)
+			except:
+				pass
 			compression_value = self.image_compression_value
 			if fileExists(BRANDOS):
-			   COMMANDTAR = 'tar -cf - --exclude=smg.sock --exclude msg.sock --exclude ./boot/kernel.img --exclude ./.resizerootfs --exclude ./.resize-rootfs --exclude ./.resize-linuxrootfs --exclude ./.resize-userdata -C /tmp/root . > %s && bzip2 %s' % (IMAGENAMEPATH, IMAGENAMEPATH)
+				COMMANDTAR = 'tar -cf - --exclude=smg.sock --exclude msg.sock --exclude ./boot/kernel.img --exclude ./.resizerootfs --exclude ./.resize-rootfs --exclude ./.resize-linuxrootfs --exclude ./.resize-userdata -C /tmp/root . > %s && bzip2 %s' % (IMAGENAMEPATH, IMAGENAMEPATH)
 			else:
-			   COMMANDTAR = 'tar -cf - --exclude ./boot/kernel.img --exclude ./.resizerootfs --exclude ./.resize-rootfs --exclude ./.resize-linuxrootfs --exclude ./.resize-userdata -C /tmp/root . > %s && bzip2 %s' % (IMAGENAMEPATH, IMAGENAMEPATH)
-		IMAGENAMEPATH = os.path.join(self.device_path, IMAGENAME)
-		self.IMAGENAMEPATH = IMAGENAMEPATH
+				COMMANDTAR = 'tar -cf - --exclude ./boot/kernel.img --exclude ./.resizerootfs --exclude ./.resize-rootfs --exclude ./.resize-linuxrootfs --exclude ./.resize-userdata -C /tmp/root . > %s && bzip2 %s' % (IMAGENAMEPATH, IMAGENAMEPATH)
 		script_path = resolveFilename(SCOPE_PLUGINS, 'Extensions/backupflashe/tools/imagebackup.sh')
 		os.system('chmod 755 "%s"' % script_path)
 		os.system('"%s"' % script_path)
 
 		if self.device_path:
 			mytitle = _('Backup image')
+			self.IMAGENAMEPATH = IMAGENAMEPATH
 			cmdlist.append('exec > /tmp/backupflash.scr')
 			cmdlist.append('Backup (%s) on [%s]\n\n\n ' % (IMAGENAME, self.device_path))
 			cmdlist.append('umount /tmp/root >> %s 2>&1' % LOG)
@@ -271,9 +289,9 @@ class doBackUpExternal(Screen):
 				cmdlist.append("rm -f /tmp/root/home/root/ba.sh; rm -f /tmp/root/sbin/bainit; rm -f /tmp/root/sbin/ba.sh; rm -f /tmp/root/sbin/init; ln -s /etc/alternatives/init /tmp/root/sbin/init; rm -f /tmp/root/etc/alternatives/init; ln -s /lib/systemd/systemd /tmp/root/etc/alternatives/init")
 			cmdlist.append(COMMANDTAR)
 			cmdlist.append('chmod 777 %s >> %s' % (IMAGENAMEPATH, LOG))
-			if self.image_formats == 'bz2' and config.backupflashe.Zipcompression.value == False:
+			if config.backupflashe.image_format.value == 'bz2' and config.backupflashe.Zipcompression.value == False:
 				cmdlist.append('mv %s.bz2 %s >> %s' % (IMAGENAMEPATH, IMAGENAMEPATH2, LOG))
-			if self.image_formats == 'bz2' and config.backupflashe.Zipcompression.value == True:
+			if config.backupflashe.image_format.value == 'bz2' and config.backupflashe.Zipcompression.value == True:
 				cmdlist.append('mkdir -p %s >> %s' % (DEVICENAMEPATH, LOG))
 				cmdlist.append('dd if=/dev/mmcblk0p1 of=%s >> %s' % (KERNELFILE, LOG))
 				cmdlist.append('mv %s %s >> %s' % (KERNELFILE, DEVICENAMEPATH, LOG))
@@ -305,31 +323,34 @@ class doBackUpExternal(Screen):
 		os.system("rm -r /tmp/root >> %s 2>&1" % LOG)
 		NOW = datetime.datetime.now()
 		logdata("Finished Time", NOW.strftime('%H:%M')) ## Print Finished time to log file
+		IMAGENAME = ""
 		rootfsNAME = 'rootfs.tar'
 		rootfsNAMEbz2 = 'rootfs.tar.bz2'
+		IMAGENAME = None
+		IMAGENAMEPATH = None
 		IMAGENAMEPATH2 = os.path.join(self.device_path, rootfsNAME)
 		IMAGENAMEPATH3 = os.path.join(self.device_path, rootfsNAMEbz2)
-		if self.image_formats == 'xz':
+		if config.backupflashe.image_format.value == 'xz':
 			IMAGENAME = '%s.tar.xz' % self.image_name
 			IMAGENAMEPATH = os.path.join(self.device_path, IMAGENAME)
-		elif self.image_formats == 'bz2' and config.backupflashe.Zipcompression.value == False:
+		elif config.backupflashe.image_format.value == 'bz2' and config.backupflashe.Zipcompression.value == False:
 			IMAGENAME = '%s.tar.bz2' % self.image_name
 			IMAGENAMEPATH = os.path.join(self.device_path, IMAGENAME)
-		elif self.image_formats == 'bz2' and config.backupflashe.Zipcompression.value == True:
+		elif config.backupflashe.image_format.value == 'bz2' and config.backupflashe.Zipcompression.value == True:
 			IMAGENAME = '%s_usb.zip' % self.image_name
 			BUILDFOLDER = 'build_folder/%s' % boxtype
 			IMAGENAMEPATH = os.path.join(self.device_path, IMAGENAME)
 			DEVICENAMEPATH = os.path.join(self.device_path, BUILDFOLDER)
 		if fileExists(cancelBackup):
-			if os.path.exists(cancelBackup):
-			 	os.remove(cancelBackup)
-			if os.path.exists(IMAGENAMEPATH):
-			 	os.remove(IMAGENAMEPATH)
-			if os.path.exists(IMAGENAMEPATH2):
-			 	os.remove(IMAGENAMEPATH2)
-			if os.path.exists(IMAGENAMEPATH3):
-			 	os.remove(IMAGENAMEPATH3)
 			try:
+				os.system("kill -9 $(ps aux | grep imagebackup.sh | awk '{print $2}')")
+				os.remove(cancelBackup)
+				if IMAGENAMEPATH and fileExists(IMAGENAMEPATH):
+			 		os.remove(IMAGENAMEPATH)
+				if fileExists(IMAGENAMEPATH2):
+			 		os.remove(IMAGENAMEPATH2)
+				if fileExists(IMAGENAMEPATH3):
+			 		os.remove(IMAGENAMEPATH3)
 				if os.path.exists(DEVICENAMEPATH):
 			 		os.remove(DEVICENAMEPATH)
 			except:
