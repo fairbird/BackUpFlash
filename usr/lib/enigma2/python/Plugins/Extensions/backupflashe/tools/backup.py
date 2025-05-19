@@ -120,7 +120,6 @@ class doBackUpInternal(Screen):
 			if config.backupflashe.image_format.value == 'bz2' and config.backupflashe.Zipcompression.value == False:
 				cmdlist.append('mv %s.bz2 %s >> %s' % (IMAGENAMEPATH, IMAGENAMEPATH2, LOG))
 			if config.backupflashe.image_format.value == 'bz2' and config.backupflashe.Zipcompression.value == True:
-				print(" Start Zip *************************************")
 				cmdlist.append('mkdir -p %s >> %s' % (DEVICENAMEPATH, LOG))
 				cmdlist.append('dd if=/dev/mmcblk0p1 of=%s >> %s' % (KERNELFILE, LOG))
 				cmdlist.append('mv %s %s >> %s' % (KERNELFILE, DEVICENAMEPATH, LOG))
@@ -138,7 +137,6 @@ class doBackUpInternal(Screen):
 					cmdlist.append('7za a -r %s %s* >> %s' % (IMAGENAMEPATHZIP, DEVICENAMEPATH, LOG))
 				else:
 					cmdlist.append('7za a -r -bt -bd -bso0 %s %s* >> %s' % (IMAGENAMEPATHZIP, DEVICENAMEPATH, LOG))
-					print(f" Start Zip2 ************************************* {cmdlist.append('7za a -r -bt -bd -bso0 %s %s* >> %s' % (IMAGENAMEPATHZIP, DEVICENAMEPATH, LOG))}")
 				cmdlist.append('rm -r %s/build_folder >> %s' % (self.device_path, LOG))
 			if os.path.exists("/etc/init.d/openvpn"):
 				cmdlist.append('/etc/init.d/openvpn start >> %s' % LOG)
