@@ -76,7 +76,7 @@ class doBackUpInternal(Screen):
 			IMAGENAME = 'rootfs.tar'
 			IMAGENAMEBZ2 = 'rootfs.tar.bz2'
 			IMAGENAME2 = '%s.tar.bz2' % self.image_name
-			IMAGENAMEZIP = '%s_usb.zip' % self.image_name
+			IMAGENAMEZIP = '%s.zip' % self.image_name
 			BUILDFOLDER = 'build_folder/%s' % boxtype
 			KERNELFILE = '/tmp/root/kernel.bin'
 			IMAGEVERSION = '/tmp/imageversion'
@@ -166,7 +166,7 @@ class doBackUpInternal(Screen):
 			IMAGENAME = '%s.tar.bz2' % self.image_name
 			IMAGENAMEPATH = os.path.join(self.device_path, IMAGENAME)
 		elif config.backupflashe.image_format.value == 'bz2' and config.backupflashe.Zipcompression.value == True:
-			IMAGENAME = '%s_usb.zip' % self.image_name
+			IMAGENAME = '%s.zip' % self.image_name
 			BUILDFOLDER = 'build_folder/%s' % boxtype
 			IMAGENAMEPATH = os.path.join(self.device_path, IMAGENAME)
 			DEVICENAMEPATH = os.path.join(self.device_path, BUILDFOLDER)
@@ -248,7 +248,7 @@ class doBackUpExternal(Screen):
 			IMAGENAME = 'rootfs.tar'
 			IMAGENAMEBZ2 = 'rootfs.tar.bz2'
 			IMAGENAME2 = '%s.tar.bz2' % self.image_name
-			IMAGENAMEZIP = '%s_usb.zip' % self.image_name
+			IMAGENAMEZIP = '%s.zip' % self.image_name
 			BUILDFOLDER = 'build_folder/%s' % boxtype
 			KERNELFILE = '/tmp/root/kernel.bin'
 			IMAGEVERSION = '/tmp/imageversion'
@@ -337,7 +337,7 @@ class doBackUpExternal(Screen):
 			IMAGENAME = '%s.tar.bz2' % self.image_name
 			IMAGENAMEPATH = os.path.join(self.device_path, IMAGENAME)
 		elif config.backupflashe.image_format.value == 'bz2' and config.backupflashe.Zipcompression.value == True:
-			IMAGENAME = '%s_usb.zip' % self.image_name
+			IMAGENAME = '%s.zip' % self.image_name
 			BUILDFOLDER = 'build_folder/%s' % boxtype
 			IMAGENAMEPATH = os.path.join(self.device_path, IMAGENAME)
 			DEVICENAMEPATH = os.path.join(self.device_path, BUILDFOLDER)
