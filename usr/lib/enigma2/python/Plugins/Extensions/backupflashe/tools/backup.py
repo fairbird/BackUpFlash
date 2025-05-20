@@ -156,7 +156,7 @@ class doBackUpInternal(Screen):
 		IMAGENAME = None
 		IMAGENAMEPATH = None
 		IMAGENAMEPATH2 = os.path.join(self.device_path, rootfsNAME)
-		IMAGENAMEPATH3 = os.path.join(self.device_path, rootfsNAMEbz2)		
+		IMAGENAMEPATH3 = os.path.join(self.device_path, rootfsNAMEbz2)
 		if config.backupflashe.image_format.value == 'xz':
 			IMAGENAME = '%s.tar.xz' % self.image_name
 			IMAGENAMEPATH = os.path.join(self.device_path, IMAGENAME)
@@ -187,7 +187,13 @@ class doBackUpInternal(Screen):
 			logdata(".\n.\nCancelled Backup !!!!!!")
 			self.close()
 		else:
-			self.session.open(MessageBox, _('(%s)\non\n[%s]\n\nfinished. Press (Exit) or (Ok) Button.' % (IMAGENAME, self.device_path)), MessageBox.TYPE_INFO)
+			size_bytes = os.path.getsize(IMAGENAMEPATH)
+			size_mb = size_bytes / float(1024 * 1024)
+			if size_mb < 80:
+			 	os.remove(IMAGENAMEPATH)
+				self.session.open(MessageBox, _('Something went wrong. The backup was unsuccessful.\nLook in (/tmp/backupflash.log)\n\nPress (Exit) or (Ok) Button.'), MessageBox.TYPE_INFO)
+			else:
+				self.session.open(MessageBox, _('(%s)\non\n[%s]\n\nfinished. Press (Exit) or (Ok) Button.' % (IMAGENAME, self.device_path)), MessageBox.TYPE_INFO)
 			if config.backupflashe.shutdown.value:
 					sleep(2)
 					logdata("Shutdown Device") ## Print Shutdown to log file
@@ -198,7 +204,7 @@ class doBackUpInternal(Screen):
 ## BackUp External Flash
 class doBackUpExternal(Screen):
 
-	def __init__(self, session, image_name = None, image_path = None, device_path = None, image_formats = None, image_compression_value = 0):
+	def __init__(self, session, image_name = None, image_path = None, device_path = None, image_compression_value = 0):
 		Screen.__init__(self, session)
 		self.list = []
 		self['key_red'] = Label(_('Cancel'))
@@ -237,7 +243,7 @@ class doBackUpExternal(Screen):
 		if config.backupflashe.image_format.value == 'xz':
 			IMAGENAME = '%s.tar.xz' % self.image_name
 			IMAGENAMEPATH = os.path.join(self.device_path, IMAGENAME)
-			compression_value=self.image_compression_value
+			compression_value = self.image_compression_value
 			if fileExists(BRANDOS):
 			   COMMANDTAR = 'tar --exclude=smg.sock --exclude msg.sock -cf - -C /tmp/root . | xz -%s -T 0 -c - > %s' % (compression_value, IMAGENAMEPATH)
 			else:
@@ -358,7 +364,13 @@ class doBackUpExternal(Screen):
 			logdata(".\n.\nCancelled Backup !!!!!!")
 			self.close()
 		else:
-			self.session.open(MessageBox, _('(%s)\non\n[%s]\n\nfinished. Press (Exit) or (Ok) Button.' % (IMAGENAME, self.device_path)), MessageBox.TYPE_INFO)
+			size_bytes = os.path.getsize(IMAGENAMEPATH)
+			size_mb = size_bytes / float(1024 * 1024)
+			if size_mb < 80:
+			 	os.remove(IMAGENAMEPATH)
+				self.session.open(MessageBox, _('Something went wrong. The backup was unsuccessful.\nLook in (/tmp/backupflash.log)\n\nPress (Exit) or (Ok) Button.'), MessageBox.TYPE_INFO)
+			else:
+				self.session.open(MessageBox, _('(%s)\non\n[%s]\n\nfinished. Press (Exit) or (Ok) Button.' % (IMAGENAME, self.device_path)), MessageBox.TYPE_INFO)
 			if config.backupflashe.shutdown.value:
 					sleep(2)
 					logdata("Shutdown Device") ## Print Shutdown to log file

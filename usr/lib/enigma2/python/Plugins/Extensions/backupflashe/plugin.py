@@ -64,10 +64,14 @@ else:
 	xz_options.append(("4", "4"))
 	xz_options.append(("5", "5"))
 	xz_options.append(("6", "6"))
-config.backupflashe.xzcompression = ConfigSelection(
-	default="1", choices=xz_options)
-config.backupflashe.bz2compression = ConfigSelection(
-	default="3", choices=xz_options)
+
+config.backupflashe.xzcompression = ConfigSelection(default="1", choices=xz_options)
+config.backupflashe.bz2compression = ConfigSelection(default="3", choices=xz_options)
+
+if config.backupflashe.image_format.value == "xz":
+	imagecompressionvalue = config.backupflashe.xzcompression.value
+else:
+	imagecompressionvalue = config.backupflashe.bz2compression.value
 
 k = open("/proc/cmdline", "r")
 cmd = k.read()
@@ -320,11 +324,8 @@ class full_main(Screen, ConfigListScreen):
 				try:
 					image_name = target
 					device_path = self['config'].list[0][1].getText()
-					image_formats = self['config'].list[1][1].getText()
-					image_compression_value = self['config'].list[2][1].getText(
-					)
-					self.session.open(
-						doBackUpInternal, image_name, device_path, image_formats, image_compression_value)
+					image_compression_value = imagecompressionvalue
+					self.session.open(doBackUpInternal, image_name, device_path, image_compression_value)
 				except:
 					trace_error()
 					pass
