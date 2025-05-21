@@ -364,10 +364,8 @@ class full_main(Screen, ConfigListScreen):
 					image_name = target
 					image_path = self.image_path
 					device_path = self.device_path
-					image_formats = self.image_formats
 					image_compression_value = self.image_compression_value
-					self.session.open(doBackUpExternal, image_name, image_path,
-									  device_path, image_formats, image_compression_value)
+					self.session.open(doBackUpExternal, image_name, image_path,device_path, image_compression_value)
 				except:
 					trace_error()
 					pass
