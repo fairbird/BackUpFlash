@@ -152,7 +152,10 @@ class doConvert(Screen):
 			logdata(".\n.\nCancelled Converting !!!!!!")
 			self.close()
 		else:
-			self.session.open(MessageBox, _('(%s)\non\n[%s]\n\nfinished. Press (Exit) or (Ok) Button.' % (ZIPNAME, self.device_path)), MessageBox.TYPE_INFO)
+			size_bytes = os.path.getsize(IMAGEZIPNAME)
+			size_mb = size_bytes / float(1024 * 1024)
+			message = _('(%s) (%s MB)\nSave on\n[%s]\n\n\nFinished. Press (Exit) or (Ok) Button to close screen.' % (ZIPNAME, size_mb, self.device_path))
+			self.session.open(MessageBox, message, MessageBox.TYPE_INFO)
 			if config.backupflashe.shutdown.value:
 					sleep(2)
 					logdata("Shutdown Device") ## Print Shutdown to log file
