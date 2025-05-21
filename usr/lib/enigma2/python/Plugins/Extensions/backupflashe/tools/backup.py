@@ -191,9 +191,11 @@ class doBackUpInternal(Screen):
 			size_mb = size_bytes / float(1024 * 1024)
 			if size_mb < 80:
 				os.remove(IMAGENAMEPATH)
-				self.session.open(MessageBox, _('Something went wrong. The backup was unsuccessful.\nLook in (/tmp/backupflash.log)\n\nPress (Exit) or (Ok) Button.'), MessageBox.TYPE_INFO)
+				message = _('Something went wrong. The backup was unsuccessful.\nLook in (/tmp/backupflash.log)\n\nPress (Exit) or (Ok) Button.')
+				self.session.open(MessageBox, message, MessageBox.TYPE_INFO)
 			else:
-				self.session.open(MessageBox, _('(%s)\non\n[%s]\n\nfinished. Press (Exit) or (Ok) Button.' % (IMAGENAME, self.device_path)), MessageBox.TYPE_INFO)
+				message = _('- (%s) (%s MB)\n- Save on\n[%s]\n\n\nFinished. Press (Exit) or (Ok) Button to close screen.' % (IMAGENAME, size_bytes, self.device_path))
+				self.session.open(MessageBox, message, MessageBox.TYPE_INFO)
 			if config.backupflashe.shutdown.value:
 					sleep(2)
 					logdata("Shutdown Device") ## Print Shutdown to log file
@@ -368,9 +370,11 @@ class doBackUpExternal(Screen):
 			size_mb = size_bytes / float(1024 * 1024)
 			if size_mb < 80:
 				os.remove(IMAGENAMEPATH)
-				self.session.open(MessageBox, _('Something went wrong. The backup was unsuccessful.\nLook in (/tmp/backupflash.log)\n\nPress (Exit) or (Ok) Button.'), MessageBox.TYPE_INFO)
+				message = _('Something went wrong. The backup was unsuccessful.\nLook in (/tmp/backupflash.log)\n\nPress (Exit) or (Ok) Button.')
+				self.session.open(MessageBox, message, MessageBox.TYPE_INFO)
 			else:
-				self.session.open(MessageBox, _('(%s)\non\n[%s]\n\nfinished. Press (Exit) or (Ok) Button.' % (IMAGENAME, self.device_path)), MessageBox.TYPE_INFO)
+				message = _('- (%s) (%s MB)\n- Save on\n[%s]\n\n\nFinished. Press (Exit) or (Ok) Button to close screen.' % (IMAGENAME, size_bytes, self.device_path))
+				self.session.open(MessageBox, message, MessageBox.TYPE_INFO)
 			if config.backupflashe.shutdown.value:
 					sleep(2)
 					logdata("Shutdown Device") ## Print Shutdown to log file
