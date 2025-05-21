@@ -154,7 +154,8 @@ class doConvert(Screen):
 		else:
 			size_bytes = os.path.getsize(IMAGEZIPNAME)
 			size_mb = size_bytes / float(1024 * 1024)
-			message = _('(%s) (%s MB)\nSave on\n[%s]\n\n\nFinished. Press (Exit) or (Ok) Button to close screen.' % (ZIPNAME, size_mb, self.device_path))
+			size_mb = round(size_mb, 1)
+			message = _('- Name :\n(%s)\n- Size :\n(%s MB)\n- Save on :\n[%s]\n\n\nFinished. Press (Exit) or (Ok) Button to close screen.' % (ZIPNAME, size_mb, self.device_path))
 			self.session.open(MessageBox, message, MessageBox.TYPE_INFO)
 			if config.backupflashe.shutdown.value:
 					sleep(2)
