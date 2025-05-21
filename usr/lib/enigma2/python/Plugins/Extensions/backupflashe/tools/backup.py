@@ -190,7 +190,7 @@ class doBackUpInternal(Screen):
 			size_bytes = os.path.getsize(IMAGENAMEPATH)
 			size_mb = size_bytes / float(1024 * 1024)
 			if size_mb < 80:
-			 	os.remove(IMAGENAMEPATH)
+				os.remove(IMAGENAMEPATH)
 				self.session.open(MessageBox, _('Something went wrong. The backup was unsuccessful.\nLook in (/tmp/backupflash.log)\n\nPress (Exit) or (Ok) Button.'), MessageBox.TYPE_INFO)
 			else:
 				self.session.open(MessageBox, _('(%s)\non\n[%s]\n\nfinished. Press (Exit) or (Ok) Button.' % (IMAGENAME, self.device_path)), MessageBox.TYPE_INFO)
@@ -367,7 +367,7 @@ class doBackUpExternal(Screen):
 			size_bytes = os.path.getsize(IMAGENAMEPATH)
 			size_mb = size_bytes / float(1024 * 1024)
 			if size_mb < 80:
-			 	os.remove(IMAGENAMEPATH)
+				os.remove(IMAGENAMEPATH)
 				self.session.open(MessageBox, _('Something went wrong. The backup was unsuccessful.\nLook in (/tmp/backupflash.log)\n\nPress (Exit) or (Ok) Button.'), MessageBox.TYPE_INFO)
 			else:
 				self.session.open(MessageBox, _('(%s)\non\n[%s]\n\nfinished. Press (Exit) or (Ok) Button.' % (IMAGENAME, self.device_path)), MessageBox.TYPE_INFO)
