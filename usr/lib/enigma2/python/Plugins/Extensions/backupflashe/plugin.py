@@ -204,10 +204,9 @@ class full_main(Screen, ConfigListScreen):
 		if missing:
 			self.msg_timer = eTimer()
 			try:
-				self.msg_timer_conn = self.msg_timer.timeout.connect
+				self.msg_timer.callback.append(self.showMissingPackages)
 			except:
-				self.msg_timer.callback.append
-			self.msg_timer.callback.append(self.showMissingPackages)
+				self.msg_timer_conn = self.msg_timer.timeout.connect(self.showMissingPackages)
 			self.msg_timer.start(100, True)
 
 		self["config"].onSelectionChanged.append(self.updateHelp)
