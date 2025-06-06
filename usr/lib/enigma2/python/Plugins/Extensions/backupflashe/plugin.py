@@ -2,17 +2,21 @@
 # -*- coding: utf-8 -*-
 # RAED & mfaraj57 (c) 2018 - 2025
 
-from enigma import eTimer, quitMainloop
+from enigma import eTimer, quitMainloop, getDesktop
 from Screens.ChoiceBox import ChoiceBox
 from Screens.MessageBox import MessageBox
 from Screens.VirtualKeyBoard import VirtualKeyBoard
 from Screens.Screen import Screen
+from Screens.Standby import TryQuitMainloop
 from Plugins.Plugin import PluginDescriptor
-from Tools.Directories import resolveFilename, fileExists, pathExists, SCOPE_MEDIA
+from Tools.LoadPixmap import LoadPixmap
+from Tools.Directories import resolveFilename, fileExists, pathExists, SCOPE_MEDIA, SCOPE_PLUGINS
 from Components.FileList import FileList
 from Components.ActionMap import ActionMap
 from Components.Label import Label
+from Components.Pixmap import Pixmap
 from Components.MenuList import MenuList
+from Components.Sources.List import List
 from Components.Sources.StaticText import StaticText
 from Components.ConfigList import ConfigListScreen
 from Components.config import getConfigListEntry, ConfigSubsection, config, ConfigYesNo, ConfigSelection, NoSave, configfile, ConfigText
@@ -45,12 +49,11 @@ config.backupflashe.shutdown = ConfigYesNo(default=False)
 config.backupflashe.cleanba = ConfigYesNo(default=False)
 config.backupflashe.flashAllow = ConfigYesNo(default=False)
 config.backupflashe.Zipcompression = ConfigYesNo(default=False)
-config.backupflashe.path_left = ConfigText(
-	default=resolveFilename(SCOPE_MEDIA))
+config.backupflashe.path_left = ConfigText(default=resolveFilename(SCOPE_MEDIA))
+config.backupflashe.showplugin = ConfigText(default="")
 
 image_formats = [('xz', 'xz'), ('bz2', 'bz2')]
-config.backupflashe.image_format = ConfigSelection(
-	default="xz", choices=image_formats)
+config.backupflashe.image_format = ConfigSelection(default="xz", choices=image_formats)
 xz_options = []
 if boxtype == "dm520":
 	xz_options.append(("1", "1"))
@@ -139,6 +142,106 @@ else:
 ####
 
 
+class SelectionScreen(Screen, ConfigListScreen):
+
+	def __init__(self, session):
+		Screen.__init__(self, session)
+		self.skin = SKIN_SelectionScreen
+		ConfigListScreen.__init__(self, [], session=session)
+		self.session = session
+		self.setup_title = _("Select your choose")
+		self.setTitle(self.setup_title)
+
+		# Load pixmaps for checkboxes
+		sz_w = getDesktop(0).size().width()
+		if sz_w == 1280 :
+			self.empty_box = LoadPixmap(resolveFilename(SCOPE_PLUGINS, 'Extensions/backupflashe/buttons/checkbox_empty.png'))
+			self.checked_box = LoadPixmap(resolveFilename(SCOPE_PLUGINS, 'Extensions/backupflashe/buttons/checkbox_checked.png'))
+		else:
+			self.empty_box = LoadPixmap(resolveFilename(SCOPE_PLUGINS, 'Extensions/backupflashe/buttons/checkbox_empty2.png'))
+			self.checked_box = LoadPixmap(resolveFilename(SCOPE_PLUGINS, 'Extensions/backupflashe/buttons/checkbox_checked2.png'))
+
+		# Initialize selection states
+		self.selection_states = {
+			"Menu": False,
+			"Channellist": False,
+			"Extensions": False
+		}
+
+		# Get current config value and update selection states
+		self.current_value = config.backupflashe.showplugin.value
+		if self.current_value:
+			selected_items = self.current_value.split(',')
+			for item in selected_items:
+				if item in self.selection_states:
+					self.selection_states[item] = True
+
+		# Create list of options with their checkbox states
+		self.list = []
+
+		# Set up the list component
+		self["list"] = List(self.list)
+
+		# Now update the list
+		self.updateList()
+
+		# Set up labels
+		self["key_green"] = Label(_("Save"))
+		self["key_red"] = Label(_("Cancel"))
+
+		# Set up actions
+		self["actions"] = ActionMap(["WizardActions", "ColorActions", "MenuActions"], {
+			"ok": self.select_option,
+			"cancel": self.close,
+			"back": self.close,
+			"green": self.save
+		}, -1)
+
+		self.onLayoutFinish.append(self.layoutFinished)
+
+	def layoutFinished(self):
+		self.setTitle(self.setup_title)
+
+	def updateList(self):
+		self.list = []
+		choices = [
+			("Menu", _("Menu")),
+			("Channellist", _("Channellist")),
+			("Extensions", _("Extensions"))
+		]
+
+		for key, text in choices:
+			pixmap = self.checked_box if self.selection_states[key] else self.empty_box
+			self.list.append((text, pixmap, key))
+
+		self["list"].setList(self.list)
+
+	def select_option(self):
+		current = self["list"].getCurrent()
+		if current:
+			key = current[2]
+			self.selection_states[key] = not self.selection_states[key]
+			self.updateList()
+
+	def save(self):
+		# Save all selected options as comma-separated string
+		selected_options = [key for key, state in self.selection_states.items() if state]
+		new_value = ','.join(selected_options)
+		config.backupflashe.showplugin.value = new_value
+		config.backupflashe.showplugin.save()
+
+		if self.current_value != new_value:
+			self.session.openWithCallback(self.restart, MessageBox, _("You need to restart GUI\nDo you want to do it now ?!"))
+		else:
+			self.close(True)
+
+	def restart(self,answer=None):
+		if answer:
+			self.session.open(TryQuitMainloop, 3)
+		else:
+			self.close(True)
+
+
 class full_main(Screen, ConfigListScreen):
 
 	def __init__(self, session):
@@ -158,15 +261,14 @@ class full_main(Screen, ConfigListScreen):
 		self["key_blue"].hide()
 		self["key_yellow"].hide()
 		self["help"] = StaticText()
-		self["actions"] = ActionMap(["WizardActions", "ColorActions", "MenuActions"],
-									{
+		self["actions"] = ActionMap(["WizardActions", "ColorActions", "MenuActions"], {
 			#"green": self.doFlash,
 			"green": self.convertimage,
 			"blue": self.BackUpListSelect,
 			"yellow": self.flashOnline,
 			"menu": self.showMenuoptions,
 			"red": self.red,
-			"back": self.close
+			"back": self.close,
 		})
 		self.deviceok = True
 		self.new_version = Ver
@@ -236,7 +338,8 @@ class full_main(Screen, ConfigListScreen):
 		dellog()
 		if len(mounted_devices) > 0:
 			self.deviceok = True
-			self["lab1"].setText(_("Do (Full Backup) or (Convert) or (Download) Images or (Go to Recovery Mode)"))
+			self["lab1"].setText(_("# Press Menu ..\nTo open option of show Plugin in any where you like"))
+			#self["lab1"].setText(_("Do (Full Backup) or (Convert) or (Download) Images or (Go to Recovery Mode)"))
 			self["key_green"].show()
 			self["key_blue"].show()
 			self["key_yellow"].show()
@@ -244,8 +347,7 @@ class full_main(Screen, ConfigListScreen):
 				choices=mounted_devices)
 			self.createSetup()
 		else:
-			self["lab1"].setText(
-				_("Sorry no device mounted found.\nPlease check your media in devices manager."))
+			self["lab1"].setText(_("Sorry no device mounted found.\nPlease check your media in devices manager."))
 			self["key_green"].hide()
 			self["key_blue"].hide()
 			self["key_yellow"].hide()
@@ -418,10 +520,11 @@ class full_main(Screen, ConfigListScreen):
 		configfile.save()
 
 	def showMenuoptions(self):
-		choices = []
-		self.list = []
-		choices.append(("Install/Reinstgall backupflash version %s" % self.new_version, "Install"))
-		self.session.openWithCallback(self.choicesback, ChoiceBox, _('select task'), choices)
+		self.session.open(SelectionScreen)
+		#choices = []
+		#self.list = []
+		#choices.append(("Install/Reinstgall backupflash version %s" % self.new_version, "Install"))
+		#self.session.openWithCallback(self.choicesback, ChoiceBox, _('select task'), choices)
 
 	def choicesback(self, select):
 		if select:
@@ -477,6 +580,11 @@ class full_main(Screen, ConfigListScreen):
 	def myCallback(self, result):
 		return
 
+def main_menu(menuid, **kwargs):
+	if menuid == "mainmenu" and config.backupflashe.showplugin.value:
+		return [(_("BackupFlash"), main, "BackupFlash", 45)]
+	else:
+		return []
 
 def main(session, **kwargs):
 	# mounted_devices = getmDevices()
@@ -486,14 +594,56 @@ def main(session, **kwargs):
 	#        session.open(MessageBox, "Sorry no device mounted found.\nPlease check your media in devices manager.", MessageBox.TYPE_ERROR,timeout=8)
 
 
+description = _("Backup And Flash Images")
+
 def Plugins(**kwargs):
 	result = [
 		PluginDescriptor(
 			name=_("BackupFlash"),
-			description=_("Backup And Flash Images"),
+			description=description,
+			icon="plugin.png",
 			where=PluginDescriptor.WHERE_PLUGINMENU,
-			icon='plugin.png',
 			fnc=main
 		),
 	]
+
+	show = config.backupflashe.showplugin.value
+	selected_options = show.split(",") if show else []
+
+	extDescriptor = PluginDescriptor(
+		name=_("Backup And Flash Images [BackupFlash]"),
+		description=description,
+		where=PluginDescriptor.WHERE_EXTENSIONSMENU,
+		fnc=main
+	)
+
+	menulist = PluginDescriptor(
+		name=_("BackupFlash"),
+		description=description,
+		where=PluginDescriptor.WHERE_MENU,
+		fnc=main_menu
+	)
+
+	contextlist = PluginDescriptor(
+		name=_("Backup And Flash Images [BackupFlash]"),
+		description=description,
+		where=PluginDescriptor.WHERE_CHANNEL_CONTEXT_MENU,
+		fnc=main
+	)
+
+	if "Menu" in selected_options:
+		result.append(menulist)
+	if "Extensions" in selected_options:
+		result.append(extDescriptor)
+	if "Channellist" in selected_options:
+		result.append(contextlist)
+		if fileExists(BRANDOS):
+			result.append(
+				PluginDescriptor(
+					name=_("Backup And Flash Images [BackupFlash]"),
+					description=description,
+					where=PluginDescriptor.WHERE_CHANNEL_SELECTION_RED,
+					fnc=main
+				)
+			)
 	return result

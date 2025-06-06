@@ -1,8 +1,8 @@
 #!/bin/bash
 ##setup command=wget https://raw.githubusercontent.com/fairbird/BackUpFlash/main/installer.sh -O - | /bin/sh
 
-version=11.1
-description=What is NEW :\n- Some fixes and improvements. -\n\n**************************\n: ما هو الجديد\n- بعض التصحيحات والتحسينات
+version=11.2
+description=What is NEW :\n- Add new option in menu button. -\n\n**************************\n: ما هو الجديد\n- menu إضافة خاصية جديدة في زر
 
 echo ""
 if [ ! -d '/usr/lib64' ]; then
