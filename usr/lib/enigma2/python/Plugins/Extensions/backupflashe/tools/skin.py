@@ -155,3 +155,47 @@ else:
 <eLabel text="Press Ok Button to Hide/Show Screen" position="32,200" zPosition="2" size="784,35" font="Regular;28" halign="center" valign="center" foregroundColor="#00bab329" backgroundColor="#16000000"/>
 <widget name="slider" position="0,238" size="850,20" borderWidth="1" transparent="1"/>
 </screen>"""
+
+#### Selection Screen
+if sz_w == 1280 :
+	SKIN_SelectionScreen = """
+<screen name="SelectionScreen" position="center,center" size="560,400" title="Select Options">
+        <widget source="list" render="Listbox" position="10,10" size="540,300" scrollbarMode="showOnDemand">
+            <convert type="TemplatedMultiContent">
+                {
+                    "template": [
+                        MultiContentEntryText(pos=(50,0), size=(450,50), font=0, text=0),
+                        MultiContentEntryPixmapAlphaBlend(pos=(0,0), size=(50,50), flags=BT_SCALE, png=1)
+                    ],
+                    "fonts": [gFont("Regular", 24)],
+                    "itemHeight": 50
+                }
+            </convert>
+        </widget>
+<ePixmap pixmap="%s/buttons/red35x35.png" position="35,362" size="35,35" alphatest="blend"/>
+<ePixmap pixmap="%s/buttons/green35x35.png" position="317,362" size="35,35" alphatest="blend"/>
+<widget name="key_red" position="70,360" zPosition="1" size="140,40" font="Regular;20" halign="center" valign="right" foregroundColor="#00ffffff" backgroundColor="#ff1f771f" transparent="1"/>
+<widget name="key_green" position="350,360" zPosition="1" size="140,40" font="Regular;20" halign="center" valign="right" foregroundColor="#00ffffff" backgroundColor="#ff9f1313" transparent="1"/>
+</screen>
+""" % (resolveFilename(SCOPE_PLUGINS, 'Extensions/backupflashe'), resolveFilename(SCOPE_PLUGINS, 'Extensions/backupflashe'))
+else:
+	SKIN_SelectionScreen = """
+<screen name="SelectionScreen" position="center,center" size="738,524" title="Select Options">
+        <widget source="list" render="Listbox" position="10,10" size="716,461" scrollbarMode="showOnDemand">
+            <convert type="TemplatedMultiContent">
+                {
+                    "template": [
+                        MultiContentEntryText(pos=(85,10), size=(650,50), font=0, text=0),
+                        MultiContentEntryPixmapAlphaBlend(pos=(0,0), size=(50,50), flags=BT_SCALE, png=1)
+                    ],
+                    "fonts": [gFont("Regular", 35)],
+                    "itemHeight": 60
+                }
+            </convert>
+        </widget>
+<ePixmap pixmap="%s/buttons/red35x35.png" position="35,487" size="35,35" alphatest="blend"/>
+<ePixmap pixmap="%s/buttons/green35x35.png" position="407,487" size="35,35" alphatest="blend"/>
+<widget name="key_red" position="70,480" zPosition="1" size="246,40" font="Regular;35" halign="center" valign="right" foregroundColor="#00ffffff" backgroundColor="#ff1f771f" transparent="1"/>
+<widget name="key_green" position="445,480" zPosition="1" size="246,40" font="Regular;35" halign="center" valign="right" foregroundColor="#00ffffff" backgroundColor="#ff9f1313" transparent="1"/>
+</screen>
+""" % (resolveFilename(SCOPE_PLUGINS, 'Extensions/backupflashe'), resolveFilename(SCOPE_PLUGINS, 'Extensions/backupflashe'))
