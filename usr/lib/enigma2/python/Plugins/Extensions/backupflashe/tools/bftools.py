@@ -146,13 +146,10 @@ def get_package():
 
 def get_images(url,regx):
 	images = []
-	# Replace http with https to avoid redirects
-	if url.startswith('http://'):
-		url = url.replace('http://', 'https://', 1)
 	logdata("images_url",url)
 	try:
 		req = compat_Request(url, headers=headers) # # add headers to fix HTTP Error 403: Forbidden
-		response = compat_urlopen(req,timeout=5)
+		response = compat_urlopen(req, timeout=5)
 		data = response.read()
 		response.close()
 		match = re.findall(regx,data, re.M|re.I)
