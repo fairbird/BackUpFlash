@@ -139,20 +139,23 @@ def get_package():
 	return (XZ_, PIGZ_, ZIP_, WGET_)  # Always return a tuple
 
 
-def get_images(url,regx):
+def get_images(url, regx):
 	images = []
+	# Replace http with https to avoid redirects
+	if url.startswith('http://'):
+		url = url.replace('http://', 'https://', 1)
 	logdata("images_url",url)
 	try:
-		req = compat_Request(url, headers={'User-Agent': 'Mozilla/5.0'}) # add [headers={'User-Agent': 'Mozilla/5.0'}] to fix HTTP Error 403: Forbidden
-		response = compat_urlopen(req,timeout=5)
+		req = compat_Request(url, headers={'User-Agent': 'Mozilla/5.0'})
+		response = compat_urlopen(req, timeout=5)
 		data = response.read()
 		response.close()
-		match = re.findall(regx,data, re.M|re.I)
-		for item1,item2 in match:
-			images.append((item1,item2))
+		match = re.findall(regx, data, re.M | re.I)
+		for item1, item2 in match:
+			images.append((item1, item2))
 		return images
-	except:
-		trace_error()
+	except Exception as e:
+		print("Error fetching images:", str(e))  # Debug error
 		return []
 
 
