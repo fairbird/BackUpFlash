@@ -165,7 +165,7 @@ if sz_w == 1280 :
                 {
                     "template": [
                         MultiContentEntryText(pos=(50,0), size=(450,50), font=0, text=0),
-                        MultiContentEntryPixmapAlphaBlend(pos=(0,0), size=(50,50), flags=BT_SCALE, png=1)
+                        MultiContentEntryPixmapAlphaBlend(pos=(0,0), size=(50,50), png=1)
                     ],
                     "fonts": [gFont("Regular", 24)],
                     "itemHeight": 50
@@ -186,7 +186,7 @@ else:
                 {
                     "template": [
                         MultiContentEntryText(pos=(85,10), size=(650,50), font=0, text=0),
-                        MultiContentEntryPixmapAlphaBlend(pos=(0,0), size=(50,50), flags=BT_SCALE, png=1)
+                        MultiContentEntryPixmapAlphaBlend(pos=(0,0), size=(50,50), png=1)
                     ],
                     "fonts": [gFont("Regular", 35)],
                     "itemHeight": 60

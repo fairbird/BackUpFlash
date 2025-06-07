@@ -195,7 +195,7 @@ class SelectionScreen(Screen, ConfigListScreen):
 			"cancel": self.close,
 			"back": self.close,
 			"green": self.save
-		}, -1)
+		}, -2)  # Higher priority to ensure OK is captured (DreamOS images need it)
 
 		self.onLayoutFinish.append(self.layoutFinished)
 
@@ -203,6 +203,8 @@ class SelectionScreen(Screen, ConfigListScreen):
 		self.setTitle(self.setup_title)
 
 	def updateList(self):
+		# Store the current index before updating the list
+		current_index = self["list"].getIndex() or 0
 		self.list = []
 		choices = [
 			("Menu", _("Menu")),
@@ -215,6 +217,11 @@ class SelectionScreen(Screen, ConfigListScreen):
 			self.list.append((text, pixmap, key))
 
 		self["list"].setList(self.list)
+		# Restore the previous index, ensuring it's within bounds
+		if current_index < len(self.list):
+			self["list"].setIndex(current_index)
+		else:
+			self["list"].setIndex(0)  # Fallback to first item if index is out of range
 
 	def select_option(self):
 		current = self["list"].getCurrent()
@@ -586,7 +593,7 @@ def main_menu(menuid, **kwargs):
 	else:
 		return []
 
-def main(session, **kwargs):
+def main(session, *args, **kwargs):
 	# mounted_devices = getmDevices()
 	# if len(mounted_devices) > 0:
 	session.open(full_main)
