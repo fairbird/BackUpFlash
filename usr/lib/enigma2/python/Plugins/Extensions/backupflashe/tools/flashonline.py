@@ -226,31 +226,27 @@ class imagesScreen(Screen):
 				images.append((imageName,imagePath))
 
 		if self.teamName=="OpenATV-Python2":
-			imagesPath="https://images.mynonpublic.com/openatv/6.4/index.php?open="+boxtype
+			imagesPath = "https://images.mynonpublic.com/openatv/6.4/index.php?open="+boxtype
 			regx = b'''<a href='(.*?)'>(.*?)</a>'''
-			rimages=get_images(imagesPath,regx)
+			rimages = get_images(imagesPath, regx)
 			for item in rimages:
-				imageName=item[1]
+				imageName = item[1]
 				imageName2=item[0]
 				if PY3:
-					imageName=imageName.decode()
-					imagePath =  os.path.join(b'https://images.mynonpublic.com/openatv/6.4/', imageName2)
-				else:
-					imagePath =  os.path.join('https://images.mynonpublic.com/openatv/6.4/', imageName2)
+					imageName = imageName.decode()
+				imagePath =  os.path.join(b'https://images.mynonpublic.com/openatv/6.4/', imageName2)
 				images.append((imageName,imagePath))
 
 		if self.teamName=="OpenATV-Python3":
-			imagesPath="https://images.mynonpublic.com/openatv/7.6/index.php?open="+boxtype
+			imagesPath = "https://images.mynonpublic.com/openatv/7.6/index.php?open="+boxtype
 			regx = b'''<a href='(.*?)'>(.*?)</a>'''
-			rimages=get_images(imagesPath,regx)
+			rimages = get_images(imagesPath, regx)
 			for item in rimages:
-				imageName=item[1]
+				imageName = item[1]
 				imageName2=item[0]
 				if PY3:
-					imageName=imageName.decode()
-					imagePath =  os.path.join(b'https://images.mynonpublic.com/openatv/7.6/', imageName2)
-				else:
-					imagePath =  os.path.join('https://images.mynonpublic.com/openatv/7.6/', imageName2)
+					imageName = imageName.decode()
+				imagePath =  os.path.join(b'https://images.mynonpublic.com/openatv/7.6/', imageName2)
 				images.append((imageName,imagePath))
 
 		if self.teamName=="OpenPLI-Unoffical":
@@ -266,13 +262,13 @@ class imagesScreen(Screen):
 		if self.teamName=="OpenPLi9xstar-japhar":
 			imagesPath = "http://openpli9xstar.japhar.net/OpenPLi9xstar/"
 			regx = b'''<a href="http://openpli9xstar.japhar.net/OpenPLi9xstar/(.*?)">(.*?)</a>'''
-			rimages=get_images(imagesPath,regx)
+			rimages = get_images(imagesPath, regx)
 			for item in rimages:
-				imageName=item[1]
+				imageName = item[1]
 				imageName = imageName.replace(b" (Original)", b"").replace(b" (Japhar)", b"")
 				logdata("imageName",imageName)
 				if PY3:
-					imageName=imageName.decode()
+					imageName = imageName.decode()
 				imagePath = os.path.join("http://openpli9xstar.japhar.net/OpenPLi9xstar/", imageName)
 				if not boxtype in imageName:
 					continue
@@ -309,109 +305,97 @@ class imagesScreen(Screen):
 				images.append((imageName,imagePath))
 
 		if self.teamName=="ArEaDeLtA-SaT":
-			imagesPath="http://areadeltasat.net/upload/E2%20Images/Dreambox/"
+			imagesPath = "http://areadeltasat.net/upload/E2%20Images/Dreambox/"
 			regx = b'''<font color="#ffffff"><b>(.*?)</b></font>.*?<a href="(.*?)" target="_blank">'''
-			rimages=get_images(imagesPath,regx)
+			rimages = get_images(imagesPath, regx)
 			for item in rimages:
 				imageName=item[0]
 				if PY3:
-					imageName=imageName.decode()
+					imageName = imageName.decode()
 					imagePath = (item[1].decode()).replace(" ","%20")
 				else:
-					imagePath=item[1].replace(" ","%20")
+					imagePath = item[1].replace(" ","%20")
 				if not boxtype in imageName:
 					continue
 				images.append((imageName+".zip",imagePath))
 
 		if self.teamName=="OpenESI": 
-			imagesPath="http://www.openesi.eu/images/index.php?dir=Dreambox/" +boxtype + "/"
+			imagesPath = "http://www.openesi.eu/images/index.php?dir=Dreambox/" +boxtype + "/"
 			regx = b'''<a class="autoindex_a" href="(.*?)&amp;file=(.*?)">'''
-			rimages=get_images(imagesPath,regx)
+			rimages = get_images(imagesPath, regx)
 			for item in rimages:
-				imageName=item[1]
+				imageName = item[1]
 				if PY3:
-					imageName=imageName.decode()
+					imageName = imageName.decode()
 				imagePath="http://www.openesi.eu/images/Dreambox" + "/" + boxtype + "/" + imageName
 				images.append((imageName,imagePath))
 
 		if self.teamName=="DreamElite":
-			if boxtype=="dm520" or boxtype=="dm525":
+			if boxtype == "dm520" or boxtype == "dm525":
 				boxtype='DM520-DM525'
 			else:
-				boxtype=boxtype.upper()
-			imagesPath="https://images.dream-elite.net/DEP/index.php?dir=" + boxtype + "/"
+				boxtype = boxtype.upper()
+			imagesPath = "https://images.dream-elite.net/DEP/index.php?dir=" + boxtype + "/"
 			regx = b'''<a class="autoindex_a" href="(.*?)&amp;file=(.*?)">'''
-			rimages=get_images(imagesPath,regx)
+			rimages = get_images(imagesPath, regx)
 			for item in rimages:
-				imageName=item[1]
+				imageName = item[1]
 				if PY3:
-					imageName=imageName.decode()
+					imageName = imageName.decode()
 				imagePath="https://images.dream-elite.net/DEP/"+boxtype.upper()+'/'+imageName
 				images.append((imageName,imagePath.strip()))
 
 		if self.teamName=="Dreamboxupdates-Stable":
-			if boxtype=="dreamone" or boxtype=="dreamtwo":
-				imagesPath="http://www.dreamboxupdate.com/opendreambox/2.6/stable/images/"+boxtype+"/index.php"
+			if boxtype == "dreamone" or boxtype == "dreamtwo":
+				imagesPath = "http://www.dreamboxupdate.com/opendreambox/2.6/stable/images/"+boxtype+"/index.php"
 			else:
-				imagesPath="http://www.dreamboxupdate.com/opendreambox/2.5/stable/images/"+boxtype+"/index.php"
+				imagesPath = "http://www.dreamboxupdate.com/opendreambox/2.5/stable/images/"+boxtype+"/index.php"
 			regx = b'''<a class="tarxz" href="(.*?)">(.*?)</a>'''
-			rimages=get_images(imagesPath,regx)
+			rimages = get_images(imagesPath, regx)
 			for item in rimages:
-				imageName=item[1]
+				imageName = item[1]
 				if PY3:
-					imageName=imageName.decode()
-				if boxtype=="dreamone" or boxtype=="dreamtwo":
-					if PY3:
-						imagePath = os.path.join("http://www.dreamboxupdate.com/opendreambox/2.6/stable/images/"+boxtype+'/', imageName)
-					else:
-						imagePath = os.path.join("http://www.dreamboxupdate.com/opendreambox/2.6/stable/images/"+boxtype+'/', imageName)
+					imageName = imageName.decode()
+				if boxtype == "dreamone" or boxtype == "dreamtwo":
+					imagePath = os.path.join("http://www.dreamboxupdate.com/opendreambox/2.6/stable/images/"+boxtype+'/', imageName)
 				else:
-					if PY3:
-						imagePath = os.path.join("http://www.dreamboxupdate.com/opendreambox/2.5/stable/images/"+boxtype+'/', imageName)
-					else:
-						imagePath = os.path.join("http://www.dreamboxupdate.com/opendreambox/2.5/stable/images/"+boxtype+'/', imageName)
+					imagePath = os.path.join("http://www.dreamboxupdate.com/opendreambox/2.5/stable/images/"+boxtype+'/', imageName)
 				if "sig" in imageName:
 					continue
 				images.append((imageName,imagePath))
 
 		if self.teamName=="Dreamboxupdates-UnStable":
-			if boxtype=="dreamone" or boxtype=="dreamtwo":
-				imagesPath="http://www.dreamboxupdate.com/opendreambox/2.6/unstable/images/"+boxtype+"/index.php"
+			if boxtype == "dreamone" or boxtype == "dreamtwo":
+				imagesPath = "http://www.dreamboxupdate.com/opendreambox/2.6/unstable/images/"+boxtype+"/index.php"
 			else:
-				imagesPath="http://www.dreamboxupdate.com/opendreambox/2.5/unstable/images/"+boxtype+"/index.php"
+				imagesPath = "http://www.dreamboxupdate.com/opendreambox/2.5/unstable/images/"+boxtype+"/index.php"
 			regx = b'''<a class="tarxz" href="(.*?)">(.*?)</a>'''
-			rimages=get_images(imagesPath,regx)
+			rimages = get_images(imagesPath, regx)
 			for item in rimages:
-				imageName=item[1]
+				imageName = item[1]
 				if PY3:
-					imageName=imageName.decode()
-				if boxtype=="dreamone" or boxtype=="dreamtwo":
-					if PY3:
-						imagePath = os.path.join("http://www.dreamboxupdate.com/opendreambox/2.6/unstable/images/"+boxtype+'/', imageName)
-					else:
-						imagePath = os.path.join("http://www.dreamboxupdate.com/opendreambox/2.6/unstable/images/"+boxtype+'/', imageName)
+					imageName = imageName.decode()
+				if boxtype == "dreamone" or boxtype == "dreamtwo":
+					imagePath = os.path.join("http://www.dreamboxupdate.com/opendreambox/2.6/unstable/images/"+boxtype+'/', imageName)
 				else:
-					if PY3:
-						imagePath = os.path.join("http://www.dreamboxupdate.com/opendreambox/2.5/unstable/images/"+boxtype+'/', imageName)
-					else:
-						imagePath = os.path.join("http://www.dreamboxupdate.com/opendreambox/2.5/unstable/images/"+boxtype+'/', imageName)
+					imagePath = os.path.join("http://www.dreamboxupdate.com/opendreambox/2.5/unstable/images/"+boxtype+'/', imageName)
 				if "sig" in imageName:
 					continue
 				images.append((imageName,imagePath))
 
 		if self.teamName=="Merlin4":
-			if boxtype=="dreamone" or boxtype=="dreamtwo":
+			if boxtype == "dreamone" or boxtype == "dreamtwo":
 				imagesPath = "https://merlinfeed.boxpirates.to/images_oe_2.6/"
 				regx = b'''<a href="/images_oe_2.6/(.*?)">(.*?)</a>'''
 			else:
 				imagesPath = "https://merlinfeed.boxpirates.to/images_oe_2.5/"
 				regx = b'''<a href="/images_oe_2.5/(.*?)">(.*?)</a>'''
-			rimages=get_images(imagesPath,regx)
+			rimages = get_images(imagesPath, regx)
 			for item in rimages:
-				imageName=item[1]
+				imageName = item[1]
 				if PY3:
-					imageName=imageName.decode()
-				if boxtype=="dreamone" or boxtype=="dreamtwo":
+					imageName = imageName.decode()
+				if boxtype == "dreamone" or boxtype == "dreamtwo":
 					imagePath = os.path.join("https://merlinfeed.boxpirates.to/images_oe_2.6/", imageName)
 				else:
 					imagePath = os.path.join("https://merlinfeed.boxpirates.to/images_oe_2.5/", imageName)
@@ -420,31 +404,27 @@ class imagesScreen(Screen):
 				images.append((imageName,imagePath))
 
 		if self.teamName=="OoZooN":
-			imagesPath="http://www.oozoon-download.de/opendreambox/images/"+boxtype+"/unstable/index.html"
+			imagesPath = "http://www.oozoon-download.de/opendreambox/images/"+boxtype+"/unstable/index.html"
 			regx = b'''<a href="(.*?)">(.*?)</a>'''
-			rimages=get_images(imagesPath,regx)
+			rimages = get_images(imagesPath, regx)
 			for item in rimages:
-				imageName=item[1]
+				imageName = item[1]
 				if PY3:
-					imageName=imageName.decode()
-					imagePath = os.path.join("http://www.oozoon-download.de/opendreambox/images/"+boxtype+"/unstable/", imageName)
-				else:
-					imagePath = os.path.join("http://www.oozoon-download.de/opendreambox/images/"+boxtype+"/unstable/", imageName)
+					imageName = imageName.decode()
+				imagePath = os.path.join("http://www.oozoon-download.de/opendreambox/images/"+boxtype+"/unstable/", imageName)
 				if ".nfo" in  imageName or not "oozoon" in imageName:
 					continue
 				images.append((imageName,imagePath))
 
 		if self.teamName=="Newnigma2":
-			imagesPath="http://feed.newnigma2.to/daily/images/"
+			imagesPath = "http://feed.newnigma2.to/daily/images/"
 			regx = b'''<a href="(.*?)">(.*?)</a>'''
-			rimages=get_images(imagesPath,regx)
+			rimages = get_images(imagesPath, regx)
 			for item in rimages:
-				imageName=item[1]
+				imageName = item[1]
 				if PY3:
-					imageName=imageName.decode()
-					imagePath = os.path.join("http://feed.newnigma2.to/daily/images/", imageName)
-				else:
-					imagePath = os.path.join("http://feed.newnigma2.to/daily/images/", imageName)
+					imageName = imageName.decode()
+				imagePath = os.path.join("http://feed.newnigma2.to/daily/images/", imageName)
 				if not boxtype in imageName:
 					continue
 				images.append((imageName,imagePath))
@@ -466,110 +446,94 @@ class imagesScreen(Screen):
 				boxtype = "dreamtwo"
 			else:
 				pass
-			if boxtype=="dreamone" or boxtype=="dreamtwo": 
-				imagesPath="http://demonisat.info/demonisat-e2Img-OE2.0/Image-OE2.6/"+boxtype+"/"
+			if boxtype == "dreamone" or boxtype == "dreamtwo": 
+				imagesPath = "http://demonisat.info/demonisat-e2Img-OE2.0/Image-OE2.6/"+boxtype+"/"
 				regx = b'<a href="(.*?)">(.*?)..&gt;</a></td><td align="right">(.*?)  </td>'
 			else:
-				imagesPath="http://demonisat.info/demonisat-e2Img-OE2.0/Image-oe2.5/"+boxtype+"/"
+				imagesPath = "http://demonisat.info/demonisat-e2Img-OE2.0/Image-oe2.5/"+boxtype+"/"
 			regx = b'<a href="(.*?)">(.*?)-..&gt;</a></td><td align="right">(.*?)</td>'
 			data = requests.get(imagesPath, headers=headers).content
 			info = re.findall(regx, data)
 			rimages = []
 			for href, title, cdate in info:
-				cdate=(cdate.decode("utf-8")).split(" ")[0]
-				title=title.decode("utf-8")+"-"+cdate
+				cdate = (cdate.decode("utf-8")).split(" ")[0]
+				title = title.decode("utf-8") + "-" + cdate
 				if PY3:
-					title=imagesPath+href.decode("utf-8")
-					rimages.append((href.decode("utf-8"),title))
+					title = imagesPath + href.decode("utf-8")
+					rimages.append((href.decode("utf-8"), title))
 				else:
-					title=imagesPath+href
+					title = imagesPath + href
 					rimages.append((href, title))
-			images=[]
+			images = []
 			for item in rimages:
 				imageName=item[0]
 				imagePath=item[1]
 				images.append((imageName,imagePath))
 
 		if self.teamName=="Powersat":
-			imagesPath="http://www.power-sat.org/power-plus/index.php?dir=Powersat_2.5/immagini_powersat_"+boxtype+"_OE2.5/"
+			imagesPath = "http://www.power-sat.org/power-plus/index.php?dir=Powersat_2.5/immagini_powersat_"+boxtype+"_OE2.5/"
 			regx = b'''<a class="autoindex_a" href="(.*?)&amp;file=(.*?)">'''
-			rimages=get_images(imagesPath,regx)
+			rimages = get_images(imagesPath, regx)
 			for item in rimages:
-				imageName=item[1]
+				imageName = item[1]
 				if PY3:
-					imageName=imageName.decode()
-					imagePath = os.path.join("http://www.power-sat.org/power-plus/Powersat_2.5/immagini_powersat_"+boxtype+"_OE2.5/", imageName)
-				else:
-					imagePath = os.path.join("http://www.power-sat.org/power-plus/Powersat_2.5/immagini_powersat_"+boxtype+"_OE2.5/", imageName)
+					imageName = imageName.decode()
+				imagePath = os.path.join("http://www.power-sat.org/power-plus/Powersat_2.5/immagini_powersat_"+boxtype+"_OE2.5/", imageName)
 				if not boxtype in imageName:
 					continue
 				images.append((imageName,imagePath))
 
 		if self.teamName=="Satlodge":
 			if boxtype == "dreamone" or boxtype == "dreamtwo":
-				imagesPath="http://webplus.sat-lodge.it/index.php?dir=dreamone2.6/"
+				imagesPath = "http://webplus.sat-lodge.it/index.php?dir=dreamone2.6/"
 			else:
-				imagesPath="http://webplus.sat-lodge.it/index.php?dir=Satlodge%202.5/"
+				imagesPath = "http://webplus.sat-lodge.it/index.php?dir=Satlodge%202.5/"
 			regx = b'''<a class="autoindex_a" href="(.*?)&amp;file=(.*?)">'''
-			rimages=get_images(imagesPath,regx)
+			rimages = get_images(imagesPath, regx)
 			for item in rimages:
-				imageName=item[1]
+				imageName = item[1]
 				if PY3:
-					imageName=imageName.decode()
-					if boxtype == "dreamone" or boxtype == "dreamtwo":
-						imagePath = os.path.join('http://webplus.sat-lodge.it/dreamone2.6/', imageName)
-					else:
-						imagePath = os.path.join('http://webplus.sat-lodge.it/Satlodge%202.5/', imageName)
+					imageName = imageName.decode()
+				if boxtype == "dreamone" or boxtype == "dreamtwo":
+					imagePath = os.path.join('http://webplus.sat-lodge.it/dreamone2.6/', imageName)
 				else:
-					if boxtype == "dreamone" or boxtype == "dreamtwo":
-						imagePath = os.path.join('http://webplus.sat-lodge.it/dreamone2.6/', imageName)
-					else:
-						imagePath = os.path.join('http://webplus.sat-lodge.it/Satlodge%202.5/', imageName)
+					imagePath = os.path.join('http://webplus.sat-lodge.it/Satlodge%202.5/', imageName)
 				if not boxtype in imageName:
 					continue
 				images.append((imageName,imagePath))
 
 		if self.teamName=="OpenSatlodge":
-			imagesPath="http://webplus.sat-lodge.it/index.php?dir=Dreambox920/"
+			imagesPath = "http://webplus.sat-lodge.it/index.php?dir=Dreambox920/"
 			regx = b'''<a class="autoindex_a" href="(.*?)&amp;file=(.*?)">'''
-			rimages=get_images(imagesPath,regx)
+			rimages = get_images(imagesPath, regx)
 			for item in rimages:
-				imageName=item[1]
+				imageName = item[1]
 				if PY3:
-					imageName=imageName.decode()
-					imagePath = os.path.join('http://webplus.sat-lodge.it/Dreambox920/', imageName)
-				else:
-					imagePath = os.path.join('http://webplus.sat-lodge.it/Dreambox920/', imageName)
+					imageName = imageName.decode()
+				imagePath = os.path.join('http://webplus.sat-lodge.it/Dreambox920/', imageName)
 				if not item[1].endswith(b"unstable.tar.bz2"):
 					continue
 				images.append((imageName,imagePath))
 
 		if self.teamName=="PurE2":
 			if boxtype == "dreamone" or boxtype == "dreamtwo":
-				imagesPath="https://www.pur-e2.club/OU/images/index.php?dir=6.5/dreambox/TEST-alpha/"
+				imagesPath = "https://www.pur-e2.club/OU/images/index.php?dir=6.5/dreambox/TEST-alpha/"
 			elif boxtype == "dm900" or boxtype == "dm920":
-				imagesPath="https://www.pur-e2.club/OU/images/index.php?dir=7.4/dreambox/"
+				imagesPath = "https://www.pur-e2.club/OU/images/index.php?dir=7.4/dreambox/"
 			else:
-				imagesPath="https://www.pur-e2.club/OU/images/index.php?dir=6.5/dreambox/"
+				imagesPath = "https://www.pur-e2.club/OU/images/index.php?dir=6.5/dreambox/"
 			regx = b'''<a class="autoindex_a" href="(.*?)&amp;file=(.*?)">'''
-			rimages=get_images(imagesPath,regx)
+			rimages = get_images(imagesPath, regx)
 			for item in rimages:
-				imageName=item[1]
+				imageName = item[1]
 				if PY3:
-					imageName=imageName.decode()
-					if boxtype == "dreamone" or boxtype == "dreamtwo":
-						imagePath = os.path.join('https://www.pur-e2.club/OU/images/6.5/dreambox/TEST-alpha/', imageName)
-					elif boxtype == "dm900" or boxtype == "dm920":
-						imagePath = os.path.join('https://www.pur-e2.club/OU/images/7.4/dreambox/', imageName)
-					else:
-						imagePath = os.path.join('https://www.pur-e2.club/OU/images/6.5/dreambox/', imageName)
+					imageName = imageName.decode()
+				if boxtype == "dreamone" or boxtype == "dreamtwo":
+					imagePath = os.path.join('https://www.pur-e2.club/OU/images/6.5/dreambox/TEST-alpha/', imageName)
+				elif boxtype == "dm900" or boxtype == "dm920":
+					imagePath = os.path.join('https://www.pur-e2.club/OU/images/7.4/dreambox/', imageName)
 				else:
-					if boxtype == "dreamone" or boxtype == "dreamtwo":
-						imagePath = os.path.join('https://www.pur-e2.club/OU/images/6.5/dreambox/TEST-alpha/', imageName)
-					elif boxtype == "dm900" or boxtype == "dm920":
-						imagePath = os.path.join('https://www.pur-e2.club/OU/images/7.4/dreambox/', imageName)
-					else:
-						imagePath = os.path.join('https://www.pur-e2.club/OU/images/6.5/dreambox/', imageName)
+					imagePath = os.path.join('https://www.pur-e2.club/OU/images/6.5/dreambox/', imageName)
 				if boxtype == "dreamone" or boxtype == "dreamtwo":
 					if not boxtype in imageName:
 						continue
@@ -582,16 +546,14 @@ class imagesScreen(Screen):
 				images.append((imageName,imagePath))
 
 		if self.teamName=="PKTeam":
-			imagesPath="http://e2.pkteam.pl/index.php?dir=IMAGE%20DREAMBOX/HYPERION%206.1/"
+			imagesPath = "http://e2.pkteam.pl/index.php?dir=IMAGE%20DREAMBOX/HYPERION%206.1/"
 			regx = b'''<a class="autoindex_a" href="(.*?)&amp;file=(.*?)">'''
-			rimages=get_images(imagesPath,regx)
+			rimages = get_images(imagesPath, regx)
 			for item in rimages:
-				imageName=item[1]
+				imageName = item[1]
 				if PY3:			     
-					imageName=imageName.decode()
-					imagePath = os.path.join("http://e2.pkteam.pl/IMAGE%20DREAMBOX/HYPERION%206.1/", imageName)
-				else:
-					imagePath = os.path.join("http://e2.pkteam.pl/IMAGE%20DREAMBOX/HYPERION%206.1/", imageName)
+					imageName = imageName.decode()
+				imagePath = os.path.join("http://e2.pkteam.pl/IMAGE%20DREAMBOX/HYPERION%206.1/", imageName)
 				if not boxtype in imageName:
 					continue
 				images.append((imageName,imagePath))
@@ -605,70 +567,59 @@ class imagesScreen(Screen):
 				boxtype = 'DM920'
 			else:
 				pass
-			imagesPath="http://atemio.dyndns.tv/nightly-images/Dreambox/"+boxtype+"/v2.04/"
+			imagesPath = "http://atemio.dyndns.tv/nightly-images/Dreambox/"+boxtype+"/v2.04/"
 			regx = b'''<a href="(.*?)">(.*?)</a>'''
-			rimages=get_images(imagesPath,regx)
+			rimages = get_images(imagesPath, regx)
 			for item in rimages:
-				imageName=item[1]
+				imageName = item[1]
 				if PY3:
-					imageName=imageName.decode()
-					imagePath = os.path.join("http://atemio.dyndns.tv/nightly-images/Dreambox/"+boxtype+"/v2.04/", imageName)
-				else:
-					imagePath = os.path.join("http://atemio.dyndns.tv/nightly-images/Dreambox/"+boxtype+"/v2.04/", imageName)
+					imageName = imageName.decode()
+				imagePath = os.path.join("http://atemio.dyndns.tv/nightly-images/Dreambox/"+boxtype+"/v2.04/", imageName)
 				if not item[0].endswith(b".zip"):
 					continue
 				images.append((imageName,imagePath))
 
 		if self.teamName=="Gemini4":
 			if boxtype == "dreamone" or boxtype == "dreamtwo":
-				imagesPath="http://download.blue-panel.com/pyro/gemini4-unstable/developer/images/"
+				imagesPath = "https://download.blue-panel.com/pyro/gemini4-unstable/developer/images/"
 			else:
-				imagesPath="http://download.blue-panel.com/gemini4/krogoth-gemini4-unstable/developer/images/"
+				imagesPath = "https://download.blue-panel.com/gemini4/krogoth-gemini4-unstable/developer/images/"
 			regx = b'''<a href="(.*?)" class="xz" download='(.*?)'>'''
-			rimages=get_images(imagesPath,regx)
+			rimages = get_images(imagesPath, regx)
 			for item in rimages:
-				imageName=item[1]
+				imageName = item[1]
 				if PY3:
-					imageName=imageName.decode()
-					if boxtype == "dreamone" or boxtype == "dreamtwo":
-						imagePath = os.path.join('http://download.blue-panel.com/pyro/gemini4-unstable/developer/images/', imageName)
-					else:
-						imagePath = os.path.join('http://download.blue-panel.com/gemini4/krogoth-gemini4-unstable/developer/images/', imageName)
+					imageName = imageName.decode()
+				if boxtype == "dreamone" or boxtype == "dreamtwo":
+					imagePath = os.path.join('https://download.blue-panel.com/pyro/gemini4-unstable/developer/images/', imageName)
 				else:
-					if boxtype == "dreamone" or boxtype == "dreamtwo":
-						imagePath = os.path.join('http://download.blue-panel.com/pyro/gemini4-unstable/developer/images/', imageName)
-					else:
-						imagePath = os.path.join('http://download.blue-panel.com/gemini4/krogoth-gemini4-unstable/developer/images/', imageName)
+					imagePath = os.path.join('https://download.blue-panel.com/gemini4/krogoth-gemini4-unstable/developer/images/', imageName)
 				if not boxtype in imageName:
 					continue
 				images.append((imageName,imagePath))
 
 		if self.teamName=="OpenVision":
-			imagesPath="https://images.openvision.dedyn.io/12.2/EOL/Vision/Dreambox/"+boxtype+"/"
+			imagesPath = "https://images.openvision.dedyn.io/12.2/EOL/Vision/Dreambox/"+boxtype+"/"
 			regx = ('''<a href="/12.2/EOL/Vision/Dreambox/%s/(.*?)">(.*?)</a>''' % boxtype).encode()
-			rimages=get_images(imagesPath,regx)
+			rimages = get_images(imagesPath, regx)
 			for item in rimages:
-				imageName=item[1]
+				imageName = item[1]
 				if PY3:
-					imageName=imageName.decode()
-					imagePath = os.path.join("https://images.openvision.dedyn.io/12.2/EOL/Vision/Dreambox/"+boxtype+"/", imageName)
-				else:
-					imagePath = os.path.join("https://images.openvision.dedyn.io/12.2/EOL/Vision/Dreambox/"+boxtype+"/", imageName)
+					imageName = imageName.decode()
+				imagePath = os.path.join("https://images.openvision.dedyn.io/12.2/EOL/Vision/Dreambox/"+boxtype+"/", imageName)
 				if not item[0].endswith(b".zip"):
 					continue
 				images.append((imageName,imagePath))
 
 		if self.teamName=="OpenVision":
-			imagesPath="https://images.openvision.dedyn.io/13.1/Develop/Vision/Dreambox/"+boxtype+"/"
+			imagesPath = "https://images.openvision.dedyn.io/13.1/Develop/Vision/Dreambox/"+boxtype+"/"
 			regx = ('''<a href="/13.1/Develop/Vision/Dreambox/%s/(.*?)">(.*?)</a>''' % boxtype).encode()
-			rimages=get_images(imagesPath,regx)
+			rimages = get_images(imagesPath, regx)
 			for item in rimages:
-				imageName=item[1]
+				imageName = item[1]
 				if PY3:
-					imageName=imageName.decode()
-					imagePath = os.path.join("https://images.openvision.dedyn.io/13.1/Develop/Vision/Dreambox/"+boxtype+"/", imageName)
-				else:
-					imagePath = os.path.join("https://images.openvision.dedyn.io/13.1/Develop/Vision/Dreambox/"+boxtype+"/", imageName)
+					imageName = imageName.decode()
+				imagePath = os.path.join("https://images.openvision.dedyn.io/13.1/Develop/Vision/Dreambox/"+boxtype+"/", imageName)
 				if not item[0].endswith(b".zip"):
 					continue
 				images.append((imageName,imagePath))
@@ -678,70 +629,60 @@ class imagesScreen(Screen):
 			regx = b'''<a href="(.*?)">(.*?)</a>'''
 			rimages = get_images(imagesPath,regx)
 			for item in rimages:
-				imageName=item[1]
+				imageName = item[1]
 				if PY3:
 					imageName = imageName.decode()
-					imagePath = os.path.join("http://v7.hdfreaks.cc/" + boxtype + "/", imageName)
-				else:
-					imagePath = os.path.join("http://v7.hdfreaks.cc/" + boxtype + "/", imageName)
+				imagePath = os.path.join("http://v7.hdfreaks.cc/" + boxtype + "/", imageName)
 				if not item[0].endswith(b".zip"):
 					continue
 				images.append((imageName, imagePath))
 
 		if self.teamName=="NonSoloSat":
-			imagesPath="https://www.nonsolosat.net/upload/index.php?dir=Dreambox/Nonsolosat%2028/&file="
+			imagesPath = "https://www.nonsolosat.net/upload/index.php?dir=Dreambox/Nonsolosat%2028/&file="
 			regx = b'''<a class="autoindex_a" href="(.*?)&amp;file=(.*?)">'''
-			rimages=get_images(imagesPath,regx)
+			rimages = get_images(imagesPath, regx)
 			for item in rimages:
-				imageName=item[1]
+				imageName = item[1]
 				if PY3:
-					imageName=imageName.decode()
-					imagePath = os.path.join('https://www.nonsolosat.net/upload/Image-Nonsolosat/Dreambox/Nonsolosat%2028/', imageName)
-				else:
-					imagePath = os.path.join('https://www.nonsolosat.net/upload/Image-Nonsolosat/Dreambox/Nonsolosat%2028/', imageName)
+					imageName = imageName.decode()
+				imagePath = os.path.join('https://www.nonsolosat.net/upload/Image-Nonsolosat/Dreambox/Nonsolosat%2028/', imageName)
 				if not boxtype in imageName:
 					continue
 				images.append((imageName,imagePath))
 
 		if self.teamName=="Open-cobralibero":
-			imagesPath="https://cobraliberosat.net/UPLOAD/index.php?dir=Dreambox/20.09.2023/"
+			imagesPath = "https://cobraliberosat.net/UPLOAD/index.php?dir=Dreambox/20.09.2023/"
 			regx = b'''<a class="autoindex_a" href="(.*?)&amp;file=(.*?)">'''
-			rimages=get_images(imagesPath,regx)
+			rimages = get_images(imagesPath, regx)
 			for item in rimages:
-				imageName=item[1]
+				imageName = item[1]
 				if PY3:
-					imageName=imageName.decode()
-					imagePath = os.path.join('https://cobraliberosat.net/UPLOAD/IMAGE-COBRALIBEROSAT/Dreambox/20.09.2023/', imageName)
-				else:
-					imagePath = os.path.join('https://cobraliberosat.net/UPLOAD/IMAGE-COBRALIBEROSAT/Dreambox/20.09.2023/', imageName)
+					imageName = imageName.decode()
+				imagePath = os.path.join('https://cobraliberosat.net/UPLOAD/IMAGE-COBRALIBEROSAT/Dreambox/20.09.2023/', imageName)
 				if not boxtype in imageName:
 					continue
 				images.append((imageName,imagePath))
 
 		if self.teamName=="BPanther":
-			imagesPath="https://%s.mbremer.de/FLASH/" % boxtype
+			imagesPath = "https://%s.mbremer.de/FLASH/" % boxtype
 			regx = b'''<a href="(.*?)">(.*?)</a>.*?Neutrino Image'''
-			rimages=get_images(imagesPath,regx)
+			rimages = get_images(imagesPath, regx)
 			for item in rimages:
-				imageName=item[1]
+				imageName = item[1]
 				if PY3:
-					imageName=imageName.decode()
-					imagePath = os.path.join('https://'+ boxtype +'.mbremer.de/FLASH/', imageName)
-				else:
-					imagePath = os.path.join('https://'+ boxtype +'.mbremer.de/FLASH/', imageName)
+					imageName = imageName.decode()
+				imagePath = os.path.join('https://'+ boxtype +'.mbremer.de/FLASH/', imageName)
 				images.append((imageName,imagePath))
 
 		if self.teamName=="OpenVIX":
-			imagesPath="https://www.openvix.co.uk/openvix-builds/%s/" % boxtype
+			imagesPath = "https://www.openvix.co.uk/openvix-builds/%s/" % boxtype
 			regx = b'''<a href="(.*?)">(.*?).rele..&gt;</a>'''
-			rimages=get_images(imagesPath,regx)
+			rimages = get_images(imagesPath, regx)
 			for item in rimages:
 				imageName=item[0]
 				if PY3:
-					imageName=imageName.decode()
-					imagePath = os.path.join('https://www.openvix.co.uk/openvix-builds/'+ boxtype +'/', imageName)
-				else:
-					imagePath = os.path.join('https://www.openvix.co.uk/openvix-builds/'+ boxtype +'/', imageName)
+					imageName = imageName.decode()
+				imagePath = os.path.join('https://www.openvix.co.uk/openvix-builds/'+ boxtype +'/', imageName)
 				images.append((imageName,imagePath))
 
 		if self.teamName=="OpenVIX-Unoffical":
@@ -755,18 +696,16 @@ class imagesScreen(Screen):
 				images.append((imageName,imagePath))
 
 		if self.teamName=="OpenDroid":
-			imagesPath="https://opendroid.org/Dreambox/index.php?open=%s" % boxtype
+			imagesPath = "https://opendroid.org/Dreambox/index.php?open=%s" % boxtype
 			#logdata("imagesPath",imagesPath)
 			regx = b'''<a href='.*?/(.*?)'>(.*?)</a><br>'''
-			rimages=get_images(imagesPath,regx)
+			rimages = get_images(imagesPath, regx)
 			#logdata("rimages",rimages)
 			for item in rimages:
 				imageName=item[0]
 				if PY3:
-					imageName=imageName.decode()
-					imagePath = os.path.join('https://opendroid.org/Dreambox/%s/' % boxtype, imageName)
-				else:
-					imagePath = os.path.join('https://opendroid.org/Dreambox/%s/' % boxtype, imageName)
+					imageName = imageName.decode()
+				imagePath = os.path.join('https://opendroid.org/Dreambox/%s/' % boxtype, imageName)
 				images.append((imageName,imagePath))
 
 		return images
@@ -775,17 +714,18 @@ class imagesScreen(Screen):
 		idx = self['list'].getSelectionIndex()
 		imageLink = self.images[idx][1]
 		IMAGENAME = self.images[idx][0]
-		IMAGEPATH =os.path.join(self.device_path,IMAGENAME)
-		logdata("imageLink",imageLink)
-		logdata("IMAGENAME",IMAGENAME)
-		logdata("IMAGEPATH",IMAGEPATH)
+		IMAGEPATH = os.path.join(self.device_path,IMAGENAME)
+		logdata("imageLink", imageLink)
+		logdata("IMAGENAME", IMAGENAME)
+		logdata("IMAGEPATH", IMAGEPATH)
 		self.session.openWithCallback(self.downloadback, imagedownloadScreen, IMAGENAME, imageLink, IMAGEPATH, self.canflash)
 
 	def downloadback(self,success):
-		if success:
-			self.doFlash()
-		else:
-			pass
+		#if success:
+		#	self.doFlash()
+		#else:
+		#	pass
+		pass
 
 	def doFlash(self):
 		k=open("/proc/cmdline","r")
