@@ -599,19 +599,6 @@ class imagesScreen(Screen):
 				images.append((imageName,imagePath))
 
 		if self.teamName=="OpenVision":
-			imagesPath = "https://images.openvision.dedyn.io/12.2/EOL/Vision/Dreambox/"+boxtype+"/"
-			regx = ('''<a href="/12.2/EOL/Vision/Dreambox/%s/(.*?)">(.*?)</a>''' % boxtype).encode()
-			rimages = get_images(imagesPath, regx)
-			for item in rimages:
-				imageName = item[1]
-				if PY3:
-					imageName = imageName.decode()
-				imagePath = os.path.join("https://images.openvision.dedyn.io/12.2/EOL/Vision/Dreambox/"+boxtype+"/", imageName)
-				if not item[0].endswith(b".zip"):
-					continue
-				images.append((imageName,imagePath))
-
-		if self.teamName=="OpenVision":
 			imagesPath = "https://images.openvision.dedyn.io/13.1/Develop/Vision/Dreambox/"+boxtype+"/"
 			regx = ('''<a href="/13.1/Develop/Vision/Dreambox/%s/(.*?)">(.*?)</a>''' % boxtype).encode()
 			rimages = get_images(imagesPath, regx)
