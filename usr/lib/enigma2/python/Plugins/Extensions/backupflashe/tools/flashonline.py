@@ -599,7 +599,6 @@ class imagesScreen(Screen):
 				images.append((imageName,imagePath))
 
 		if self.teamName=="OpenVision":
-					# https://images.openvision.dedyn.io/12.2/EOL/Vision/Dreambox/
 			imagesPath = "https://images.openvision.dedyn.io/13.1/Develop/Vision/Dreambox/"+boxtype+"/"
 			regx = ('''<a href="/13.1/Develop/Vision/Dreambox/%s/(.*?)">(.*?)</a>''' % boxtype).encode()
 			rimages = get_images(imagesPath, regx)
