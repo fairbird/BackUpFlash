@@ -37,7 +37,9 @@ class imagedownloadScreen(Screen):
 		self['activityslider'] = ProgressBar()
 		self['activityslider'].setRange((0, 100))
 		self['activityslider'].setValue(0)
+		self['info'] = Label()
 		self['status'] = Label()
+		self['status2'] = Label()
 		self['package'] = Label()
 		if self.canflash:
 			self['key_green'] = Label('Download image Finished. Press Exit !!')
@@ -48,7 +50,9 @@ class imagedownloadScreen(Screen):
 			'green': self.doFlash,
 			'ok': self.okclicked,
 			'cancel': self.dexit}, -1)
+		self['info'].setText(_('Press Exit Button to cancel Downlaod'))
 		self['status'].setText(_('Waiting to get resources free...'))
+		self['status2'].hide()
 		self.downloading = False
 		self.downloader = None
 		self.setTitle(_('Connecting') + '...')
@@ -85,16 +89,24 @@ class imagedownloadScreen(Screen):
 	def responseCompleted(self, data=None):
 		print('[BackUpFlash downloader] Download succeeded.')
 		logdata("download data", str(data))
-		logdata("download status", "Download succeeded.")
-		info = 'Download completed successfully, Press (Exit) to go back'
-		self['status'].setText(info)
+		logdata("download status2", "Download succeeded.")
+		info = 'Download completed successfully.\nPress (OK) to go back'
+
+		self['info'].setText("")
+		self['status'].setText("")
+		self['status2'].setText(info)
+		self['activityslider'].hide()  # Hide progress bar
+		self['info'].hide()            # Hide info
+		self['status'].hide()          # Hide status
+		self['status2'].show()         # Ensure status2 is shown
+
 		self.setTitle(_('Download completed successfully.'))
-		self.downloading = False
 		if self.canflash:
 			self['key_green'].show()
 		else:
 			self['key_green'].hide()
 		self.success = True
+		self.downloading = False
 		self.instance.show()
 
 	def responseFailed(self, failure_instance=None, error_message=''):
@@ -102,18 +114,19 @@ class imagedownloadScreen(Screen):
 		logdata("download status", "Download failed." + error_message)
 		self.error_message = error_message
 		if error_message == '' and failure_instance is not None:
-			self.error_message = failure_instance.getErrorMessage()
+			self.error_message = str(failure_instance)
 		info = self.error_message
-		self['status'].setText(info)
-		self.setTitle(_('Download failed Press Exit'))
 		cmd = "echo 'message' > /tmp/.download_error.log"
 		cmd = cmd.replace('message', info)
 		self.container = eConsoleAppContainer()
 		self.container.execute(cmd)
 		self.downloading = False
 		self.success = False
-		self['key_green'].hide()
-		self.instance.show()
+		if 'status' in self:
+			self['status'].setText(info)
+			self.setTitle(_('Download failed Press Exit'))
+			self['key_green'].hide()
+			self.instance.show()
 		self.remove_target()
 
 	def dexit(self):
@@ -124,8 +137,6 @@ class imagedownloadScreen(Screen):
 			pass
 		if self.downloading:
 			self.session.openWithCallback(self.abort, MessageBox, _('Are you sure to stop download.'), MessageBox.TYPE_YESNO)
-		else:
-			self.close(False)
 
 	def remove_target(self):
 		try:
@@ -145,6 +156,7 @@ class imagedownloadScreen(Screen):
 			self.downloader.stop()
 			info = _('Aborting...')
 			self['status'].setText(info)
+			self['status2'].setText("")
 			cmd = 'echo canceled > /tmp/.download_error.log ; rm target'
 			cmd = cmd.replace('target', self.target)
 			self.remove_target()
@@ -162,6 +174,7 @@ class imagedownloadScreen(Screen):
 		self['package'].setText(self.name)
 		self.setTitle(_('Connecting') + '...')
 		self['status'].setText(_('Connecting') + ' to server....')
+		self['status2'].setText("")
 		self.downloading = True
 		logdata('image link', self.url)
 		self.downloader = downloadWithProgress(self.url, self.target)
@@ -175,6 +188,8 @@ class imagedownloadScreen(Screen):
 			self.close(True)
 
 	def okclicked(self):
+		if self.success and not self.downloading:
+			self.close(True)  # Exit immediately if job is done
 		if not self.downloading:
 			self.instance.show()
 			self.shown = True
