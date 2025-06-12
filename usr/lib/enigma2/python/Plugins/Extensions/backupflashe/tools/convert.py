@@ -110,7 +110,7 @@ class doConvert(Screen):
 				os.system('echo "xz -dc %s > %s/rootfs.tar" >> %s' % (IMAGENAMEPATH, BUILDFOLDER, SCRIPT))
 				os.system('echo "bzip2 %s/rootfs.tar" >> %s' % (BUILDFOLDER, SCRIPT))
 				os.system('echo "touch %s/%s/kernel.bin" >> %s' % (BUILDFOLDER, boxtype, SCRIPT))
-				os.system('echo "echo %s > %s/%s/eimageversion.txt" >> %s' % (REALNAME, BUILDFOLDER, boxtype, SCRIPT))
+				os.system('echo "echo %s > %s/%s/imageversion" >> %s' % (REALNAME, BUILDFOLDER, boxtype, SCRIPT))
 			os.system('echo "mv %s/rootfs.tar.bz2 %s/%s" >> %s' % (BUILDFOLDER, BUILDFOLDER, boxtype, SCRIPT))
 			os.system('echo "chmod 777 -R %s/%s/*" >> %s' % (BUILDFOLDER, boxtype, SCRIPT))
 			os.system('echo "7za a -r %s.zip %s/%s" >> %s' % (IMAGENAME, BUILDFOLDER, boxtype, SCRIPT))
