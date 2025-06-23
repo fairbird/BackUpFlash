@@ -234,7 +234,8 @@ class imagesScreen(Screen):
 				imageName2=item[0]
 				if PY3:
 					imageName = imageName.decode()
-				imagePath =  os.path.join(b'https://images.mynonpublic.com/openatv/6.4/', imageName2)
+					imageName2 = imageName2.decode()
+				imagePath =  os.path.join('https://images.mynonpublic.com/openatv/6.4/', imageName2)
 				images.append((imageName,imagePath))
 
 		if self.teamName=="OpenATV-Python3":
@@ -243,10 +244,11 @@ class imagesScreen(Screen):
 			rimages = get_images(imagesPath, regx)
 			for item in rimages:
 				imageName = item[1]
-				imageName2=item[0]
+				imageName2 = item[0]
 				if PY3:
 					imageName = imageName.decode()
-				imagePath =  os.path.join(b'https://images.mynonpublic.com/openatv/7.6/', imageName2)
+					imageName2 = imageName2.decode()
+				imagePath =  os.path.join('https://images.mynonpublic.com/openatv/7.6/', imageName2)
 				images.append((imageName,imagePath))
 
 		if self.teamName=="OpenPLI-Unoffical":
