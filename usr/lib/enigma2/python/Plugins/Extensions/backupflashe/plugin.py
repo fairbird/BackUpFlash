@@ -377,8 +377,7 @@ class full_main(Screen, ConfigListScreen):
 		#		"This option to set stringe value of Compress image (The higher the value, the longer the operation time, but the smaller the backup size)")))
 		else:
 			pass
-		if config.backupflashe.image_format.value == "bz2":
-			self.list.append(getConfigListEntry(('Compression image as Zip'), config.backupflashe.Zipcompression, _(
+		self.list.append(getConfigListEntry(('Compression image as Zip'), config.backupflashe.Zipcompression, _(
 				"This option to Compression image inside Zip file")))
 		self.list.append(getConfigListEntry(('Enable shutdown box after backup'), config.backupflashe.shutdown, _(
 			"This option to Enable or Disable Shutdown Box After Finished Backup")))
@@ -460,7 +459,6 @@ class full_main(Screen, ConfigListScreen):
 			self.imagename = '%s-%s-%s' % (self.getname, boxtype, DATETIME)
 			self.device_path = self['config'].list[0][1].getText()
 			self.image_formats = self['config'].list[1][1].getText()
-			self.image_compression_value = self['config'].list[2][1].getText()
 			self.session.openWithCallback(self.doBackUpExt, VirtualKeyBoard, title=_(
 				"Please Enter Name For Backup Image"), text="%s" % self.imagename)
 
@@ -473,7 +471,7 @@ class full_main(Screen, ConfigListScreen):
 					image_name = target
 					image_path = self.image_path
 					device_path = self.device_path
-					image_compression_value = self.image_compression_value
+					image_compression_value = imagecompressionvalue
 					self.session.open(doBackUpExternal, image_name, image_path,device_path, image_compression_value)
 				except:
 					trace_error()
