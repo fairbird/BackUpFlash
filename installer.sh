@@ -1,7 +1,7 @@
 #!/bin/bash
 ##setup command=wget https://raw.githubusercontent.com/fairbird/BackUpFlash/main/installer.sh -O - | /bin/sh
 
-version=11.4
+version=11.5
 description=What is NEW :\n- Some fixes. -\n\n**************************\n: ما هو الجديد\n- بعض الإصلاحات
 
 echo ""
