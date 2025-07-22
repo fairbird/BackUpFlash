@@ -193,7 +193,7 @@ class ProgressScreen(Screen):
 			else:
 				self.TimerBackup.callback.append(self.checkbackupProgress)
 			self.TimerBackup.start(10000, True)
-			startstr = 'Backup started for (%s)' % imagename.replace("Backup-","")
+			startstr = 'Backup Running ... Please Be Patient'
 		elif self.processType == 'convert':
 			self.backuptime = 0
 			self.TimerBackup = eTimer()
@@ -207,7 +207,7 @@ class ProgressScreen(Screen):
 			else:
 				self.TimerBackup.callback.append(self.checkbackupProgress)
 			self.TimerBackup.start(10000, True)
-			startstr = 'Convert started for (%s)' % self.imagePath.split('/')[-1]
+			startstr = 'Convert Running ... Please Be Patient'
 		else:
 			self.flashingtime = 0
 			self.TimerFlashing = eTimer()
