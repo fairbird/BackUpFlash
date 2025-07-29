@@ -183,42 +183,38 @@ def get_images2(url,regx):
 
 def get_images_mediafire(url):
 	images = []
-	logdata("images_url",url)
+	logdata("images_url", url)
+
 	def readnet(url):
 		try:
-			req = compat_Request(url, headers=headers) # add headers to fix HTTP Error 403: Forbidden
-			response = compat_urlopen(req,timeout=10)
+			req = compat_Request(url, headers=headers)  # Add headers to fix HTTP Error 403: Forbidden
+			response = compat_urlopen(req, timeout=10)
+			data = response.read()
 			if PY3:
-				data = response.read().decode('utf-8')
+				data = data.decode('utf-8')  # Python 3: decode bytes to str
 			else:
-				data = response.read()
+				data = data.encode('utf-8')  # Python 2: keep as bytes (str)
 			return data
 		except:
 			trace_error()
 			return None
+
 	data = readnet(url)
-	if data == None:
+	if data is None:
 		return []
+
 	jdata = json.loads(data)
-	dl = jdata['response']['folder_content']['files']
-	images=[]
-	for item in dl:
-		dl = item['links']['normal_download']
-		name = os.path.split(dl)[1]
-		data = readnet(dl)
-		regx = 'href="(.*?)"'
-		try:
-			hrefs = re.findall(str(regx), data, re.M|re.I)
-		except Exception as e:
-			hrefs = re.findall(regx, data, re.M|re.I)
-		for href in hrefs:
-			if not "download" in href:
-				continue
-			name = os.path.split(href)[1]
-			images.append((name,href))
-			break
-	print(images)       
-	return  images
+	files_list = jdata['response']['folder_content']['files']
+
+	for item in files_list:
+		direct_download_link = item['links']['normal_download']
+		file_name = item['filename']
+		# Ensure file_name is a byte string (str) in Python 2
+		if not PY3 and isinstance(file_name, unicode):  # Python 2: convert unicode to str
+			file_name = file_name.encode('utf-8')
+		images.append((file_name, direct_download_link))
+
+	return images
 
 
 def getimage_name():
