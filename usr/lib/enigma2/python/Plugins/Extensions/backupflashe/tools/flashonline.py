@@ -66,9 +66,9 @@ class teamsScreen(Screen):
 	def get_teams(self,select):
 		self.list=[]
 		if select:
-			if select[0]=="DreamOS OE2.5 Images":
+			if select[0] == "DreamOS OE2.5 Images":
 				self.teams=self.DreamOS()
-			elif select[0]=="Open Source OE2.0 Images":
+			elif select[0] == "Open Source OE2.0 Images":
 				self.teams=self.opensource()
 			else:
 				self.teams=self.neutrino()
@@ -143,8 +143,8 @@ class imagesScreen(Screen):
 	def __init__(self, session,device_path,teamName, imagesPath):
 		Screen.__init__(self, session)
 		self.skin = SKIN_doFlash
-		self.teamName=imagesPath
-		self.imagesPath=imagesPath
+		self.teamName = imagesPath
+		self.imagesPath = imagesPath
 		self.device_path=device_path
 		self.list = []
 		self['key_red'] = Label(_('Cancel'))
@@ -188,10 +188,10 @@ class imagesScreen(Screen):
 
 	def getteam_images(self):
 		images = []
-		boxtype=getboxtype()
+		boxtype = getboxtype()
 		self.urlimage = ''
 
-		if self.teamName=="BlackHole":
+		if self.teamName == "BlackHole":
 			if boxtype == "dm920":
 				key = 'cdmen9tqtpwxk'
 			elif boxtype == "dm520":
@@ -202,14 +202,14 @@ class imagesScreen(Screen):
 				key = '60ptu82mgakx6'
 			else:
 				return []
-			imagesPath='https://www.mediafire.com/api/1.4/folder/get_content.php?r=cfgd&content_type=files&filter=all&order_by=name&order_direction=asc&chunk=1&version=1.5&folder_key=%s&response_format=json' % key
-			rimages=get_images_mediafire(imagesPath)
+			imagesPath = 'https://www.mediafire.com/api/1.4/folder/get_content.php?r=cfgd&content_type=files&filter=all&order_by=name&order_direction=asc&chunk=1&version=1.5&folder_key=%s&response_format=json' % key
+			rimages = get_images_mediafire(imagesPath)
 			for item in rimages:
-				imageName=item[0]
-				imagePath=item[1]
-				images.append((imageName,imagePath))
+				imageName = item[0]
+				imagePath = item[1]
+				images.append((imageName, imagePath))
 
-		if self.teamName=="OpenTSimage":
+		if self.teamName == "OpenTSimage":
 			if boxtype == "dm920":
 				key = 'sbrjw60if73re'
 			elif boxtype == "dm520":
@@ -218,27 +218,27 @@ class imagesScreen(Screen):
 				key = 'tb1x6tmtglyw4'
 			else:
 				return []
-			imagesPath='https://www.mediafire.com/api/1.4/folder/get_content.php?r=cfgd&content_type=files&filter=all&order_by=name&order_direction=asc&chunk=1&version=1.5&folder_key=%s&response_format=json' % key
-			rimages=get_images_mediafire(imagesPath)
+			imagesPath = 'https://www.mediafire.com/api/1.4/folder/get_content.php?r=cfgd&content_type=files&filter=all&order_by=name&order_direction=asc&chunk=1&version=1.5&folder_key=%s&response_format=json' % key
+			rimages = get_images_mediafire(imagesPath)
 			for item in rimages:
-				imageName=item[0]
-				imagePath=item[1]
+				imageName = item[0]
+				imagePath = item[1]
 				images.append((imageName,imagePath))
 
-		if self.teamName=="OpenATV-Python2":
+		if self.teamName == "OpenATV-Python2":
 			imagesPath = "https://images.mynonpublic.com/openatv/6.4/index.php?open="+boxtype
 			regx = b'''<a href='(.*?)'>(.*?)</a>'''
 			rimages = get_images(imagesPath, regx)
 			for item in rimages:
 				imageName = item[1]
-				imageName2=item[0]
+				imageName2 = item[0]
 				if PY3:
 					imageName = imageName.decode()
 					imageName2 = imageName2.decode()
 				imagePath =  os.path.join('https://images.mynonpublic.com/openatv/6.4/', imageName2)
 				images.append((imageName,imagePath))
 
-		if self.teamName=="OpenATV-Python3":
+		if self.teamName == "OpenATV-Python3":
 			imagesPath = "https://images.mynonpublic.com/openatv/7.6/index.php?open="+boxtype
 			regx = b'''<a href='(.*?)'>(.*?)</a>'''
 			rimages = get_images(imagesPath, regx)
@@ -251,17 +251,17 @@ class imagesScreen(Screen):
 				imagePath =  os.path.join('https://images.mynonpublic.com/openatv/7.6/', imageName2)
 				images.append((imageName,imagePath))
 
-		if self.teamName=="OpenPLI-Unoffical":
+		if self.teamName == "OpenPLI-Unoffical":
 			imagesPath='https://www.mediafire.com/api/1.4/folder/get_content.php?r=cfgd&content_type=files&filter=all&order_by=name&order_direction=asc&chunk=1&version=1.5&folder_key=5mqob16bb176n&response_format=json'
 			rimages=get_images_mediafire(imagesPath)
 			for item in rimages:
-				imageName=item[0]
-				imagePath=item[1]
+				imageName = item[0]
+				imagePath = item[1]
 				if not boxtype in imageName:
 					continue
 				images.append((imageName,imagePath))
 
-		if self.teamName=="OpenPLi9xstar-japhar":
+		if self.teamName == "OpenPLi9xstar-japhar":
 			imagesPath = "http://openpli9xstar.japhar.net/OpenPLi9xstar/"
 			regx = b'''<a href="http://openpli9xstar.japhar.net/OpenPLi9xstar/(.*?)">(.*?)</a>'''
 			rimages = get_images(imagesPath, regx)
@@ -276,42 +276,42 @@ class imagesScreen(Screen):
 					continue
 				images.append((imageName,imagePath))
 
-		if self.teamName=="Openeight-Unoffical":
+		if self.teamName == "Openeight-Unoffical":
 			imagesPath='https://www.mediafire.com/api/1.4/folder/get_content.php?r=cfgd&content_type=files&filter=all&order_by=name&order_direction=asc&chunk=1&version=1.5&folder_key=10ipmypb5ura9&response_format=json'
 			rimages=get_images_mediafire(imagesPath)
 			for item in rimages:
-				imageName=item[0]
-				imagePath=item[1]
+				imageName = item[0]
+				imagePath = item[1]
 				if not boxtype in imageName:
 					continue
 				images.append((imageName,imagePath))
 
-		if self.teamName=="TeamBlue":
+		if self.teamName == "TeamBlue":
 			imagesPath='https://www.mediafire.com/api/1.4/folder/get_content.php?r=cfgd&content_type=files&filter=all&order_by=name&order_direction=asc&chunk=1&version=1.5&folder_key=nzy14rrzawbw4&response_format=json'
 			rimages=get_images_mediafire(imagesPath)
 			for item in rimages:
-				imageName=item[0]
-				imagePath=item[1]
+				imageName = item[0]
+				imagePath = item[1]
 				if not boxtype in imageName:
 					continue
 				images.append((imageName,imagePath))
 
-		if self.teamName=="OpenBH-Unoffical":
+		if self.teamName == "OpenBH-Unoffical":
 			imagesPath='https://www.mediafire.com/api/1.4/folder/get_content.php?r=cfgd&content_type=files&filter=all&order_by=name&order_direction=asc&chunk=1&version=1.5&folder_key=sdvi12arjgsuj&response_format=json'
 			rimages=get_images_mediafire(imagesPath)
 			for item in rimages:
-				imageName=item[0]
-				imagePath=item[1]
+				imageName = item[0]
+				imagePath = item[1]
 				if not boxtype in imageName:
 					continue
 				images.append((imageName,imagePath))
 
-		if self.teamName=="ArEaDeLtA-SaT":
+		if self.teamName == "ArEaDeLtA-SaT":
 			imagesPath = "http://areadeltasat.net/upload/E2%20Images/Dreambox/"
 			regx = b'''<font color="#ffffff"><b>(.*?)</b></font>.*?<a href="(.*?)" target="_blank">'''
 			rimages = get_images(imagesPath, regx)
 			for item in rimages:
-				imageName=item[0]
+				imageName = item[0]
 				if PY3:
 					imageName = imageName.decode()
 					imagePath = (item[1].decode()).replace(" ","%20")
@@ -321,7 +321,7 @@ class imagesScreen(Screen):
 					continue
 				images.append((imageName+".zip",imagePath))
 
-		if self.teamName=="OpenESI": 
+		if self.teamName == "OpenESI": 
 			imagesPath = "http://www.openesi.eu/images/index.php?dir=Dreambox/" +boxtype + "/"
 			regx = b'''<a class="autoindex_a" href="(.*?)&amp;file=(.*?)">'''
 			rimages = get_images(imagesPath, regx)
@@ -332,7 +332,7 @@ class imagesScreen(Screen):
 				imagePath="http://www.openesi.eu/images/Dreambox" + "/" + boxtype + "/" + imageName
 				images.append((imageName,imagePath))
 
-		if self.teamName=="DreamElite":
+		if self.teamName == "DreamElite":
 			if boxtype == "dm520" or boxtype == "dm525":
 				boxtype='DM520-DM525'
 			else:
@@ -347,7 +347,7 @@ class imagesScreen(Screen):
 				imagePath="https://images.dream-elite.net/DEP/"+boxtype.upper()+'/'+imageName
 				images.append((imageName,imagePath.strip()))
 
-		if self.teamName=="Dreamboxupdates-Stable":
+		if self.teamName == "Dreamboxupdates-Stable":
 			if boxtype == "dreamone" or boxtype == "dreamtwo":
 				imagesPath = "http://www.dreamboxupdate.com/opendreambox/2.6/stable/images/"+boxtype+"/index.php"
 			else:
@@ -366,7 +366,7 @@ class imagesScreen(Screen):
 					continue
 				images.append((imageName,imagePath))
 
-		if self.teamName=="Dreamboxupdates-UnStable":
+		if self.teamName == "Dreamboxupdates-UnStable":
 			if boxtype == "dreamone" or boxtype == "dreamtwo":
 				imagesPath = "http://www.dreamboxupdate.com/opendreambox/2.6/unstable/images/"+boxtype+"/index.php"
 			else:
@@ -385,7 +385,7 @@ class imagesScreen(Screen):
 					continue
 				images.append((imageName,imagePath))
 
-		if self.teamName=="Merlin4":
+		if self.teamName == "Merlin4":
 			if boxtype == "dreamone" or boxtype == "dreamtwo":
 				imagesPath = "https://merlinfeed.boxpirates.to/images_oe_2.6/"
 				regx = b'''<a href="/images_oe_2.6/(.*?)">(.*?)</a>'''
@@ -405,7 +405,7 @@ class imagesScreen(Screen):
 					continue
 				images.append((imageName,imagePath))
 
-		if self.teamName=="OoZooN":
+		if self.teamName == "OoZooN":
 			imagesPath = "http://www.oozoon-download.de/opendreambox/images/"+boxtype+"/unstable/index.html"
 			regx = b'''<a href="(.*?)">(.*?)</a>'''
 			rimages = get_images(imagesPath, regx)
@@ -418,7 +418,7 @@ class imagesScreen(Screen):
 					continue
 				images.append((imageName,imagePath))
 
-		if self.teamName=="Newnigma2":
+		if self.teamName == "Newnigma2":
 			imagesPath = "http://feed.newnigma2.to/daily/images/"
 			regx = b'''<a href="(.*?)">(.*?)</a>'''
 			rimages = get_images(imagesPath, regx)
@@ -431,7 +431,7 @@ class imagesScreen(Screen):
 					continue
 				images.append((imageName,imagePath))
 
-		if self.teamName=="Demonisat":
+		if self.teamName == "Demonisat":
 			if boxtype == "dm520":
 				boxtype = "520"
 			elif boxtype == "dm820":
@@ -468,11 +468,11 @@ class imagesScreen(Screen):
 					rimages.append((href, title))
 			images = []
 			for item in rimages:
-				imageName=item[0]
-				imagePath=item[1]
+				imageName = item[0]
+				imagePath = item[1]
 				images.append((imageName,imagePath))
 
-		if self.teamName=="Powersat":
+		if self.teamName == "Powersat":
 			imagesPath = "http://www.power-sat.org/power-plus/index.php?dir=Powersat_2.5/immagini_powersat_"+boxtype+"_OE2.5/"
 			regx = b'''<a class="autoindex_a" href="(.*?)&amp;file=(.*?)">'''
 			rimages = get_images(imagesPath, regx)
@@ -485,7 +485,7 @@ class imagesScreen(Screen):
 					continue
 				images.append((imageName,imagePath))
 
-		if self.teamName=="Satlodge":
+		if self.teamName == "Satlodge":
 			if boxtype == "dreamone" or boxtype == "dreamtwo":
 				imagesPath = "http://webplus.sat-lodge.it/index.php?dir=dreamone2.6/"
 			else:
@@ -504,7 +504,7 @@ class imagesScreen(Screen):
 					continue
 				images.append((imageName,imagePath))
 
-		if self.teamName=="OpenSatlodge":
+		if self.teamName == "OpenSatlodge":
 			imagesPath = "http://webplus.sat-lodge.it/index.php?dir=Dreambox920/"
 			regx = b'''<a class="autoindex_a" href="(.*?)&amp;file=(.*?)">'''
 			rimages = get_images(imagesPath, regx)
@@ -517,7 +517,7 @@ class imagesScreen(Screen):
 					continue
 				images.append((imageName,imagePath))
 
-		if self.teamName=="PurE2":
+		if self.teamName == "PurE2":
 			if boxtype == "dreamone" or boxtype == "dreamtwo":
 				imagesPath = "https://www.pur-e2.club/OU/images/index.php?dir=6.5/dreambox/TEST-alpha/"
 			elif boxtype == "dm900" or boxtype == "dm920":
@@ -547,7 +547,7 @@ class imagesScreen(Screen):
 						continue
 				images.append((imageName,imagePath))
 
-		if self.teamName=="PKTeam":
+		if self.teamName == "PKTeam":
 			imagesPath = "http://e2.pkteam.pl/index.php?dir=IMAGE%20DREAMBOX/HYPERION%206.1/"
 			regx = b'''<a class="autoindex_a" href="(.*?)&amp;file=(.*?)">'''
 			rimages = get_images(imagesPath, regx)
@@ -560,7 +560,7 @@ class imagesScreen(Screen):
 					continue
 				images.append((imageName,imagePath))
 
-		if self.teamName=="AFF-TitanNit":
+		if self.teamName == "AFF-TitanNit":
 			if boxtype == "dm520":
 				boxtype = 'DM520'
 			elif boxtype == "dm900":
@@ -581,7 +581,7 @@ class imagesScreen(Screen):
 					continue
 				images.append((imageName,imagePath))
 
-		if self.teamName=="Gemini4":
+		if self.teamName == "Gemini4":
 			if boxtype == "dreamone" or boxtype == "dreamtwo":
 				imagesPath = "https://download.blue-panel.com/pyro/gemini4-unstable/developer/images/"
 			else:
@@ -600,7 +600,7 @@ class imagesScreen(Screen):
 					continue
 				images.append((imageName,imagePath))
 
-		if self.teamName=="OpenVision":
+		if self.teamName == "OpenVision":
 			imagesPath = "https://images.openvision.dedyn.io/13.1/Develop/Vision/Dreambox/"+boxtype+"/"
 			regx = ('''<a href="/13.1/Develop/Vision/Dreambox/%s/(.*?)">(.*?)</a>''' % boxtype).encode()
 			rimages = get_images(imagesPath, regx)
@@ -613,7 +613,7 @@ class imagesScreen(Screen):
 					continue
 				images.append((imageName,imagePath))
 
-		if self.teamName=="OpenHDF":
+		if self.teamName == "OpenHDF":
 			imagesPath = "http://v7.hdfreaks.cc/" + boxtype + "/"
 			regx = b'''<a href="(.*?)">(.*?)</a>'''
 			rimages = get_images(imagesPath,regx)
@@ -626,7 +626,7 @@ class imagesScreen(Screen):
 					continue
 				images.append((imageName, imagePath))
 
-		if self.teamName=="NonSoloSat":
+		if self.teamName == "NonSoloSat":
 			imagesPath = "https://www.nonsolosat.net/upload/index.php?dir=Dreambox/Nonsolosat%2028/&file="
 			regx = b'''<a class="autoindex_a" href="(.*?)&amp;file=(.*?)">'''
 			rimages = get_images(imagesPath, regx)
@@ -639,7 +639,7 @@ class imagesScreen(Screen):
 					continue
 				images.append((imageName,imagePath))
 
-		if self.teamName=="Open-cobralibero":
+		if self.teamName == "Open-cobralibero":
 			imagesPath = "https://cobraliberosat.net/UPLOAD/index.php?dir=Dreambox/20.09.2023/"
 			regx = b'''<a class="autoindex_a" href="(.*?)&amp;file=(.*?)">'''
 			rimages = get_images(imagesPath, regx)
@@ -652,7 +652,7 @@ class imagesScreen(Screen):
 					continue
 				images.append((imageName,imagePath))
 
-		if self.teamName=="BPanther":
+		if self.teamName == "BPanther":
 			imagesPath = "https://%s.mbremer.de/FLASH/" % boxtype
 			regx = b'''<a href="(.*?)">(.*?)</a>.*?Neutrino Image'''
 			rimages = get_images(imagesPath, regx)
@@ -663,35 +663,35 @@ class imagesScreen(Screen):
 				imagePath = os.path.join('https://'+ boxtype +'.mbremer.de/FLASH/', imageName)
 				images.append((imageName,imagePath))
 
-		if self.teamName=="OpenVIX":
+		if self.teamName == "OpenVIX":
 			imagesPath = "https://www.openvix.co.uk/openvix-builds/%s/" % boxtype
 			regx = b'''<a href="(.*?)">(.*?).rele..&gt;</a>'''
 			rimages = get_images(imagesPath, regx)
 			for item in rimages:
-				imageName=item[0]
+				imageName = item[0]
 				if PY3:
 					imageName = imageName.decode()
 				imagePath = os.path.join('https://www.openvix.co.uk/openvix-builds/'+ boxtype +'/', imageName)
 				images.append((imageName,imagePath))
 
-		if self.teamName=="OpenVIX-Unoffical":
+		if self.teamName == "OpenVIX-Unoffical":
 			imagesPath='https://www.mediafire.com/api/1.4/folder/get_content.php?r=cfgd&content_type=files&filter=all&order_by=name&order_direction=asc&chunk=1&version=1.5&folder_key=q1ds8bogfa994&response_format=json'
 			rimages=get_images_mediafire(imagesPath)
 			for item in rimages:
-				imageName=item[0]
-				imagePath=item[1]
+				imageName = item[0]
+				imagePath = item[1]
 				if not boxtype in imageName:
 					continue
 				images.append((imageName,imagePath))
 
-		if self.teamName=="OpenDroid":
+		if self.teamName == "OpenDroid":
 			imagesPath = "https://opendroid.org/Dreambox/index.php?open=%s" % boxtype
 			#logdata("imagesPath",imagesPath)
 			regx = b'''<a href='.*?/(.*?)'>(.*?)</a><br>'''
 			rimages = get_images(imagesPath, regx)
 			#logdata("rimages",rimages)
 			for item in rimages:
-				imageName=item[0]
+				imageName = item[0]
 				if PY3:
 					imageName = imageName.decode()
 				imagePath = os.path.join('https://opendroid.org/Dreambox/%s/' % boxtype, imageName)
