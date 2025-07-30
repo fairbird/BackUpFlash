@@ -148,7 +148,7 @@ def get_images(url,regx):
 	images = []
 	logdata("images_url",url)
 	try:
-		req = compat_Request(url, headers=headers) # # add headers to fix HTTP Error 403: Forbidden
+		req = compat_Request(url, headers = headers) # # add headers to fix HTTP Error 403: Forbidden
 		response = compat_urlopen(req, timeout=5)
 		data = response.read()
 		response.close()
@@ -161,11 +161,11 @@ def get_images(url,regx):
 		return []
 
 
-def get_images2(url,regx):
+def get_images_github(url,regx):
 	images = []
 	logdata("images_url",url)
 	try:
-		req = compat_Request(url, headers={'User-Agent': 'Mozilla/5.0'}) # add [headers={'User-Agent': 'Mozilla/5.0'}] to fix HTTP Error 403: Forbidden
+		req = compat_Request(url, headers = headers) # Add headers to fix HTTP Error 403: Forbidden
 		response = compat_urlopen(req,timeout=5)
 		if PY3:
 			data = response.read().decode('utf-8')
@@ -187,7 +187,7 @@ def get_images_mediafire(url):
 
 	def readnet(url):
 		try:
-			req = compat_Request(url, headers=headers)  # Add headers to fix HTTP Error 403: Forbidden
+			req = compat_Request(url, headers = headers)  # Add headers to fix HTTP Error 403: Forbidden
 			response = compat_urlopen(req, timeout=10)
 			data = response.read()
 			if PY3:
