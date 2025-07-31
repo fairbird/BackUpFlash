@@ -19,6 +19,7 @@ import datetime
 import os
 import time
 
+from .compat import PY3
 from .skin import *
 from .bftools import logdata, copylog
 
@@ -177,7 +178,11 @@ class imagedownloadScreen(Screen):
 		self['status2'].setText("")
 		self.downloading = True
 		logdata('image link', self.url)
-		self.downloader = downloadWithProgress(self.url, self.target)
+		# Python 2 fix: encode unicode URL to bytes
+		url = self.url
+		if not PY3 and isinstance(url, unicode):
+			url = url.encode('utf-8')
+		self.downloader = downloadWithProgress(url, self.target)
 		self.downloader.addProgress(self.progress)
 		self.downloader.start().addCallback(self.responseCompleted).addErrback(self.responseFailed)
 
