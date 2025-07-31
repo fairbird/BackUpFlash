@@ -1,8 +1,8 @@
 #!/bin/bash
 ##setup command=wget https://raw.githubusercontent.com/fairbird/BackUpFlash/main/installer.sh -O - | /bin/sh
 
-version=11.5
-description=What is NEW :\n- Some fixes. -\n\n**************************\n: ما هو الجديد\n- بعض الإصلاحات
+version=11.6
+description=What is NEW :\n- Fix mediafire url. -\n\n**************************\n: ما هو الجديد\n- mediafire إصلاح روابط تحميل مواقع
 
 echo ""
 if [ ! -d '/usr/lib64' ]; then
