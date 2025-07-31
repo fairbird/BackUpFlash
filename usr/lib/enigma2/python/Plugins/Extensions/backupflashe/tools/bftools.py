@@ -7,7 +7,7 @@ from .compat import compat_Request, compat_urlopen, PY3
 from Components.About import about
 from Tools.Directories import fileExists, copyfile, createDir, resolveFilename, SCOPE_PLUGINS
 
-import os, traceback, re, json, datetime, ssl
+import os, traceback, re, json, datetime, ssl, base64
 
 logfile="/tmp/backupflash.log"
 backupflash_script="/tmp/backupflash.sh"
@@ -24,16 +24,16 @@ else:
 
 # Set headers (User-Agent is often required to avoid 403)
 headers = {
-    "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36"
+	"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36"
 }
 
 #def logdata(label, txt):
-#    try:
-#        bfile=open(logfile, 'a')
-#        bfile.write(str(label) + ':' + str(txt) + '\n')
-#        bfile.close()
-#    except:
-#        pass
+#	try:
+#		bfile=open(logfile, 'a')
+#		bfile.write(str(label) + ':' + str(txt) + '\n')
+#		bfile.close()
+#	except:
+#		pass
 
 
 def logdata(label='', data=None):
@@ -67,7 +67,7 @@ def copylog(device_path):
 		  logfile2=os.path.join(device_path,"backupflash.log")
 		  backupflash_script2=os.path.join(device_path,"backupflash.sh")
 		  if os.path.exists(logfile2):
-						os.remove(logfile2)                   
+						os.remove(logfile2)				   
 		  copyfile(logfile,logfile2)
 		  copyfile(backupflash_script, backupflash_script2)
 	except:
@@ -187,32 +187,45 @@ def get_images_mediafire(url):
 
 	def readnet(url):
 		try:
-			req = compat_Request(url, headers = headers)  # Add headers to fix HTTP Error 403: Forbidden
+			req = compat_Request(url, headers=headers)  # Add headers to fix HTTP Error 403: Forbidden
 			response = compat_urlopen(req, timeout=10)
 			data = response.read()
 			if PY3:
-				data = data.decode('utf-8')  # Python 3: decode bytes to str
-			else:
-				data = data.encode('utf-8')  # Python 2: keep as bytes (str)
+				data = data.decode('utf-8')
 			return data
 		except:
 			trace_error()
 			return None
 
 	data = readnet(url)
-	if data is None:
+	if not data:
 		return []
 
 	jdata = json.loads(data)
-	files_list = jdata['response']['folder_content']['files']
-
+	files_list = jdata.get('response', {}).get('folder_content', {}).get('files', [])
+	
 	for item in files_list:
-		direct_download_link = item['links']['normal_download']
+		normal_link = item['links']['normal_download']
 		file_name = item['filename']
-		# Ensure file_name is a byte string (str) in Python 2
-		if not PY3 and isinstance(file_name, unicode):  # Python 2: convert unicode to str
+		
+		# Python 2: convert unicode to str
+		if not PY3 and isinstance(file_name, unicode):
 			file_name = file_name.encode('utf-8')
-		images.append((file_name, direct_download_link))
+
+		# Step 1: Read HTML of the normal download page
+		html = readnet(normal_link)
+		if not html:
+			continue
+
+		# Step 2: Extract scrambled direct link
+		match = re.search(r'aria-label="Download file"[^>]*?data-scrambled-url="([^"]+)"', html)
+		if match:
+			scrambled_url = match.group(1)
+			direct_url = base64.b64decode(scrambled_url).decode('utf-8')
+			images.append((file_name, direct_url))
+		else:
+			# fallback to normal link if regex fails
+			images.append((file_name, normal_link))
 
 	return images
 
@@ -295,10 +308,10 @@ def getimage_name():
 		name=None
 		if os.path.exists("/etc/image-version"):
 				f=open("/etc/image-version")
-				line = f.readline()                                                    
-				while (line):                                             
-						line = f.readline()                                                 
-						if line.startswith("creator="):                                    
+				line = f.readline()													
+				while (line):											 
+						line = f.readline()												 
+						if line.startswith("creator="):									
 								name=line
 				f.close()
 				if name:
@@ -316,11 +329,11 @@ def getimage_name():
 			f.close()
 			if "power-Sat" in i.lower():
 					name="Backup-PowerSat"
-			if "oooZooN" in i.lower():    
+			if "oooZooN" in i.lower():	
 					name="Backup-OoZooN"
-			if "peter" in i.lower():    
+			if "peter" in i.lower():	
 					name="Backup-PeterPan"
-			if "italysat" in i.lower():    
+			if "italysat" in i.lower():	
 					name="Backup-ItalySat"
 			if "openatv" in i.lower():
 					name="Backup-openATV"
@@ -341,14 +354,14 @@ def getimage_name():
 	name = name + "-%s" % now.strftime('%Y-%m-%d')
 	#image_version=getimage_version()
 	#if image_version != None and not image_version=="":
-	#    name=name+"-"+image_version
+	#	name=name+"-"+image_version
 	#return (name)
 
 	#image_version=getimage_version()
 	#if image_version != None and not image_version=="":
-	#    name=name+"-"+image_version
+	#	name=name+"-"+image_version
 	#if name == None:
-	#    name="Backup-"
+	#	name="Backup-"
 	return (name)
 
 
