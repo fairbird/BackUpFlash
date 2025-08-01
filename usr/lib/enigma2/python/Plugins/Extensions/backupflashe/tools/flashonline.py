@@ -19,7 +19,7 @@ from Components.config import config
 from .skin import *
 from .Console import Console
 from .download import imagedownloadScreen
-from .bftools import logdata, getboxtype, get_images, get_images_mediafire, copylog, trace_error
+from .bftools import logdata, getboxtype, get_images, url_exists, get_images_mediafire, copylog, trace_error
 
 headers = {
 	'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10.12; rv:55.0) Gecko/20100101 Firefox/55.0',
@@ -596,7 +596,8 @@ class imagesScreen(Screen):
 					imagePath = os.path.join('https://download.blue-panel.com/pyro/gemini4-unstable/developer/images/', imageName)
 				else:
 					imagePath = os.path.join('https://download.blue-panel.com/gemini4/krogoth-gemini4-unstable/developer/images/', imageName)
-				if not boxtype in imageName:
+				# Skip if boxtype not in filename
+				if boxtype not in imageName:
 					continue
 				images.append((imageName,imagePath))
 
@@ -685,7 +686,7 @@ class imagesScreen(Screen):
 				images.append((imageName,imagePath))
 
 		if self.teamName == "OpenDroid":
-			imagesPath = "https://opendroid.org/Dreambox/index.php?open=%s" % boxtype
+			imagesPath = "https://opendroid.org/8.0/Dreambox/index.php?open=%s" % boxtype
 			#logdata("imagesPath",imagesPath)
 			regx = b'''<a href='.*?/(.*?)'>(.*?)</a><br>'''
 			rimages = get_images(imagesPath, regx)
@@ -694,7 +695,7 @@ class imagesScreen(Screen):
 				imageName = item[0]
 				if PY3:
 					imageName = imageName.decode()
-				imagePath = os.path.join('https://opendroid.org/Dreambox/%s/' % boxtype, imageName)
+				imagePath = os.path.join('https://opendroid.org/8.0/Dreambox/%s/' % boxtype, imageName)
 				images.append((imageName,imagePath))
 
 		return images
