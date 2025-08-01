@@ -1,8 +1,16 @@
 #!/bin/bash
 ##setup command=wget https://raw.githubusercontent.com/fairbird/BackUpFlash/main/installer.sh -O - | /bin/sh
 
-version=11.6
-description=What is NEW :\n- Fix mediafire url. -\n\n**************************\n: ما هو الجديد\n- mediafire إصلاح روابط تحميل مواقع
+version=11.7
+EN="- [flashonline] Update url of OpenDroid\n- Fix error with py2 after this commit"
+AR="- OpebDroid إصلاح روابط صور\n- إصلاح الأكواد لتناسب بايثون 2"
+
+description="What is NEW :
+- ${EN} -
+
+**************************
+: ما هو الجديد
+- ${AR}"
 
 echo ""
 if [ ! -d '/usr/lib64' ]; then
