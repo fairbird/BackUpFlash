@@ -4,7 +4,7 @@
 version=11.7
 EN="- [flashonline] Update url of OpenDroid\n- Fix error with py2 after this commit"
 AR="- OpebDroid إصلاح روابط صور\n- إصلاح الأكواد لتناسب بايثون 2"
-description=What is NEW :\n- ${EN}. -\n\n**************************\n: ${AR}
+description=What is NEW :\n- $EN. -\n\n**************************\n: $AR
 
 echo ""
 if [ ! -d '/usr/lib64' ]; then
