@@ -1,7 +1,7 @@
 #!/bin/bash
 ##setup command=wget https://raw.githubusercontent.com/fairbird/BackUpFlash/main/installer.sh -O - | /bin/sh
 
-version=11.7
+version=11.8
 description=What is NEW :\n- fix gemini url \n\n**************************\n: ما هو الجديد\n- gemini إصلاح رابط 
 
 echo ""
