@@ -161,6 +161,48 @@ def get_images(url,regx):
 		return []
 
 
+def get_images2(url, regx):
+	images = []
+	logdata("images_url", url)
+	try:
+		req = compat_Request(url, headers=headers)
+		response = compat_urlopen(req, timeout=5)
+		data = response.read()
+		response.close()
+
+		match = re.findall(regx, data, re.M | re.I)
+
+		for item1, item2 in match:
+			# Decode bytes if needed
+			href = item1.decode() if isinstance(item1, bytes) else item1
+			dname = item2.decode() if isinstance(item2, bytes) else item2
+
+			# Ensure only filename for the 2nd tuple item
+			if dname.startswith('http'):
+				dname = dname.split('/')[-1]
+
+			# Full image URL to test
+			imageURL = url.rstrip('/') + '/' + dname
+
+			# Check if file exists (skip 404)
+			try:
+				req_img = compat_Request(imageURL, headers=headers)
+				resp_img = compat_urlopen(req_img, timeout=5)
+				resp_img.read(10)  # try small read
+				resp_img.close()
+
+				# Only append if exists
+				images.append((href, dname))
+			except:
+				logdata("skipped_image", "{} not found".format(dname))
+				continue
+
+		return images
+	except:
+		trace_error()
+		return []
+
+
 def get_images_github(url,regx):
 	images = []
 	logdata("images_url",url)

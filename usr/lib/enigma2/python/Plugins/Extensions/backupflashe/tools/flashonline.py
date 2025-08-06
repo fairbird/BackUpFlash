@@ -19,7 +19,7 @@ from Components.config import config
 from .skin import *
 from .Console import Console
 from .download import imagedownloadScreen
-from .bftools import logdata, getboxtype, get_images, get_images_mediafire, copylog, trace_error
+from .bftools import logdata, getboxtype, get_images, get_images2, get_images_mediafire, copylog, trace_error
 
 headers = {
 	'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10.12; rv:55.0) Gecko/20100101 Firefox/55.0',
@@ -587,11 +587,11 @@ class imagesScreen(Screen):
 			else:
 				imagesPath = "https://download.blue-panel.com/gemini4/krogoth-gemini4-unstable/developer/images/"
 			regx = b'''<a href="(.*?)" class="xz" download='(.*?)'>'''
-			rimages = get_images(imagesPath, regx)
+			rimages = get_images2(imagesPath, regx)
 			for item in rimages:
 				imageName = item[1]
-				if PY3:
-					imageName = imageName.decode()
+				if isinstance(imageName, bytes):
+    					imageName = imageName.decode()
 				if boxtype == "dreamone" or boxtype == "dreamtwo":
 					imagePath = os.path.join('https://download.blue-panel.com/pyro/gemini4-unstable/developer/images/', imageName)
 				else:
