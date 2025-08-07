@@ -591,7 +591,9 @@ class imagesScreen(Screen):
 			for item in rimages:
 				imageName = item[1]
 				if isinstance(imageName, bytes):
-    					imageName = imageName.decode()
+					imageName = imageName.decode('utf-8', errors='ignore')  # Decode bytes to str
+				elif not PY3 and isinstance(imageName, unicode):
+					imageName = str(imageName)  # Convert Unicode to plain str in Python 2
 				if boxtype == "dreamone" or boxtype == "dreamtwo":
 					imagePath = os.path.join('https://download.blue-panel.com/pyro/gemini4-unstable/developer/images/', imageName)
 				else:
