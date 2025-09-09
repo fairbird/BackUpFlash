@@ -110,26 +110,28 @@ else:
 sz_w = getDesktop(0).size().width()
 if sz_w == 1280 :
 	SKIN_imagedownloadScreen = """
-<screen name="imagedownloadScreen" position="center,center" size="560,160" title="Downloading image..." backgroundColor="#16000000">
+<screen name="imagedownloadScreen" position="center,center" size="560,185" title="Downloading image..." backgroundColor="#16000000">
 <!--widget name="activityslider" position="20,40" size="510,15" pixmap="skin_default/progress_big.png" /-->
 <widget name="activityslider" position="20,45" size="510,20" borderWidth="1" transparent="1"/>
 <widget name="package" position="20,10" size="510,29" font="Regular;18" halign="center" valign="center" transparent="1"/>
 <widget name="status" position="20,70" size="510,28" font="Regular;16" foregroundColor="#00ffffff" backgroundColor="#16000000" halign="center" valign="center" transparent="1"/>
 <widget name="status2" position="20,10" size="510,142" font="Regular;25" foregroundColor="#00bab329" backgroundColor="#16000000" halign="center" valign="center" transparent="1"/>
 <widget name="info" position="11,109" size="534,40" font="Regular;25" foregroundColor="#00ff2525" backgroundColor="#16000000" halign="center" valign="center" transparent="1"/>
+<eLabel text="Press Ok Button to Hide/Show Screen" position="10,155" zPosition="2" size="531,26" font="Regular;22" halign="center" valign="center" foregroundColor="#00bab329" backgroundColor="#16000000"/>
 <!--widget name="key_green" position="8,107" zPosition="2" size="532,22" font="Regular;22" halign="center" valign="center" foregroundColor="#00389416" backgroundColor="#16000000" transparent="1"/-->
 <!--ePixmap pixmap="{0}/buttons/green35x35.png" position="180,125" size="35,35" alphatest="blend"/-->
 </screen>
 """.format(resolveFilename(SCOPE_PLUGINS, 'Extensions/backupflashe'))
 else:
 	SKIN_imagedownloadScreen = """
-<screen name="imagedownloadScreen" position="center,center" size="805,232" title="Downloading image..." backgroundColor="#16000000">
+<screen name="imagedownloadScreen" position="center,center" size="805,265" title="Downloading image..." backgroundColor="#16000000">
 <!--widget name="activityslider" position="30,60" size="765,22" pixmap="skin_default/progress_big.png" /-->
 <widget name="activityslider" position="30,48" size="755,30" borderWidth="1" transparent="1"/>
 <widget name="package" position="30,7" size="755,35" font="Regular;27" halign="center" valign="center" transparent="1"/>
 <widget name="status" position="30,90" size="755,40" font="Regular;24" foregroundColor="#00ffffff" backgroundColor="#16000000" halign="center" valign="center" transparent="1"/>
 <widget name="status2" position="14,10" size="771,217" font="Regular;30" foregroundColor="#00bab329" backgroundColor="#16000000" halign="center" valign="center" transparent="1"/>
 <widget name="info" position="11,185" size="784,40" font="Regular;28" foregroundColor="#00ff2525" backgroundColor="#16000000" halign="center" valign="center" transparent="1"/>
+<eLabel text="Press Ok Button to Hide/Show Screen" position="7,230" zPosition="2" size="784,35" font="Regular;28" halign="center" valign="center" foregroundColor="#00bab329" backgroundColor="#16000000"/>
 <!--widget name="key_green" position="11,139" zPosition="2" size="784,40" font="Regular;28" halign="center" valign="center" foregroundColor="#00389416" backgroundColor="#16000000" transparent="1"/-->
 <!--ePixmap pixmap="{0}/buttons/green35x35.png" position="290,190" size="35,35" alphatest="blend"/-->
 </screen>
@@ -139,7 +141,7 @@ else:
 sz_w = getDesktop(0).size().width()
 if sz_w == 1280 :
 	SKIN_Progress = """
-<screen name="Progress..." position="center,center"  size="550,178" title="Downloading image..." backgroundColor="#16000000" >
+<screen name="ProgressScreen" position="center,center"  size="550,178" title="Downloading image..." backgroundColor="#16000000" >
 <!--widget source="Title" render="Label" font="Regular;24" foregroundColor="#00bab329" backgroundColor="#16000000" position="10,5" size="530,25" transparent="1"/>
 <eLabel text="" position="10,31" zPosition="3" size="531,1" font="Regular;5" halign="center" valign="center" foregroundColor="#00ffffff" backgroundColor="#00ffffff"/-->
 <widget name="text" position="10,32" size="530,75" font="Regular;18" backgroundColor="#16000000"/>
@@ -149,7 +151,7 @@ if sz_w == 1280 :
 </screen>"""
 else:
 	SKIN_Progress = """
-<screen name="Progress..." position="center,center" size="850,259" title="Downloading image..." backgroundColor="#16000000" >
+<screen name="ProgressScreen" position="center,center" size="850,259" title="Downloading image..." backgroundColor="#16000000" >
 <!--widget source="Title" render="Label" font="Regular;30" foregroundColor="#00bab329" backgroundColor="#16000000" position="20,5" size="815,35" transparent="1"/>
 <eLabel text="" position="20,41" zPosition="3" size="815,2" font="Regular;5" halign="center" valign="center" foregroundColor="#00ffffff" backgroundColor="#00ffffff"/-->
 <widget name="text" position="20,45" size="815,115" font="Regular;28" backgroundColor="#16000000"/>
