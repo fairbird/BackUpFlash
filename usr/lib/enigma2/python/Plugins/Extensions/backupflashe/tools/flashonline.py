@@ -89,6 +89,7 @@ class teamsScreen(Screen):
 		teams.append((_("Merlin4"), "Merlin4"))
 		teams.append((_("Satlodge"), "Satlodge"))
 		teams.append((_("Newnigma2"), "Newnigma2"))
+		teams.append((_("TSimage"), "TSimage"))
 		#teams.append((_("OoZooN"), "OoZooN")) ## No more Team
 		#teams.append((_("Demonisat"), "Demonisat")) ## Server down
 		#teams.append((_("Powersat"), "Powersat")) ## No more Team
@@ -224,6 +225,17 @@ class imagesScreen(Screen):
 				imageName = item[0]
 				imagePath = item[1]
 				images.append((imageName,imagePath))
+
+		if self.teamName == "TSimage":
+			key = 'kyfdfkze34gaq'
+			imagesPath = 'https://www.mediafire.com/api/1.4/folder/get_content.php?r=cfgd&content_type=files&filter=all&order_by=name&order_direction=asc&chunk=1&version=1.5&folder_key=%s&response_format=json' % key
+			rimages = get_images_mediafire(imagesPath)
+			for item in rimages:
+				imageName = item[0]
+				imagePath = item[1]
+				if not boxtype in imageName:
+					continue
+				images.append((imageName, imagePath))
 
 		if self.teamName == "OpenATV-Python2":
 			imagesPath = "https://images.mynonpublic.com/openatv/6.4/index.php?open="+boxtype
