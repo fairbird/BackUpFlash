@@ -1,528 +1,225 @@
-#!/usr/bin/python
-# -*- coding: utf-8 -*-
-# RAED & mfaraj57 (c) 2015 - 2025
+#!/bin/bash
+##setup command=wget https://raw.githubusercontent.com/fairbird/BackUpFlash/main/installer.sh -O - | /bin/sh
 
-from .compat import compat_Request, compat_urlopen, PY3
+version=12.1
+description="
+What is NEW:
+- Fix get_images_mediafire
 
-from Components.About import about
-from Tools.Directories import fileExists, copyfile, createDir, resolveFilename, SCOPE_PLUGINS
+ما هو الجديد:
+-  get_images_mediafire إصلاح
+"
 
-import os, traceback, re, json, datetime, ssl, base64
-
-logfile="/tmp/backupflash.log"
-backupflash_script="/tmp/backupflash.sh"
-
-if not fileExists('/usr/lib64'):
+echo ""
+if [ ! -d '/usr/lib64' ]; then
 	LIBPATH='/usr/lib'
-else:
+else
 	LIBPATH='/usr/lib64'
+fi
+#########################
+if [ `uname -r | grep dm7080 | wc -l` -gt 0 ]; then
+        echo "[Your device is MIPS - DM7080]"
+        echo ""
+elif [ `uname -r | grep dm820 | wc -l` -gt 0 ]; then
+        echo "[Your device is MIPS - DM820]"
+        echo ""
+elif [ `uname -r | grep dm520 | wc -l` -gt 0 ]; then
+        echo "[Your device is MIPS - DM520/525]"
+        echo ""
+elif [ `uname -r | grep dm525 | wc -l` -gt 0 ]; then
+        echo "[Your device is MIPS - DM525]"
+        echo ""
+elif [ `uname -r | grep dm900 | wc -l` -gt 0 ]; then
+        echo "[Your device is armv7l - DM900]"
+        echo ""
+elif [ `uname -r | grep dm920 | wc -l` -gt 0 ]; then
+        echo "[Your device is armv7l - DM920]"
+        echo ""
+elif [ `uname -r | grep 4.9 | wc -l` -gt 0 ]; then
+        if [ -e /dev/ci0 ]; then
+        	echo "[Your device is armv64 - dreamtwo]"
+        else
+        	echo "[Your device is armv64 - dreamone]"
+        fi
+        echo ""
+else
+echo "##############################################"
+echo "#     Sorry plugin not support your STB      #"
+echo "##############################################"
+exit 1
+echo ""
+fi
 
-if os.path.isfile('/var/lib/dpkg/status'):
-	STATUS = '/var/lib/dpkg/status'
-else:
-	STATUS = '/var/lib/opkg/status'
+# check depends packges
+if [ -f /var/lib/dpkg/status ]; then
+   STATUS=/var/lib/dpkg/status
+   OSTYPE=DreamOs
+else
+   STATUS=/var/lib/opkg/status
+   OSTYPE=Opensource
+fi
 
-# Set headers (User-Agent is often required to avoid 403)
-headers = {
-	"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36"
-}
+if [ -f /usr/bin/python3 ] ; then
+	echo "You have Python3 image"
+	PYTHON=PY3
+	CRYPT='python3-crypt'
+	REQUESTS='python3-requests'
+else
+	echo "You have Python2 image"
+	PYTHON=PY2
+	CRYPT='python-crypt'
+	REQUESTS='python-requests'
+fi
 
-#def logdata(label, txt):
-#	try:
-#		bfile=open(logfile, 'a')
-#		bfile.write(str(label) + ':' + str(txt) + '\n')
-#		bfile.close()
-#	except:
-#		pass
+wget='wget'
+pigz='pigz'
+xz='xz'
+zip='7zip'
+p7zip='p7zip'
+flashscripts='flash-scripts'
 
+# install depend packges if need it
+if grep -qs "Package: $CRYPT" "$STATUS" && \
+	grep -qs "Package: $REQUESTS" "$STATUS" && \
+	grep -qs "Package: $wget" "$STATUS" && \
+	grep -qs "Package: $xz" "$STATUS" && \
+	grep -qs "Package: $pigz" "$STATUS" && \
+	grep -qs "Package: $flashscripts" "$STATUS" && \
+	grep -qs "Package: $zip" "$STATUS" || grep -qs "Package: $p7zip" "$STATUS"; then
+	echo ""
+	echo "All depend packages Installed"
+else
+	opkg update
+	if grep -qs "Package: $CRYPT" cat $STATUS ; then
+		echo ""
+	else
+		echo "Need to install $CRYPT"
+		opkg install $CRYPT
+	fi
+	if grep -qs "Package: $REQUESTS" cat $STATUS ; then
+		echo ""
+	else
+		echo "Need to install $REQUESTS"
+		opkg install $REQUESTS
+	fi
+	if grep -qs "Package: $wget" cat $STATUS ; then
+		echo ""
+	else
+		echo "Need to install $wget"
+		opkg install $wget
+	fi
+	if grep -qs "Package: $pigz" cat $STATUS ; then
+		echo ""
+	else
+		echo "Need to install $pigz"
+		opkg install $pigz
+	fi
+	if grep -qs "Package: $p7zip" cat $STATUS ; then
+		echo ""
+	else
+		echo "Need to install $p7zip"
+		opkg install $p7zip
+	fi
+ 	if grep -qs "Package: $zip" cat $STATUS ; then
+		echo ""
+	else
+		echo "Need to install $zip"
+		opkg install $zip
+	fi
+	if grep -qs "Package: $xz" cat $STATUS ; then
+		echo ""
+	else
+		echo "Need to install $xz"
+		opkg install $xz
+	fi
+	if grep -qs "Package: $flashscripts" cat $STATUS ; then
+		echo ""
+	else
+		echo "Need to install $flashscripts"
+		opkg install $flashscripts
+	fi
+fi
+# Make more check depend packges
+if grep -q "wget" $STATUS ; then
+     echo ""
+else
+     echo "Missing (wget) package"
+exit 1
+fi
+if grep -q "pigz" $STATUS ; then
+     echo ""
+else
+     echo "Missing (pigz) package"
+exit 1
+fi
+if grep -q "7zip" $STATUS || grep -q "p7zip" $STATUS ; then
+     echo ""
+else
+     echo "Missing (7zip) or (p7zip) package"
+exit 1
+fi
+if grep -q "flash-scripts" $STATUS ; then
+     echo ""
+else
+     echo "Missing (flash-scripts) package"
+exit 1
+fi
+if grep -q $CRYPT $STATUS ; then
+     echo ""
+else
+     echo "Missing ($CRYPT) package"
+exit 1
+fi
 
-def logdata(label='', data=None):
-	try:
-		bfile=open(logfile, 'a')
-		bfile.write( str(label) + ' : ' + str(data) + "\n")
-		bfile.close()
-	except:
-		pass
+# remove old version
+if [ /media/ba/backupflashe ]; then
+	rm -rf /media/ba/backupflashe
+fi
+if [ $LIBPATH/enigma2/python/Plugins/Extensions/backupflashe ]; then
+	rm -rf $LIBPATH/enigma2/python/Plugins/Extensions/backupflashe
+fi
+if [ $LIBPATH/enigma2/python/Plugins/Extensions/backupflashe2 ]; then
+	rm -rf $LIBPATH/enigma2/python/Plugins/Extensions/backupflashe2
+fi
+if [ $LIBPATH/enigma2/python/Plugins/Extensions/dBackup ]; then
+	rm -rf $LIBPATH/enigma2/python/Plugins/Extensions/dBackup
+fi
+# Download and install plugin
+cd /tmp 
+set -e
+rm -rf *BackUpFlash* > /dev/null 2>&1
+rm -rf *main* > /dev/null 2>&1
+wget https://github.com/fairbird/BackUpFlash/archive/refs/heads/main.tar.gz
+tar -xzf main.tar.gz
+cp -r BackUpFlash-main/usr /
+rm -rf *BackUpFlash* > /dev/null 2>&1
+rm -rf *main* > /dev/null 2>&1
+## This commands to save plugin from BA protection
+if [ -f "/media/ba/ba.sh" -a "$LIBPATH/enigma2/python/Plugins/Extensions/backupflashe" ]; then
+mv /usr/lib/enigma2/python/Plugins/Extensions/backupflashe /media/ba
+ln -s /media/ba/backupflashe /usr/lib/enigma2/python/Plugins/Extensions
+fi
+#
+set +e
+cd ..
+sync
 
+### Check if plugin installed correctly
+if [ ! -d $LIBPATH/enigma2/python/Plugins/Extensions/backupflashe ]; then
+if [ ! -d /media/ba/backupflashe ]; then
+	echo "Some thing wrong .. Plugin not installed"
+	exit 1
+fi
+fi
 
-def dellog():
-	if os.path.exists(logfile):
-		os.remove(logfile)
-
-
-def trace_error():
-	try:
-		traceback.print_exc(file=sys.stdout)
-		if os.path.exists(logfile):
-			pass
-		else:
-			return
-		traceback.print_exc(file=open(logfile, 'a'))
-	except:
-		pass
-
-
-def copylog(device_path):
-	try:
-		  logfile2=os.path.join(device_path,"backupflash.log")
-		  backupflash_script2=os.path.join(device_path,"backupflash.sh")
-		  if os.path.exists(logfile2):
-						os.remove(logfile2)				   
-		  copyfile(logfile,logfile2)
-		  copyfile(backupflash_script, backupflash_script2)
-	except:
-			  pass
-
-
-def getimage_version():
-	try:
-	  image_version=about.getEnigmaVersionString()
-	  return image_version.strip()
-	except:
-		return None
-
-
-def getversioninfo():
-	currversion = '1.0'
-	version_file = resolveFilename(SCOPE_PLUGINS, 'Extensions/backupflashe/tools/version')
-	if os.path.exists(version_file):
-		try:
-			fp = open(version_file, 'r').readlines()
-			for line in fp:
-				if 'version' in line:
-					currversion = line.split('=')[1].strip()
-		except:
-			pass
-	return currversion
-
-
-def getboxtype():
-	boxtype="dm7080hd"
-	if os.path.exists('/proc/stb/info/model'):
-		f = open('/proc/stb/info/model')
-		boxtype = f.read()
-		f.close()
-		boxtype = boxtype.replace('\n', '').replace('\\l', '')
-		if boxtype == "dm525":
-			boxtype="dm520"
-		if boxtype == "one":
-			boxtype="dreamone"
-		if boxtype == "two":
-			boxtype="dreamtwo"
-	if boxtype.strip()=="":
-		boxtype=getHostName()
-	return boxtype
-
-
-def getHostName():
-	try:
-		boxtype=open("/etc/hostname").read()
-		return boxtype.strip()
-	except:
-		return ""
-
-
-def get_package():
-	XZ_ = False
-	PIGZ_ = False
-	ZIP_ = False
-	WGET_ = False
-	try:
-		with open(STATUS, 'r') as f:
-			for line in f:
-				line = line.strip()  # Strip newline characters
-				if line.startswith('Package: xz'):
-					XZ_ = True
-				elif line.startswith('Package: pigz'):
-					PIGZ_ = True
-				elif line.startswith('Package: p7zip') or line.startswith('Package: 7zip'):
-					ZIP_ = True
-				elif line.startswith('Package: wget'):
-					WGET_ = True
-	except IOError:
-		print("Error reading status file")
-	return (XZ_, PIGZ_, ZIP_, WGET_)  # Always return a tuple
-
-
-def get_images(url,regx):
-	images = []
-	logdata("images_url",url)
-	try:
-		req = compat_Request(url, headers = headers) # # add headers to fix HTTP Error 403: Forbidden
-		response = compat_urlopen(req, timeout=5)
-		data = response.read()
-		response.close()
-		match = re.findall(regx,data, re.M|re.I)
-		for item1,item2 in match:
-			images.append((item1,item2))
-		return images
-	except:
-		trace_error()
-		return []
-
-
-def get_images2(url, regx):
-	images = []
-	logdata("images_url", url)
-	try:
-		req = compat_Request(url, headers=headers)
-		response = compat_urlopen(req, timeout=5)
-		data = response.read()
-		response.close()
-
-		match = re.findall(regx, data, re.M | re.I)
-
-		for item1, item2 in match:
-			# Decode bytes if needed
-			href = item1.decode() if isinstance(item1, bytes) else item1
-			dname = item2.decode() if isinstance(item2, bytes) else item2
-
-			# Ensure only filename for the 2nd tuple item
-			if dname.startswith('http'):
-				dname = dname.split('/')[-1]
-
-			# Full image URL to test
-			imageURL = url.rstrip('/') + '/' + dname
-
-			# Check if file exists (skip 404)
-			try:
-				req_img = compat_Request(imageURL, headers=headers)
-				resp_img = compat_urlopen(req_img, timeout=5)
-				resp_img.read(10)  # try small read
-				resp_img.close()
-
-				# Only append if exists
-				images.append((href, dname))
-			except:
-				logdata("skipped_image", "{} not found".format(dname))
-				continue
-
-		return images
-	except:
-		trace_error()
-		return []
-
-
-def get_images_github(url,regx):
-	images = []
-	logdata("images_url",url)
-	try:
-		req = compat_Request(url, headers = headers) # Add headers to fix HTTP Error 403: Forbidden
-		response = compat_urlopen(req,timeout=5)
-		if PY3:
-			data = response.read().decode('utf-8')
-		else:
-			data = response.read()  
-		response.close()
-		match = re.findall(str(regx), data, re.M|re.I)
-		for item1,item2 in match:
-			images.append((item1,item2))
-		return images
-	except:
-		trace_error()
-		return []
-
-def get_images_mediafire(url):
-	images = []
-	logdata("images_url", url)
-
-	def readnet(url):
-		try:
-			# Note: The 'headers' often need to include a User-Agent 
-			# to simulate a real browser to pass basic checks.
-			req = compat_Request(url, headers=headers)
-			response = compat_urlopen(req, timeout=10)
-			data = response.read()
-			if PY3:
-				data = data.decode('utf-8')
-			return data
-		except:
-			trace_error()
-			return None
-
-	data = readnet(url)
-	if not data:
-		return []
-
-	try:
-		jdata = json.loads(data)
-	except json.JSONDecodeError:
-		return []
-
-	files_list = jdata.get('response', {}).get('folder_content', {}).get('files', [])
-	
-	for item in files_list:
-		normal_link = item['links']['normal_download']
-		file_name = item['filename']
-		
-		if not PY3 and isinstance(file_name, unicode):
-			file_name = file_name.encode('utf-8')
-
-		# Step 1: Read HTML of the normal download page
-		html = readnet(normal_link)
-		if not html:
-			continue
-
-		direct_url = None
-
-		# Attempt 1: Targeted search for the dynamic URL inside the main script block
-		# MediaFire often uses an API call that returns the final URL. 
-		# We look for the common download domain ('http://download')
-		# inside a script tag, which is the result of the JS generation.
-		match_download = re.search(
-			r'(https?://download\d*\.mediafire\.com/[^"\']+)', 
-			html
-		)
-
-		if match_download:
-			direct_url = match_download.group(1).split("'")[0].split('"')[0].split('?')[0]
-			# The split removes any trailing quotes, semi-colons, or query parameters
-
-		# Attempt 2: Fallback to the link within the main download button's code block
-		if not direct_url:
-			match_button_script = re.search(
-				r'window\.location\.replace\(["\']([^"\']+)["\']\);', 
-				html
-			)
-			if match_button_script:
-				direct_url = match_button_script.group(1)
-
-		# Attempt 3 (Last Resort): Your old base64-scrambled URL logic
-		if not direct_url:
-			match_scrambled = re.search(r'aria-label="Download file"[^>]*?data-scrambled-url="([^"]+)"', html)
-			if match_scrambled:
-				scrambled_url = match_scrambled.group(1)
-				try:
-					direct_url = base64.b64decode(scrambled_url).decode('utf-8')
-				except:
-					trace_error()
-					direct_url = None
-
-		# Final check and fallback
-		if direct_url:
-			images.append((file_name, direct_url))
-		else:
-			# Final fallback
-			images.append((file_name, normal_link))
-			logdata("error", "Failed to extract direct download link from: " + normal_link)
-
-	return images
-
-
-def getimage_name():
-	GP3='%s/enigma2/python/Plugins/Bp/geminimain' % LIBPATH
-	GP4='%s/enigma2/python/Plugins/GP4/geminilocale/plugin.pyo' % LIBPATH
-	BLACKHOLE='%s/enigma2/python/Blackhole' % LIBPATH
-	OPENBH='%s/enigma2/python/Screens/BpBlue.pyo' % LIBPATH
-	MEDIASAT='%s/enigma2/python/MediaSat' % LIBPATH
-	TSIMAGE='%s/enigma2/python/Plugins/TSimage' % LIBPATH
-	VTI='%s/enigma2/python/Plugins/SystemPlugins/VTIPanel' % LIBPATH
-	MERLIN=resolveFilename(SCOPE_PLUGINS, 'Extensions/AddOnManager')
-	DREAMELITE='%s/enigma2/python/DE' % LIBPATH
-	Demoni='%s/enigma2/python/Plugins/SystemPlugins/DemonisatManager' % LIBPATH
-	OPENDROID='%s/enigma2/python/OPENDROID' % LIBPATH
-	EGAMI='%s/enigma2/python/EGAMI' % LIBPATH
-	Satdreamgr='%s/enigma2/python/Plugins/Satdreamgr' % LIBPATH
-	Powerboard=resolveFilename(SCOPE_PLUGINS, 'Extensions/PowerboardCenter')
-	PKT=resolveFilename(SCOPE_PLUGINS, 'Extensions/PKT')
-	OPENVIX='%s/enigma2/python/Plugins/SystemPlugins/ViX' % LIBPATH
-	Domica='%s/enigma2/python/Plugins/Domica' % LIBPATH
-	HDMU=resolveFilename(SCOPE_PLUGINS, 'Extensions/HDMUCenter')
-	OPENLD=resolveFilename(SCOPE_PLUGINS, 'Extensions/LDteam')
-	TDW=resolveFilename(SCOPE_PLUGINS, 'Extensions/TDW')
-	OPENHDF=resolveFilename(SCOPE_PLUGINS, 'Extensions/HDF-Toolbox')
-	OPENESI=resolveFilename(SCOPE_PLUGINS, 'Extensions/ExtraAddonss')
-	NonSoloSat=resolveFilename(SCOPE_PLUGINS, 'Extensions/NssPanel')
-	NEWNIGMA2='%s/enigma2/python/Plugins/newnigma2' % LIBPATH
-	name = 'Backup'
-	if os.path.exists(GP3):
-		name = 'Backup-GP3'
-	elif os.path.exists(GP4):
-		name = 'Backup-GP4'
-	elif os.path.exists(BLACKHOLE):
-		name = 'Backup-BlackHole'
-	elif os.path.exists(OPENBH):
-		name = 'Backup-OpenBH'
-	elif os.path.exists(MEDIASAT):
-		name = 'Backup-MediaSat'
-	elif os.path.exists(TSIMAGE):
-		name = 'Backup-TSimage'
-	elif os.path.exists(VTI):
-		name = 'Backup-VTI'
-	elif os.path.exists(MERLIN):
-		name = 'Backup-Merlin4'
-	elif os.path.exists(DREAMELITE):
-		name = 'Backup-DreamEiIte'
-	elif os.path.exists(Demoni):
-		name = 'Backup-Demonisat'
-	elif os.path.exists(OPENDROID):
-		name = 'Backup-OpenDroid'
-	elif os.path.exists(EGAMI):
-		name = 'Backup-EGAMI'
-	elif os.path.exists(Satdreamgr):
-		name = 'Backup-Satdreamgr'
-	elif os.path.exists(Powerboard):
-		name = 'Backup-Powerboard'
-	elif os.path.exists(PKT):
-		name = 'Backup-PKT'
-	elif os.path.exists(OPENVIX):
-		name = 'Backup-OpenVix'
-	elif os.path.exists(Domica):
-		name = 'Backup-Domica'
-	elif os.path.exists(HDMU):
-		name = 'Backup-HDMU'
-	elif os.path.exists(OPENLD):
-		name = 'Backup-OpenLD'
-	elif os.path.exists(TDW):
-		name = 'Backup-TDW'
-	elif os.path.exists(OPENHDF):
-		name = 'Backup-OpenHDF'
-	elif os.path.exists(OPENESI):
-		name = 'Backup-OpenESI'
-	elif os.path.exists(NonSoloSat):
-		name = 'Backup-NonSoloSat'
-	elif os.path.exists(NEWNIGMA2):
-		name = 'Backup-newnigma2'
-	else:
-		name=None
-		if os.path.exists("/etc/image-version"):
-				f=open("/etc/image-version")
-				line = f.readline()													
-				while (line):											 
-						line = f.readline()												 
-						if line.startswith("creator="):									
-								name=line
-				f.close()
-				if name:
-					name=name.replace("creator=","")
-					sp=[]
-					if len(name) > 0:
-							sp=name.split(" ")
-							if len(sp) > 0:
-									name=sp[0]
-									name=name.replace("\n","")
-									name="Backup-"+name
-		if name == None and os.path.exists("/etc/issue.net"):
-			f=open("/etc/issue.net")
-			i=f.read()
-			f.close()
-			if "power-Sat" in i.lower():
-					name="Backup-PowerSat"
-			if "oooZooN" in i.lower():	
-					name="Backup-OoZooN"
-			if "peter" in i.lower():	
-					name="Backup-PeterPan"
-			if "italysat" in i.lower():	
-					name="Backup-ItalySat"
-			if "openatv" in i.lower():
-					name="Backup-openATV"
-			if "rudreamat" in i.lower():
-					name="Backup-ruDREAM"
-			if "openeight" in i.lower():
-					name="Backup-OpenEight"
-			if "oenplus" in i.lower():
-					name="Backup-OpenPlus"
-			if "openpli" in i.lower():
-					name="Backup-OpenPLI"
-			if "opendreambox" in i.lower():
-					name="Backup-Opendreambox"
-		if name == None:
-			name="Backup-dreambox"
-
-	now = datetime.datetime.now()
-	name = name + "-%s" % now.strftime('%Y-%m-%d')
-	#image_version=getimage_version()
-	#if image_version != None and not image_version=="":
-	#	name=name+"-"+image_version
-	#return (name)
-
-	#image_version=getimage_version()
-	#if image_version != None and not image_version=="":
-	#	name=name+"-"+image_version
-	#if name == None:
-	#	name="Backup-"
-	return (name)
-
-
-def getmDevices():
-		myusb = myusb1 = myhdd = myhdd1 = mysdcard = mysd = myuniverse = myba = myba1 = mydata = mydata1 = ''
-		mdevices = []
-		myusb=None
-		myusb1=None
-		myhdd=None
-		myhdd1=None
-		mysdcard=None
-		mysd=None
-		myuniverse=None
-		myba=None
-		myba1=None
-		mydata=None
-		mydata1=None
-		if fileExists('/proc/mounts'):
-			f = open('/proc/mounts', 'r')
-			for line in f.readlines():
-				if line.find('/media/usb') != -1:
-					myusb = '/media/usb/backup'
-					if not os.path.exists('/media/usb/backup'):
-					   os.system('mkdir -p /media/usb/backup')
-				elif line.find('/media/usb1') != -1:
-					myusb1 = '/media/usb1/backup'
-					if not os.path.exists('/media/usb1/backup'):
-					   os.system('mkdir -p /media/usb1/backup')
-				elif line.find('/media/hdd') != -1:
-					myhdd = '/media/hdd/backup'
-					myhdd1 = '/media/hdd/images'
-					if not os.path.exists('/media/hdd/backup'):
-					   os.system('mkdir -p /media/hdd/backup')
-					if not os.path.exists('/media/hdd/images'):
-					   os.system('mkdir -p /media/hdd/images')
-				elif line.find('/media/sdcard') != -1:
-					mysdcard = '/media/sdcard/backup'
-					if not os.path.exists('/media/sdcard/backup'):
-					   os.system('mkdir -p /media/sdcard/backup')
-				elif line.find('/media/sd') != -1:
-					mysd = '/media/sd/backup'
-					if not os.path.exists('/media/sd/backup'):
-					   os.system('mkdir -p /media/sd/backup')
-				elif line.find('/universe') != -1:
-					myuniverse = '/universe/backup'
-					if not os.path.exists('/universe/backup'):
-					   os.system('mkdir -p /universe/backup')
-				elif line.find('/media/ba') != -1:
-					myba = '/media/ba/backup'
-					myba1 = '/media/ba/images'
-					if not os.path.exists('/media/ba/backup'):
-					   os.system('mkdir -p /media/ba/backup')
-					if not os.path.exists('/media/ba/images'):
-					   os.system('mkdir -p /media/ba/images')
-				elif line.find('/data') != -1:
-					mydata = '/data/backup'
-					mydata1 = '/data/images'
-					if not os.path.exists('/data/backup'):
-					   os.system('mkdir -p /data/backup')
-					if not os.path.exists('/data/images'):
-					   os.system('mkdir -p /data/images')
-			f.close()
-		if myusb:
-			mdevices.append((myusb, myusb))
-		if myusb1:
-			mdevices.append((myusb1, myusb1))
-		if myhdd:
-			mdevices.append((myhdd, myhdd))
-		if myhdd1:
-			mdevices.append((myhdd1, myhdd1))
-		if mysdcard:
-			mdevices.append((mysdcard, mysdcard))
-		if mysd:
-			mdevices.append((mysd, mysd))
-		if myuniverse:
-			mdevices.append((myuniverse, myuniverse))
-		if myba:
-			mdevices.append((myba, myba))
-		if myba1:
-			mdevices.append((myba1, myba1))
-		if mydata:
-			mdevices.append((mydata, mydata))
-		if mydata1:
-			mdevices.append((mydata1, mydata1))
-		return mdevices
+echo "#########################################################"
+echo "#          BackupFlash INSTALLED SUCCESSFULLY           #"
+echo "#                 Raed  &  mfaraj57                     #"              
+echo "#                     support                           #"
+echo "#   https://www.tunisia-sat.com/forums/threads/3902669/ #"
+echo "#########################################################"
+echo "#           Your STB Will RESTARTING Now                #"
+echo "#########################################################"
+sleep 3
+killall enigma2
+exit 0
