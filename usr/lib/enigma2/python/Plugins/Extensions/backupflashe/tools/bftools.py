@@ -222,14 +222,15 @@ def get_images_github(url,regx):
 		trace_error()
 		return []
 
-
 def get_images_mediafire(url):
 	images = []
 	logdata("images_url", url)
 
 	def readnet(url):
 		try:
-			req = compat_Request(url, headers=headers)  # Add headers to fix HTTP Error 403: Forbidden
+			# Note: The 'headers' often need to include a User-Agent 
+			# to simulate a real browser to pass basic checks.
+			req = compat_Request(url, headers=headers)
 			response = compat_urlopen(req, timeout=10)
 			data = response.read()
 			if PY3:
@@ -243,14 +244,17 @@ def get_images_mediafire(url):
 	if not data:
 		return []
 
-	jdata = json.loads(data)
+	try:
+		jdata = json.loads(data)
+	except json.JSONDecodeError:
+		return []
+
 	files_list = jdata.get('response', {}).get('folder_content', {}).get('files', [])
 	
 	for item in files_list:
 		normal_link = item['links']['normal_download']
 		file_name = item['filename']
 		
-		# Python 2: convert unicode to str
 		if not PY3 and isinstance(file_name, unicode):
 			file_name = file_name.encode('utf-8')
 
@@ -259,15 +263,48 @@ def get_images_mediafire(url):
 		if not html:
 			continue
 
-		# Step 2: Extract scrambled direct link
-		match = re.search(r'aria-label="Download file"[^>]*?data-scrambled-url="([^"]+)"', html)
-		if match:
-			scrambled_url = match.group(1)
-			direct_url = base64.b64decode(scrambled_url).decode('utf-8')
+		direct_url = None
+
+		# Attempt 1: Targeted search for the dynamic URL inside the main script block
+		# MediaFire often uses an API call that returns the final URL. 
+		# We look for the common download domain ('http://download')
+		# inside a script tag, which is the result of the JS generation.
+		match_download = re.search(
+			r'(https?://download\d*\.mediafire\.com/[^"\']+)', 
+			html
+		)
+
+		if match_download:
+			direct_url = match_download.group(1).split("'")[0].split('"')[0].split('?')[0]
+			# The split removes any trailing quotes, semi-colons, or query parameters
+
+		# Attempt 2: Fallback to the link within the main download button's code block
+		if not direct_url:
+			match_button_script = re.search(
+				r'window\.location\.replace\(["\']([^"\']+)["\']\);', 
+				html
+			)
+			if match_button_script:
+				direct_url = match_button_script.group(1)
+
+		# Attempt 3 (Last Resort): Your old base64-scrambled URL logic
+		if not direct_url:
+			match_scrambled = re.search(r'aria-label="Download file"[^>]*?data-scrambled-url="([^"]+)"', html)
+			if match_scrambled:
+				scrambled_url = match_scrambled.group(1)
+				try:
+					direct_url = base64.b64decode(scrambled_url).decode('utf-8')
+				except:
+					trace_error()
+					direct_url = None
+
+		# Final check and fallback
+		if direct_url:
 			images.append((file_name, direct_url))
 		else:
-			# fallback to normal link if regex fails
+			# Final fallback
 			images.append((file_name, normal_link))
+			logdata("error", "Failed to extract direct download link from: " + normal_link)
 
 	return images
 

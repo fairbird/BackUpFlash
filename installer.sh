@@ -1,8 +1,14 @@
 #!/bin/bash
 ##setup command=wget https://raw.githubusercontent.com/fairbird/BackUpFlash/main/installer.sh -O - | /bin/sh
 
-version=12.0
-description=What is NEW :\n- Add TSimage url download \n\n**************************\n: ما هو الجديد\n- TSimage إضافة رابط تحميل صور
+version=12.1
+description="
+What is NEW:
+- Fix get_images_mediafire
+
+ما هو الجديد:
+-  get_images_mediafire إصلاح
+"
 
 echo ""
 if [ ! -d '/usr/lib64' ]; then
