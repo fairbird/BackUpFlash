@@ -238,8 +238,8 @@ class imagesScreen(Screen):
 				images.append((imageName, imagePath))
 
 		if self.teamName == "OpenATV-Python2":
-			imagesPath = "https://images.mynonpublic.com/openatv/6.4/index.php?open="+boxtype
-			regx = b'''<a href='(.*?)'>(.*?)</a>'''
+			imagesPath = "https://images.mynonpublic.com/openatv/index.php?v=6.4&open=" + boxtype
+			regx = b'''href="(6\.4/.*?/(openatv-.*?\.zip))".*?>'''
 			rimages = get_images(imagesPath, regx)
 			for item in rimages:
 				imageName = item[1]
@@ -247,12 +247,12 @@ class imagesScreen(Screen):
 				if PY3:
 					imageName = imageName.decode()
 					imageName2 = imageName2.decode()
-				imagePath =  os.path.join('https://images.mynonpublic.com/openatv/6.4/', imageName2)
+				imagePath = os.path.join('https://images.mynonpublic.com/openatv/', imageName2)
 				images.append((imageName,imagePath))
 
 		if self.teamName == "OpenATV-Python3":
-			imagesPath = "https://images.mynonpublic.com/openatv/7.6/index.php?open="+boxtype
-			regx = b'''<a href='(.*?)'>(.*?)</a>'''
+			imagesPath = "https://images.mynonpublic.com/openatv/index.php?v=7.6&open=" + boxtype
+			regx = b'''href="(7\.6/.*?/(openatv-.*?\.zip))".*?>'''
 			rimages = get_images(imagesPath, regx)
 			for item in rimages:
 				imageName = item[1]
@@ -260,7 +260,7 @@ class imagesScreen(Screen):
 				if PY3:
 					imageName = imageName.decode()
 					imageName2 = imageName2.decode()
-				imagePath =  os.path.join('https://images.mynonpublic.com/openatv/7.6/', imageName2)
+				imagePath = os.path.join('https://images.mynonpublic.com/openatv/', imageName2)
 				images.append((imageName,imagePath))
 
 		if self.teamName == "OpenPLI-Unoffical":
