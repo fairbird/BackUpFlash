@@ -314,6 +314,7 @@ def getimage_name():
 	GP4='%s/enigma2/python/Plugins/GP4/geminilocale/plugin.pyo' % LIBPATH
 	BLACKHOLE='%s/enigma2/python/Blackhole' % LIBPATH
 	OPENBH='%s/enigma2/python/Screens/BpBlue.pyo' % LIBPATH
+	OPENBH3='%s/enigma2/python/Screens/BpBlue.pyc' % LIBPATH
 	MEDIASAT='%s/enigma2/python/MediaSat' % LIBPATH
 	TSIMAGE='%s/enigma2/python/Plugins/TSimage' % LIBPATH
 	VTI='%s/enigma2/python/Plugins/SystemPlugins/VTIPanel' % LIBPATH
@@ -341,7 +342,7 @@ def getimage_name():
 		name = 'Backup-GP4'
 	elif os.path.exists(BLACKHOLE):
 		name = 'Backup-BlackHole'
-	elif os.path.exists(OPENBH):
+	elif os.path.exists(OPENBH) or os.path.exists(OPENBH3):
 		name = 'Backup-OpenBH'
 	elif os.path.exists(MEDIASAT):
 		name = 'Backup-MediaSat'
