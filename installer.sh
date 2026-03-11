@@ -1,8 +1,8 @@
 #!/bin/bash
 ##setup command=wget https://raw.githubusercontent.com/fairbird/BackUpFlash/main/installer.sh -O - | /bin/sh
 
-version=12.1
-description=What is NEW :\n- Fix download images from mediafire \n\n**************************\n: ما هو الجديد\n- mediafire إصلاح تحميل الصور من
+version=12.2
+description=What is NEW :\n- Fix openatv images download link \n\n**************************\n: ما هو الجديد\n- openatv إصلاح تحميل الصور من
 
 echo ""
 if [ ! -d '/usr/lib64' ]; then
