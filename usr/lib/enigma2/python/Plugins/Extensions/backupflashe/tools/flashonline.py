@@ -58,6 +58,9 @@ class teamsScreen(Screen):
 
 	def updateList(self):
 		list1 = []
+		boxtype = getboxtype()
+		if boxtype == "dreamone" or boxtype == "dreamtwo":
+			list1.append(("DreamOS AIO Images", "DreamOS AIO Images"))
 		list1.append(("DreamOS OE2.5 Images", "DreamOS OE2.5 Images"))
 		list1.append(("Open Source OE2.0 Images", "Open Source OE2.0 Images"))
 		list1.append(("Neutrino Images", "Neutrino Images"))
@@ -66,17 +69,26 @@ class teamsScreen(Screen):
 	def get_teams(self,select):
 		self.list=[]
 		if select:
-			if select[0] == "DreamOS OE2.5 Images":
-				self.teams=self.DreamOS()
+			if select[0] == "DreamOS AIO Images":
+				self.teams = self.AIO()
+			elif select[0] == "DreamOS AIO Images":
+				self.teams = self.DreamOS()
 			elif select[0] == "Open Source OE2.0 Images":
-				self.teams=self.opensource()
+				self.teams = self.opensource()
 			else:
-				self.teams=self.neutrino()
+				self.teams = self.neutrino()
 			logdata("self.teams",self.teams)
 			self['list'].setList(self.teams)
 			self['key_green'].show()
 		else:
 			self.close()
+
+	def AIO(self):
+		boxtype=getboxtype()
+		logdata("boxtype",boxtype)
+		teams = []
+		teams.append((_("DreamElite-AIO"), "DreamElite-AIO"))
+		return teams
 
 	def DreamOS(self):
 		boxtype=getboxtype()
@@ -357,6 +369,17 @@ class imagesScreen(Screen):
 				if PY3:
 					imageName = imageName.decode()
 				imagePath="https://images.dream-elite.net/DEP/"+boxtype.upper()+'/'+imageName
+				images.append((imageName,imagePath.strip()))
+
+		if self.teamName == "DreamElite-AIO":
+			imagesPath = "https://images.dream-elite.net/DEP/index.php?dir=AIO/"
+			regx = b'''<a class="autoindex_a" href="(.*?)&amp;file=(.*?\.tar\.xz)">'''
+			rimages = get_images(imagesPath, regx)
+			for item in rimages:
+				imageName = item[1]
+				if PY3:
+					imageName = imageName.decode()
+				imagePath="https://images.dream-elite.net/DEP/AIO/"+imageName
 				images.append((imageName,imagePath.strip()))
 
 		if self.teamName == "Dreamboxupdates-Stable":
