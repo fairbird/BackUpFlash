@@ -71,7 +71,7 @@ class teamsScreen(Screen):
 		if select:
 			if select[0] == "DreamOS AIO Images":
 				self.teams = self.AIO()
-			elif select[0] == "DreamOS AIO Images":
+			elif select[0] == "DreamOS OE2.5 Images":
 				self.teams = self.DreamOS()
 			elif select[0] == "Open Source OE2.0 Images":
 				self.teams = self.opensource()
@@ -87,6 +87,7 @@ class teamsScreen(Screen):
 		boxtype=getboxtype()
 		logdata("boxtype",boxtype)
 		teams = []
+		teams.append((_("Gemini4-AIO"), "Gemini4-AIO"))
 		teams.append((_("DreamElite-AIO"), "DreamElite-AIO"))
 		return teams
 
@@ -618,7 +619,7 @@ class imagesScreen(Screen):
 
 		if self.teamName == "Gemini4":
 			if boxtype == "dreamone" or boxtype == "dreamtwo":
-				imagesPath = "https://download.blue-panel.com/pyro/gemini4-unstable/developer/images/"
+				imagesPath = "https://download.blue-panel.com/gemini4/pyro-gemini4-unstable/developer/images"
 			else:
 				imagesPath = "https://download.blue-panel.com/gemini4/krogoth-gemini4-unstable/developer/images/"
 			regx = b'''<a href="(.*?)" class="xz" download='(.*?)'>'''
@@ -630,13 +631,33 @@ class imagesScreen(Screen):
 				elif not PY3 and isinstance(imageName, unicode):
 					imageName = str(imageName)  # Convert Unicode to plain str in Python 2
 				if boxtype == "dreamone" or boxtype == "dreamtwo":
-					imagePath = os.path.join('https://download.blue-panel.com/pyro/gemini4-unstable/developer/images/', imageName)
+					imagePath = os.path.join('https://download.blue-panel.com/gemini4/pyro-gemini4-unstable/developer/images', imageName)
 				else:
 					imagePath = os.path.join('https://download.blue-panel.com/gemini4/krogoth-gemini4-unstable/developer/images/', imageName)
 				# Skip if boxtype not in filename
 				if boxtype not in imageName:
 					continue
 				images.append((imageName,imagePath))
+
+		if self.teamName == "Gemini4-AIO":
+			imagesPath = "https://download.blue-panel.com/gemini4/pyro-gemini4-unstable/developer/images"
+			regx = b'''<a href="(.*?)" class="xz" download='(.*?)'>'''
+			rimages = get_images2(imagesPath, regx)
+			for item in rimages:
+				hrefPath = item[0]
+				if isinstance(hrefPath, bytes):
+					hrefPath = hrefPath.decode('utf-8', errors='ignore')
+				if not hrefPath.startswith("Beta AIO (All-In-One)/"):
+					continue
+				if "/.unknown/" in hrefPath:
+					continue
+				imageName = item[1]
+				if isinstance(imageName, bytes):
+					imageName = imageName.decode('utf-8', errors='ignore')
+				elif not PY3 and isinstance(imageName, unicode):
+					imageName = str(imageName)
+				imagePath = "https://download.blue-panel.com/gemini4/pyro-gemini4-unstable/developer/images/Beta%20AIO%20(All-In-One)/" + imageName
+				images.append((imageName, imagePath))
 
 		if self.teamName == "OpenVision":
 			imagesPath = "https://images.openvision.dedyn.io/13.1/Develop/Vision/Dreambox/"+boxtype+"/"
