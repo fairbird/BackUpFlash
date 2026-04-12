@@ -583,7 +583,7 @@ class full_main(Screen, ConfigListScreen):
 		except:
 			trace_error()
 
-	def myCallback(self, result):
+	def myCallback(self, result = None):
 		return
 
 def main_menu(menuid, **kwargs):
