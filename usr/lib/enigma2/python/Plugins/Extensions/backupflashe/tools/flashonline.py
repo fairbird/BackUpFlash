@@ -264,8 +264,8 @@ class imagesScreen(Screen):
 				images.append((imageName,imagePath))
 
 		if self.teamName == "OpenATV-Python3":
-			imagesPath = "https://images.mynonpublic.com/openatv/index.php?v=7.6&open=" + boxtype
-			regx = b'''href="(7\.6/.*?/(openatv-.*?\.zip))".*?>'''
+			imagesPath = "https://images.mynonpublic.com/openatv/index.php?v=8.0&open=" + boxtype
+			regx = b'''href="(8\.0/.*?/(openatv-.*?\.zip))".*?>'''
 			rimages = get_images(imagesPath, regx)
 			for item in rimages:
 				imageName = item[1]

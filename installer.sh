@@ -1,8 +1,8 @@
 #!/bin/bash
 ##setup command=wget https://raw.githubusercontent.com/fairbird/BackUpFlash/main/installer.sh -O - | /bin/sh
 
-version=12.3
-description=What is NEW :\n- Add AIO image for DreamOne/Two \n\n**************************\n: ما هو الجديد\n- DreamOne/Two لاجهزة AIO إضافة صور
+version=12.4
+description=What is NEW :\n- Move to version 8.0 for OpenATV images \n\n**************************\n: ما هو الجديد\n- OpenATV الأنتقل إلى الإصدار 8.0 لصور
 echo ""
 if [ ! -d '/usr/lib64' ]; then
 	LIBPATH='/usr/lib'
