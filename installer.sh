@@ -82,54 +82,54 @@ if grep -qs "Package: $CRYPT" "$STATUS" && \
 	echo ""
 	echo "All depend packages Installed"
 else
-	opkg update
+	opkg update >/dev/null 2>&1
 	if grep -qs "Package: $CRYPT" cat $STATUS ; then
 		echo ""
 	else
 		echo "Need to install $CRYPT"
-		opkg install $CRYPT
+		opkg install $CRYPT update >/dev/null 2>&1
 	fi
 	if grep -qs "Package: $REQUESTS" cat $STATUS ; then
 		echo ""
 	else
 		echo "Need to install $REQUESTS"
-		opkg install $REQUESTS
+		opkg install $REQUESTS update >/dev/null 2>&1
 	fi
 	if grep -qs "Package: $wget" cat $STATUS ; then
 		echo ""
 	else
 		echo "Need to install $wget"
-		opkg install $wget
+		opkg install $wget update >/dev/null 2>&1
 	fi
 	if grep -qs "Package: $pigz" cat $STATUS ; then
 		echo ""
 	else
 		echo "Need to install $pigz"
-		opkg install $pigz
+		opkg install $pigz update >/dev/null 2>&1
 	fi
 	if grep -qs "Package: $p7zip" cat $STATUS ; then
 		echo ""
 	else
 		echo "Need to install $p7zip"
-		opkg install $p7zip
+		opkg install $p7zip update >/dev/null 2>&1
 	fi
  	if grep -qs "Package: $zip" cat $STATUS ; then
 		echo ""
 	else
 		echo "Need to install $zip"
-		opkg install $zip
+		opkg install $zip update >/dev/null 2>&1
 	fi
 	if grep -qs "Package: $xz" cat $STATUS ; then
 		echo ""
 	else
 		echo "Need to install $xz"
-		opkg install $xz
+		opkg install $xz update >/dev/null 2>&1
 	fi
 	if grep -qs "Package: $flashscripts" cat $STATUS ; then
 		echo ""
 	else
 		echo "Need to install $flashscripts"
-		opkg install $flashscripts
+		opkg install $flashscripts update >/dev/null 2>&1
 	fi
 fi
 # Make more check depend packges
