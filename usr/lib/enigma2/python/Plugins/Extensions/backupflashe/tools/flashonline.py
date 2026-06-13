@@ -554,33 +554,22 @@ class imagesScreen(Screen):
 				images.append((imageName,imagePath))
 
 		if self.teamName == "PurE2":
-			if boxtype == "dreamone" or boxtype == "dreamtwo":
-				imagesPath = "https://www.pur-e2.club/OU/images/index.php?dir=6.5/dreambox/TEST-alpha/"
-			elif boxtype == "dm900" or boxtype == "dm920":
-				imagesPath = "https://www.pur-e2.club/OU/images/index.php?dir=7.4/dreambox/"
-			else:
-				imagesPath = "https://www.pur-e2.club/OU/images/index.php?dir=6.5/dreambox/"
+			imagesPath = "https://www.pur-e2.club/OU/images/index.php?dir=7.6/dreambox/"
 			regx = b'''<a class="autoindex_a" href="(.*?)&amp;file=(.*?)">'''
 			rimages = get_images(imagesPath, regx)
+			seen = set()
 			for item in rimages:
 				imageName = item[1]
 				if PY3:
 					imageName = imageName.decode()
-				if boxtype == "dreamone" or boxtype == "dreamtwo":
-					imagePath = os.path.join('https://www.pur-e2.club/OU/images/6.5/dreambox/TEST-alpha/', imageName)
-				elif boxtype == "dm900" or boxtype == "dm920":
-					imagePath = os.path.join('https://www.pur-e2.club/OU/images/7.4/dreambox/', imageName)
-				else:
-					imagePath = os.path.join('https://www.pur-e2.club/OU/images/6.5/dreambox/', imageName)
-				if boxtype == "dreamone" or boxtype == "dreamtwo":
-					if not boxtype in imageName:
-						continue
-				if boxtype == "dm900" or boxtype == "dm920":
-					if "mmc.zip" in imageName or not boxtype in imageName:
-						continue
-				if boxtype == "dm520" or boxtype == "dm820":
-					if "web.zip" in imageName or not boxtype in imageName:
-						continue
+				if not imageName.endswith(".zip"):
+					continue
+				if not boxtype in imageName:
+					continue
+				if imageName in seen:
+					continue
+				seen.add(imageName)
+				imagePath = os.path.join('https://www.pur-e2.club/OU/images/7.6/dreambox/', imageName)
 				images.append((imageName,imagePath))
 
 		if self.teamName == "PKTeam":
