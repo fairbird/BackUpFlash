@@ -733,7 +733,7 @@ class imagesScreen(Screen):
 				images.append((imageName,imagePath))
 
 		if self.teamName == "OpenDroid":
-			imagesPath = "https://opendroid.org/8.0/Dreambox/index.php?open=%s" % boxtype
+			imagesPath = "https://opendroid.org/8.1.1/Dreambox/index.php?open=%s" % boxtype
 			#logdata("imagesPath",imagesPath)
 			regx = b'''<a href='.*?/(.*?)'>(.*?)</a><br>'''
 			rimages = get_images(imagesPath, regx)
@@ -742,7 +742,7 @@ class imagesScreen(Screen):
 				imageName = item[0]
 				if PY3:
 					imageName = imageName.decode()
-				imagePath = os.path.join('https://opendroid.org/8.0/Dreambox/%s/' % boxtype, imageName)
+				imagePath = os.path.join('https://opendroid.org/8.1.1/Dreambox/%s/' % boxtype, imageName)
 				images.append((imageName,imagePath))
 
 		return images
