@@ -261,6 +261,8 @@ class full_main(Screen):
 		self.icon_files.sort()
 		self.num_icons = len(self.icon_files)
 		self.selected = 0
+		self.page = 0
+		self.items_per_page = 8
 		sz_w = getDesktop(0).size().width()
 		skin_str = ""
 		if sz_w == 1280:
@@ -274,15 +276,14 @@ class full_main(Screen):
 			skin_str += '</widget>\n'
 			skin_str += ' <widget name="lab1" position="30,680" size="840,30" font="Regular;24" valign="center" foregroundColor="#00ffc435" backgroundColor="#16000000" transparent="1"/>\n'
 			max_cols = 4
-			for i in range(self.num_icons):
+			for i in range(8):
 				row = i // max_cols
 				col = i % max_cols
-				cols_in_row = min(self.num_icons - (row * max_cols), max_cols)
-				start_x = (1280 - (cols_in_row * 220)) // 2
+				start_x = (1280 - (max_cols * 220)) // 2
 				x_pos = start_x + (col * 220)
 				y_pos = 180 + (row * 220)
 				skin_str += '<widget name="cursor_%s" position="%s,%s" size="180,205" zPosition="1" pixmap="%s/background-icon.png" scale="1" alphatest="blend" transparent="1"/>\n' % (i, x_pos-25, y_pos-15, self.buttons_dir)
-				skin_str += '<widget name="icon_%s" position="%s,%s" size="130,130" zPosition="2" pixmap="%s/%s" scale="1" alphatest="blend" transparent="1"/>\n' % (i, x_pos, y_pos, self.icons_dir, self.icon_files[i])
+				skin_str += '<widget name="icon_%s" position="%s,%s" size="130,130" zPosition="2" scale="1" alphatest="blend" transparent="1"/>\n' % (i, x_pos, y_pos)
 				skin_str += '<widget name="label_%s" position="%s,%s" size="180,40" font="Regular;24" halign="center" valign="center" foregroundColor="#ffffff" backgroundColor="#00000000" zPosition="3" transparent="1"/>\n' % (i, x_pos-25, y_pos+135)
 			skin_str += '</screen>'
 		else:
@@ -296,26 +297,24 @@ class full_main(Screen):
 			skin_str += '</widget>\n'
 			skin_str += '<widget name="lab1" position="25,950" size="1397,115" font="Regular;30" valign="center" foregroundColor="#00ffc435" backgroundColor="#16000000" transparent="1" zPosition="1"/>\n'
 			max_cols = 4
-			for i in range(self.num_icons):
+			for i in range(8):
 				row = i // max_cols
 				col = i % max_cols
-				cols_in_row = min(self.num_icons - (row * max_cols), max_cols)
-				start_x = (1920 - (cols_in_row * 330)) // 2
+				start_x = (1920 - (max_cols * 330)) // 2
 				x_pos = start_x + (col * 330)
 				y_pos = 270 + (row * 330)
 				skin_str += '<widget name="cursor_%s" position="%s,%s" size="280,300" zPosition="1" pixmap="%s/background-icon.png" scale="1" alphatest="blend" transparent="1"/>\n' % (i, x_pos-40, y_pos-25, self.buttons_dir)
-				skin_str += '<widget name="icon_%s" position="%s,%s" size="200,200" zPosition="2" pixmap="%s/%s" scale="1" alphatest="blend" transparent="1"/>\n' % (i, x_pos, y_pos, self.icons_dir, self.icon_files[i])
+				skin_str += '<widget name="icon_%s" position="%s,%s" size="200,200" zPosition="2" scale="1" alphatest="blend" transparent="1"/>\n' % (i, x_pos, y_pos)
 				skin_str += '<widget name="label_%s" position="%s,%s" size="280,50" font="Regular;34" halign="center" valign="center" foregroundColor="#ffffff" backgroundColor="#00000000" zPosition="3" transparent="1"/>\n' % (i, x_pos-40, y_pos+205)
 			skin_str += '</screen>'
 		self.skin = skin_str
 		Screen.__init__(self, session)
 		title_text = "BackupFlashe V " + str(Ver)
 		self["title_label"] = Label(title_text)
-		for i in range(self.num_icons):
+		for i in range(8):
 			self["cursor_" + str(i)] = Pixmap()
 			self["icon_" + str(i)] = Pixmap()
-			name = self.icon_files[i].replace('.png', '').replace('_', ' ').title()
-			self["label_" + str(i)] = Label(name)
+			self["label_" + str(i)] = Label("")
 			self["cursor_" + str(i)].hide()
 		self["actions"] = ActionMap(["DirectionActions", "OkCancelActions"], {
 			"right": self.actionRight,
@@ -335,6 +334,26 @@ class full_main(Screen):
 		except:
 			self.timer_conn = self.timer.timeout.connect(self.updateList)
 		self.onLayoutFinish.append(self.layoutFinished)
+
+	def updateDisplay(self):
+		start_idx = self.page * 8
+		for i in range(8):
+			current_idx = start_idx + i
+			if current_idx < self.num_icons:
+				icon_path = os.path.join(self.icons_dir, self.icon_files[current_idx])
+				self["icon_" + str(i)].instance.setPixmapFromFile(icon_path)
+				self["icon_" + str(i)].show()
+				name = self.icon_files[current_idx].replace('.png', '').replace('_', ' ').title()
+				self["label_" + str(i)].setText(name)
+				self["label_" + str(i)].show()
+				if current_idx == self.selected:
+					self["cursor_" + str(i)].show()
+				else:
+					self["cursor_" + str(i)].hide()
+			else:
+				self["icon_" + str(i)].hide()
+				self["label_" + str(i)].hide()
+				self["cursor_" + str(i)].hide()
 
 	def actionRight(self):
 		if self.deviceok:
@@ -356,35 +375,62 @@ class full_main(Screen):
 		if self.deviceok:
 			self.ok()
 
+	def updateCursor(self):
+		self.page = self.selected // 8
+		self.updateDisplay()
+
+	def right(self):
+		if self.num_icons > 0:
+			self.selected += 1
+			if self.selected >= self.num_icons:
+				self.selected = 0
+			self.updateCursor()
+
+	def left(self):
+		if self.num_icons > 0:
+			self.selected -= 1
+			if self.selected < 0:
+				self.selected = self.num_icons - 1
+			self.updateCursor()
+
+	def up(self):
+		if self.num_icons > 0:
+			self.selected -= 4
+			if self.selected < 0:
+				rem = self.num_icons % 4
+				if rem == 0:
+					rem = 4
+				last_row_start = ((self.num_icons - 1) // 4) * 4
+				col = (self.selected + 4) % 4
+				target = last_row_start + col
+				if target >= self.num_icons:
+					target = self.num_icons - 1
+				self.selected = target
+			self.updateCursor()
+
+	def down(self):
+		if self.num_icons > 0:
+			self.selected += 4
+			if self.selected >= self.num_icons:
+				self.selected = self.selected % 4
+				if self.selected >= self.num_icons:
+					self.selected = 0
+			self.updateCursor()
+
 	def updateList(self):
 		dellog()
 		if len(mounted_devices) > 0:
 			self["lab1"].setText(_("Detecting mounted devices"))
 			self.deviceok = True
 			config.backupflashe.device_path = ConfigSelection(choices=mounted_devices)
-			for i in range(self.num_icons):
-				self["icon_" + str(i)].show()
-				self["label_" + str(i)].show()
-				if i == self.selected:
-					self["cursor_" + str(i)].show()
-				else:
-					self["cursor_" + str(i)].hide()
+			self.updateDisplay()
 		else:
 			self["lab1"].setText(_("Sorry no device mounted found.\nPlease check your media in devices manager."))
 			self.deviceok = False
-			for i in range(self.num_icons):
+			for i in range(8):
 				self["cursor_" + str(i)].hide()
 				self["icon_" + str(i)].hide()
 				self["label_" + str(i)].hide()
-
-	def updateCursor(self):
-		if self.num_icons == 0:
-			return
-		for i in range(self.num_icons):
-			if i == self.selected:
-				self["cursor_" + str(i)].show()
-			else:
-				self["cursor_" + str(i)].hide()
 
 	def layoutFinished(self):
 		if config.backupflashe.update.value:
@@ -427,56 +473,22 @@ class full_main(Screen):
 		message += "\n\nBackup or Convert or Download images may not work.\n\nLook in '/tmp/backupflash.log' for missing packages."
 		self.session.open(MessageBox, message, MessageBox.TYPE_INFO, timeout=8)
 
-	def right(self):
-		if self.num_icons > 0:
-			self.selected += 1
-			if self.selected >= self.num_icons:
-				self.selected = 0
-			self.updateCursor()
-
-	def left(self):
-		if self.num_icons > 0:
-			self.selected -= 1
-			if self.selected < 0:
-				self.selected = self.num_icons - 1
-			self.updateCursor()
-
-	def up(self):
-		if self.num_icons > 0:
-			self.selected -= 4
-			if self.selected < 0:
-				self.selected = 0
-			self.updateCursor()
-
-	def down(self):
-		if self.num_icons > 0:
-			self.selected += 4
-			if self.selected >= self.num_icons:
-				self.selected = self.num_icons - 1
-			self.updateCursor()
-
 	def ok(self):
 		if self.num_icons == 0:
 			return
 		selected_icon = self.icon_files[self.selected].replace('.png', '').lower()
-		print("[BackupFlashe] OK pressed! Selected Icon: " + str(selected_icon))
 		if 'setup' in selected_icon:
-			print("[BackupFlashe] Action: showMenuoptions")
 			self.session.open(Setup_Menu)
 		elif 'backup' in selected_icon or 'blackup' in selected_icon:
-			print("[BackupFlashe] Action: BackUpListSelect")
 			self.BackUpListSelect()
 		elif 'download' in selected_icon:
-			print("[BackupFlashe] Action: flashOnline")
 			self.flashOnline()
 		elif 'convert' in selected_icon:
-			print("[BackupFlashe] Action: convertimage")
 			self.convertimage()
 		elif 'recovery' in selected_icon:
-			print("[BackupFlashe] Action: red")
 			self.red()
 		else:
-			print("[BackupFlashe] No matching action found for: " + str(selected_icon))
+			logdata("No matching action found for: " + str(selected_icon))
 
 	def doFlash(self):
 		self.session.open(
@@ -488,6 +500,7 @@ class full_main(Screen):
 		if ExternalImages == True:
 			list.append(("Backup External Image", "Do Backup From External Flash image"))
 		self.session.openWithCallback(self.BackUpSelect, ChoiceBox, _('Select Backup Option'), list)
+
 
 	def BackUpSelect(self, select):
 		if select:
@@ -520,7 +533,6 @@ class full_main(Screen):
 					pass
 
 # BackUp External Flash
-
 	def imagelistbackup(self):
 		imageslist = []
 		for line in os_listdir(IMAGLISTEPATH):
