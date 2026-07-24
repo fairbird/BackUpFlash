@@ -249,59 +249,146 @@ class SelectionScreen(Screen, ConfigListScreen):
 			self.close(True)
 
 
-class full_main(Screen, ConfigListScreen):
-
+class full_main(Screen):
 	def __init__(self, session):
 		global rootfs
+		self.session = session
+		self.icons_dir = resolveFilename(SCOPE_PLUGINS, 'Extensions/backupflashe/icons')
+		self.buttons_dir = resolveFilename(SCOPE_PLUGINS, 'Extensions/backupflashe/buttons')
+		if not os.path.exists(self.icons_dir):
+			os.makedirs(self.icons_dir)
+		self.icon_files = [f for f in os.listdir(self.icons_dir) if f.endswith('.png') and f != 'background-icon.png']
+		self.icon_files.sort()
+		self.num_icons = len(self.icon_files)
+		self.selected = 0
+		sz_w = getDesktop(0).size().width()
+		skin_str = ""
+		if sz_w == 1280:
+			skin_str = '<screen name="full_main" position="0,0" size="1280,720" flags="wfNoBorder" backgroundColor="#16000000">\n'
+			skin_str += '<widget name="title_label" position="30,15" size="600,45" font="Regular;32" halign="left" valign="center" foregroundColor="#ffffff" backgroundColor="#16000000" transparent="1"/>\n'
+			skin_str += '<widget source="global.CurrentTime" render="Label" position="850,10" size="400,45" font="Regular;42" halign="right" valign="center" foregroundColor="#ffffff" backgroundColor="#16000000" transparent="1">\n'
+			skin_str += '  <convert type="ClockToText">Format:%H:%M</convert>\n'
+			skin_str += '</widget>\n'
+			skin_str += '<widget source="global.CurrentTime" render="Label" position="850,55" size="400,30" font="Regular;22" halign="right" valign="center" foregroundColor="#003584ba" backgroundColor="#16000000" transparent="1">\n'
+			skin_str += '  <convert type="ClockToText">Format:%a %d %B %Y</convert>\n'
+			skin_str += '</widget>\n'
+			skin_str += ' <widget name="lab1" position="30,680" size="840,30" font="Regular;24" valign="center" foregroundColor="#00ffc435" backgroundColor="#16000000" transparent="1"/>\n'
+			max_cols = 4
+			for i in range(self.num_icons):
+				row = i // max_cols
+				col = i % max_cols
+				cols_in_row = min(self.num_icons - (row * max_cols), max_cols)
+				start_x = (1280 - (cols_in_row * 220)) // 2
+				x_pos = start_x + (col * 220)
+				y_pos = 180 + (row * 220)
+				skin_str += '<widget name="cursor_%s" position="%s,%s" size="180,205" zPosition="1" pixmap="%s/background-icon.png" scale="1" alphatest="blend" transparent="1"/>\n' % (i, x_pos-25, y_pos-15, self.buttons_dir)
+				skin_str += '<widget name="icon_%s" position="%s,%s" size="130,130" zPosition="2" pixmap="%s/%s" scale="1" alphatest="blend" transparent="1"/>\n' % (i, x_pos, y_pos, self.icons_dir, self.icon_files[i])
+				skin_str += '<widget name="label_%s" position="%s,%s" size="180,40" font="Regular;24" halign="center" valign="center" foregroundColor="#ffffff" backgroundColor="#00000000" zPosition="3" transparent="1"/>\n' % (i, x_pos-25, y_pos+135)
+			skin_str += '</screen>'
+		else:
+			skin_str = '<screen name="full_main" position="0,0" size="1920,1080" flags="wfNoBorder" backgroundColor="#16000000">\n'
+			skin_str += '<widget name="title_label" position="50,20" size="800,60" font="Regular;45" halign="left" valign="center" foregroundColor="#ffffff" backgroundColor="#16000000" transparent="1"/>\n'
+			skin_str += '<widget source="global.CurrentTime" render="Label" position="1270,15" size="600,65" font="Regular;60" halign="right" valign="center" foregroundColor="#ffffff" backgroundColor="#16000000" transparent="1">\n'
+			skin_str += '  <convert type="ClockToText">Format:%H:%M</convert>\n'
+			skin_str += '</widget>\n'
+			skin_str += '<widget source="global.CurrentTime" render="Label" position="1270,80" size="600,40" font="Regular;32" halign="right" valign="center" foregroundColor="#003584ba" backgroundColor="#16000000" transparent="1">\n'
+			skin_str += '  <convert type="ClockToText">Format:%a %d %B %Y</convert>\n'
+			skin_str += '</widget>\n'
+			skin_str += '<widget name="lab1" position="25,950" size="1397,115" font="Regular;30" valign="center" foregroundColor="#00ffc435" backgroundColor="#16000000" transparent="1" zPosition="1"/>\n'
+			max_cols = 4
+			for i in range(self.num_icons):
+				row = i // max_cols
+				col = i % max_cols
+				cols_in_row = min(self.num_icons - (row * max_cols), max_cols)
+				start_x = (1920 - (cols_in_row * 330)) // 2
+				x_pos = start_x + (col * 330)
+				y_pos = 270 + (row * 330)
+				skin_str += '<widget name="cursor_%s" position="%s,%s" size="280,300" zPosition="1" pixmap="%s/background-icon.png" scale="1" alphatest="blend" transparent="1"/>\n' % (i, x_pos-40, y_pos-25, self.buttons_dir)
+				skin_str += '<widget name="icon_%s" position="%s,%s" size="200,200" zPosition="2" pixmap="%s/%s" scale="1" alphatest="blend" transparent="1"/>\n' % (i, x_pos, y_pos, self.icons_dir, self.icon_files[i])
+				skin_str += '<widget name="label_%s" position="%s,%s" size="280,50" font="Regular;34" halign="center" valign="center" foregroundColor="#ffffff" backgroundColor="#00000000" zPosition="3" transparent="1"/>\n' % (i, x_pos-40, y_pos+205)
+			skin_str += '</screen>'
+		self.skin = skin_str
 		Screen.__init__(self, session)
-		self.list = []
-		ConfigListScreen.__init__(self, self.list, on_change=self.changedEntry)
-		self.onChangedEntry = []
-		self.skin = SKIN_full_main
-		#self["key_green"] = Label(_("Flash Image"))
-		self["key_green"] = Label(_("Convert Image"))
-		#self["key_yellow"] = Label(_("Flash online"))
-		self["key_yellow"] = Label(_("Download Image"))
-		self["key_blue"] = Label(_("Backup Image"))
-		self["key_red"] = Label(_("Recovery Mode"))
-		self["lab1"] = Label("Detecting mounted devices")
-		self["key_green"].hide()
-		self["key_blue"].hide()
-		self["key_yellow"].hide()
-		self["help"] = StaticText()
-		self["actions"] = ActionMap(["WizardActions", "ColorActions", "MenuActions"], {
-			#"green": self.doFlash,
-			"green": self.convertimage,
-			"blue": self.BackUpListSelect,
-			"yellow": self.flashOnline,
-			"menu": self.showMenuoptions,
-			"red": self.red,
-			"back": self.close,
-		})
+		title_text = "BackupFlashe V " + str(Ver)
+		self["title_label"] = Label(title_text)
+		for i in range(self.num_icons):
+			self["cursor_" + str(i)] = Pixmap()
+			self["icon_" + str(i)] = Pixmap()
+			name = self.icon_files[i].replace('.png', '').replace('_', ' ').title()
+			self["label_" + str(i)] = Label(name)
+			self["cursor_" + str(i)].hide()
+		self["actions"] = ActionMap(["DirectionActions", "OkCancelActions"], {
+			"right": self.actionRight,
+			"left": self.actionLeft,
+			"up": self.actionUp,
+			"down": self.actionDown,
+			"ok": self.actionOk,
+			"cancel": self.close,
+		}, -1)
+		self["lab1"] = Label("")
 		self.deviceok = True
 		self.new_version = Ver
 		self.timer = eTimer()
+		self.timer.start(6, 1)
 		try:
 			self.timer.callback.append(self.updateList)
 		except:
 			self.timer_conn = self.timer.timeout.connect(self.updateList)
-		# if config.backupflashe.cleanba.value:
-		#     if fileExists(BAINIT):
-		#          if fileExists(BRANDOS):
-		#               os.system('rm -f /sbin/init')
-		#               os.system('ln -s /etc/alternatives/init /sbin/init')
-		#               os.system('rm -f /etc/alternatives/init')
-		#               os.system('ln -s /lib/systemd/systemd /etc/alternatives/init')
-		#          else:
-		#               os.system('rm -f /sbin/init')
-		#               os.system('ln -s init.sysvinit /sbin/init')
-		self.timer.start(6, 1)
 		self.onLayoutFinish.append(self.layoutFinished)
+
+	def actionRight(self):
+		if self.deviceok:
+			self.right()
+
+	def actionLeft(self):
+		if self.deviceok:
+			self.left()
+
+	def actionUp(self):
+		if self.deviceok:
+			self.up()
+
+	def actionDown(self):
+		if self.deviceok:
+			self.down()
+
+	def actionOk(self):
+		if self.deviceok:
+			self.ok()
+
+	def updateList(self):
+		dellog()
+		if len(mounted_devices) > 0:
+			self["lab1"].setText(_("Detecting mounted devices"))
+			self.deviceok = True
+			config.backupflashe.device_path = ConfigSelection(choices=mounted_devices)
+			for i in range(self.num_icons):
+				self["icon_" + str(i)].show()
+				self["label_" + str(i)].show()
+				if i == self.selected:
+					self["cursor_" + str(i)].show()
+				else:
+					self["cursor_" + str(i)].hide()
+		else:
+			self["lab1"].setText(_("Sorry no device mounted found.\nPlease check your media in devices manager."))
+			self.deviceok = False
+			for i in range(self.num_icons):
+				self["cursor_" + str(i)].hide()
+				self["icon_" + str(i)].hide()
+				self["label_" + str(i)].hide()
+
+	def updateCursor(self):
+		if self.num_icons == 0:
+			return
+		for i in range(self.num_icons):
+			if i == self.selected:
+				self["cursor_" + str(i)].show()
+			else:
+				self["cursor_" + str(i)].hide()
 
 	def layoutFinished(self):
 		if config.backupflashe.update.value:
 			self.checkupdates()
-		self.setTitle("Backup And Flash by RAED - V " + Ver)
 		missing = []
 		if not XZ_:
 			missing.append("xz")
@@ -318,8 +405,6 @@ class full_main(Screen, ConfigListScreen):
 			except:
 				self.msg_timer_conn = self.msg_timer.timeout.connect(self.showMissingPackages)
 			self.msg_timer.start(100, True)
-
-		self["config"].onSelectionChanged.append(self.updateHelp)
 
 	def showMissingPackages(self):
 		missing = []
@@ -342,60 +427,56 @@ class full_main(Screen, ConfigListScreen):
 		message += "\n\nBackup or Convert or Download images may not work.\n\nLook in '/tmp/backupflash.log' for missing packages."
 		self.session.open(MessageBox, message, MessageBox.TYPE_INFO, timeout=8)
 
-	def updateList(self):
-		dellog()
-		if len(mounted_devices) > 0:
-			self.deviceok = True
-			self["lab1"].setText(_("# Press Menu ..\nTo open option of show Plugin in any where you like"))
-			#self["lab1"].setText(_("Do (Full Backup) or (Convert) or (Download) Images or (Go to Recovery Mode)"))
-			self["key_green"].show()
-			self["key_blue"].show()
-			self["key_yellow"].show()
-			config.backupflashe.device_path = ConfigSelection(
-				choices=mounted_devices)
-			self.createSetup()
+	def right(self):
+		if self.num_icons > 0:
+			self.selected += 1
+			if self.selected >= self.num_icons:
+				self.selected = 0
+			self.updateCursor()
+
+	def left(self):
+		if self.num_icons > 0:
+			self.selected -= 1
+			if self.selected < 0:
+				self.selected = self.num_icons - 1
+			self.updateCursor()
+
+	def up(self):
+		if self.num_icons > 0:
+			self.selected -= 4
+			if self.selected < 0:
+				self.selected = 0
+			self.updateCursor()
+
+	def down(self):
+		if self.num_icons > 0:
+			self.selected += 4
+			if self.selected >= self.num_icons:
+				self.selected = self.num_icons - 1
+			self.updateCursor()
+
+	def ok(self):
+		if self.num_icons == 0:
+			return
+		selected_icon = self.icon_files[self.selected].replace('.png', '').lower()
+		print("[BackupFlashe] OK pressed! Selected Icon: " + str(selected_icon))
+		if 'setup' in selected_icon:
+			print("[BackupFlashe] Action: showMenuoptions")
+			self.session.open(Setup_Menu)
+		elif 'backup' in selected_icon or 'blackup' in selected_icon:
+			print("[BackupFlashe] Action: BackUpListSelect")
+			self.BackUpListSelect()
+		elif 'download' in selected_icon:
+			print("[BackupFlashe] Action: flashOnline")
+			self.flashOnline()
+		elif 'convert' in selected_icon:
+			print("[BackupFlashe] Action: convertimage")
+			self.convertimage()
+		elif 'recovery' in selected_icon:
+			print("[BackupFlashe] Action: red")
+			self.red()
 		else:
-			self["lab1"].setText(_("Sorry no device mounted found.\nPlease check your media in devices manager."))
-			self["key_green"].hide()
-			self["key_blue"].hide()
-			self["key_yellow"].hide()
-			self.deviceok = False
-
-	def createSetup(self):
-		self.list = []
-		self.list.append(getConfigListEntry(('Path to store Full Backup'), config.backupflashe.device_path, _(
-			"This option to set the path of Backup/Flash directory")))
-		self.list.append(getConfigListEntry(('Enable/Disable online update'), config.backupflashe.update, _(
-			"This option to Enable or Disable check of online update")))
-		self.list.append(getConfigListEntry(('Select Format to Compress BackUp'), config.backupflashe.image_format, _(
-			"This option to select the type of compress option")))
-		if config.backupflashe.image_format.value == "xz":
-			self.list.append(getConfigListEntry(("xz")+" "+_("Compression")+" "+_("(1-6)"), config.backupflashe.xzcompression, _(
-				"This option to set stringe value of Compress image (The higher the value, the longer the operation time, but the smaller the backup size)")))
-		#elif config.backupflashe.image_format.value == "bz2":
-		#	self.list.append(getConfigListEntry(("bz2")+" "+_("Compression")+" "+_("(1-6)"), config.backupflashe.bz2compression, _(
-		#		"This option to set stringe value of Compress image (The higher the value, the longer the operation time, but the smaller the backup size)")))
-		else:
-			pass
-		self.list.append(getConfigListEntry(('Compression image as Zip'), config.backupflashe.Zipcompression, _(
-				"This option to Compression image inside Zip file")))
-		self.list.append(getConfigListEntry(('Enable shutdown box after backup'), config.backupflashe.shutdown, _(
-			"This option to Enable or Disable Shutdown Box After Finished Backup")))
-		# if (os.path.exists("/.bainfo") or os.path.exists("/.lfinfo") or cmd.find(rootfs) == -1):
-		#    self.list.append(getConfigListEntry(('Allow to flash image from External image'), config.backupflashe.flashAllow, _("Warning: the process will delete the image if you are on an external flash\n(it is not recommended to Enable it)\nSafy way to Flash new image Please go to internal flash")))
-		self.list.append(getConfigListEntry(('Clean image from BA symlink before backup'), config.backupflashe.cleanba, _(
-			"This option for remove BarryAllen symlink from image Before Start Backup")))
-		self['config'].list = self.list
-		self['config'].l.setList(self.list)
-
-	def updateHelp(self):
-		cur = self["config"].getCurrent()
-		if cur:
-			self["help"].text = cur[2]
-
-	def changedEntry(self):
-		self.createSetup()
-		self.configsSave()
+			print("[BackupFlashe] No matching action found for: " + str(selected_icon))
 
 	def doFlash(self):
 		self.session.open(
@@ -427,11 +508,11 @@ class full_main(Screen, ConfigListScreen):
 		if target == None:
 			return
 		else:
-			self.configsSave()
+			configfile.save()
 			if self.deviceok:
 				try:
 					image_name = target
-					device_path = self['config'].list[0][1].getText()
+					device_path = config.backupflashe.device_path.value
 					image_compression_value = imagecompressionvalue
 					self.session.open(doBackUpInternal, image_name, device_path, image_compression_value)
 				except:
@@ -453,12 +534,12 @@ class full_main(Screen, ConfigListScreen):
 		if source == None:
 			return
 		else:
-			self.configsSave()
+			configfile.save()
 			self.getname = source[1].rstrip()
 			self.image_path = IMAGLISTEPATH + "/" + self.getname
 			self.imagename = '%s-%s-%s' % (self.getname, boxtype, DATETIME)
-			self.device_path = self['config'].list[0][1].getText()
-			self.image_formats = self['config'].list[1][1].getText()
+			self.device_path = config.backupflashe.device_path.value
+			self.image_formats = config.backupflashe.image_format.value
 			self.session.openWithCallback(self.doBackUpExt, VirtualKeyBoard, title=_(
 				"Please Enter Name For Backup Image"), text="%s" % self.imagename)
 
@@ -483,7 +564,7 @@ class full_main(Screen, ConfigListScreen):
 		self.session.openWithCallback(self.askForconvert, ChoiceBox, _("Choose an image to convert to zip compress"), self.imagelist())
 
 	def imagelist(self):
-		device_path = self['config'].list[0][1].getText()
+		device_path = config.backupflashe.device_path.value
 		imageslist = []
 		for line in os_listdir(device_path):
 			if line.endswith(".xz"):
@@ -495,9 +576,9 @@ class full_main(Screen, ConfigListScreen):
 		if source == None:
 			return
 		else:
-			self.configsSave()
+			configfile.save()
 			getname = source[1].rstrip()
-			device_path = self['config'].list[0][1].getText()
+			device_path = config.backupflashe.device_path.value
 			self.session.open(doConvert, device_path, getname)
 
 	def red(self,):
@@ -516,26 +597,9 @@ class full_main(Screen, ConfigListScreen):
 	def flashOnline(self,):
 		configfile.save()
 		from Plugins.Extensions.backupflashe.tools.flashonline import teamsScreen
-		device_path = self['config'].list[0][1].getText()
+		device_path = config.backupflashe.device_path.value
 		# logdata('selected device path', device_path)
 		self.session.open(teamsScreen, device_path)
-
-	def configsSave(self):
-		for x in self['config'].list:
-			x[1].save()
-		configfile.save()
-
-	def showMenuoptions(self):
-		self.session.open(SelectionScreen)
-		#choices = []
-		#self.list = []
-		#choices.append(("Install/Reinstgall backupflash version %s" % self.new_version, "Install"))
-		#self.session.openWithCallback(self.choicesback, ChoiceBox, _('select task'), choices)
-
-	def choicesback(self, select):
-		if select:
-			if select[1] == "Install":
-				self.install(True)
 
 	def checkupdates(self):
 		try:
@@ -585,6 +649,91 @@ class full_main(Screen, ConfigListScreen):
 
 	def myCallback(self, result = None):
 		return
+
+
+class Setup_Menu(Screen, ConfigListScreen):
+
+	def __init__(self, session):
+		Screen.__init__(self, session)
+		self.list = []
+		ConfigListScreen.__init__(self, self.list)
+		self.skin = SKIN_Setup_Menu
+		self["key_green"] = Label(_("Save"))
+		self["key_red"] = Label(_("Exit"))
+		self["lab1"] = Label("")
+		self["help"] = StaticText()
+		self["actions"] = ActionMap(["WizardActions", "ColorActions", "MenuActions"], {
+			"green": self.save,
+			"red": self.close,
+			"back": self.close,
+			"menu": self.showMenuoptions,
+		})
+		self.timer = eTimer()
+		try:
+			self.timer.callback.append(self.updateList)
+		except:
+			self.timer_conn = self.timer.timeout.connect(self.updateList)
+		self.timer.start(6, 1)
+		self.onLayoutFinish.append(self.layoutFinished)
+
+	def layoutFinished(self):
+		self["config"].onSelectionChanged.append(self.updateHelp)
+
+	def updateList(self):
+		self["lab1"].setText(_("# Press Menu ..\nTo open option of show Plugin in any where you like"))
+		config.backupflashe.device_path = ConfigSelection(choices=mounted_devices)
+		self.createSetup()
+
+	def createSetup(self):
+		self.list = []
+		self.list.append(getConfigListEntry(('Path to store Full Backup'), config.backupflashe.device_path, _(
+			"This option to set the path of Backup/Flash directory")))
+		self.list.append(getConfigListEntry(('Enable/Disable online update'), config.backupflashe.update, _(
+			"This option to Enable or Disable check of online update")))
+		self.list.append(getConfigListEntry(('Select Format to Compress BackUp'), config.backupflashe.image_format, _(
+			"This option to select the type of compress option")))
+		if config.backupflashe.image_format.value == "xz":
+			self.list.append(getConfigListEntry(("xz")+" "+_("Compression")+" "+_("(1-6)"), config.backupflashe.xzcompression, _(
+				"This option to set stringe value of Compress image (The higher the value, the longer the operation time, but the smaller the backup size)")))
+		#elif config.backupflashe.image_format.value == "bz2":
+		#	self.list.append(getConfigListEntry(("bz2")+" "+_("Compression")+" "+_("(1-6)"), config.backupflashe.bz2compression, _(
+		#		"This option to set stringe value of Compress image (The higher the value, the longer the operation time, but the smaller the backup size)")))
+		else:
+			pass
+		self.list.append(getConfigListEntry(('Compression image as Zip'), config.backupflashe.Zipcompression, _(
+				"This option to Compression image inside Zip file")))
+		self.list.append(getConfigListEntry(('Enable shutdown box after backup'), config.backupflashe.shutdown, _(
+			"This option to Enable or Disable Shutdown Box After Finished Backup")))
+		# if (os.path.exists("/.bainfo") or os.path.exists("/.lfinfo") or cmd.find(rootfs) == -1):
+		#    self.list.append(getConfigListEntry(('Allow to flash image from External image'), config.backupflashe.flashAllow, _("Warning: the process will delete the image if you are on an external flash\n(it is not recommended to Enable it)\nSafy way to Flash new image Please go to internal flash")))
+		self.list.append(getConfigListEntry(('Clean image from BA symlink before backup'), config.backupflashe.cleanba, _(
+			"This option for remove BarryAllen symlink from image Before Start Backup")))
+		self['config'].list = self.list
+		self['config'].l.setList(self.list)
+
+	def updateHelp(self):
+		cur = self["config"].getCurrent()
+		if cur:
+			self["help"].text = cur[2]
+
+	def save(self):
+		for x in self['config'].list:
+			x[1].save()
+		configfile.save()
+		self.close()
+
+	def showMenuoptions(self):
+		self.session.open(SelectionScreen)
+		#choices = []
+		#self.list = []
+		#choices.append(("Install/Reinstgall backupflash version %s" % self.new_version, "Install"))
+		#self.session.openWithCallback(self.choicesback, ChoiceBox, _('select task'), choices)
+
+	def choicesback(self, select):
+		if select:
+			if select[1] == "Install":
+				self.install(True)
+
 
 def main_menu(menuid, **kwargs):
 	if menuid == "mainmenu" and config.backupflashe.showplugin.value:
