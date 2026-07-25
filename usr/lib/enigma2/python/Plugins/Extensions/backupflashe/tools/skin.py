@@ -22,8 +22,8 @@ if sz_w == 1280 :
   <widget name="lab1" position="30,325" size="840,30" font="Regular;24" valign="center" foregroundColor="#00ffc435" backgroundColor="#16000000" transparent="1"/>
   <ePixmap pixmap="{0}/buttons/red35x35.png" position="35,362" size="35,35" alphatest="blend"/>
   <ePixmap pixmap="{0}/buttons/green35x35.png" position="242,362" size="35,35" alphatest="blend"/>
-  <widget name="key_red" position="70,360" zPosition="1" size="140,40" font="Regular;20" halign="center" valign="center" foregroundColor="#00ffffff" backgroundColor="#ff1f771f" transparent="1"/>
-  <widget name="key_green" position="280,360" zPosition="1" size="140,40" font="Regular;20" halign="center" valign="center" foregroundColor="#00ffffff" backgroundColor="#ff9f1313" transparent="1"/>
+  <widget name="key_red" position="70,360" zPosition="1" size="90,40" font="Regular;20" halign="center" valign="center" foregroundColor="#00ffffff" backgroundColor="#ff1f771f" transparent="1"/>
+  <widget name="key_green" position="280,360" zPosition="1" size="90,40" font="Regular;20" halign="center" valign="center" foregroundColor="#00ffffff" backgroundColor="#ff9f1313" transparent="1"/>
 </screen>
 """.format(resolveFilename(SCOPE_PLUGINS, 'Extensions/backupflashe'))
 else:
@@ -36,8 +36,8 @@ else:
   <widget name="lab1" position="25,715" size="1397,115" font="Regular;30" valign="center" foregroundColor="#00ffc435" backgroundColor="#16000000" transparent="1" zPosition="1"/>
   <ePixmap pixmap="{0}/buttons/red35x35.png" position="25,846" size="35,35" alphatest="blend"/>
   <ePixmap pixmap="{0}/buttons/green35x35.png" position="385,846" size="35,35" alphatest="blend"/>
-  <widget name="key_red" position="68,843" zPosition="1" size="300,40" font="Regular;30" halign="center" valign="center" foregroundColor="#00ffffff" backgroundColor="#ff9f1313" transparent="1"/>
-  <widget name="key_green" position="433,843" zPosition="1" size="300,40" font="Regular;30" halign="center" valign="center" foregroundColor="#00ffffff" backgroundColor="#ff9f1313" transparent="1"/>
+  <widget name="key_red" position="68,843" zPosition="1" size="180,40" font="Regular;30" halign="center" valign="center" foregroundColor="#00ffffff" backgroundColor="#ff9f1313" transparent="1"/>
+  <widget name="key_green" position="433,843" zPosition="1" size="180,40" font="Regular;30" halign="center" valign="center" foregroundColor="#00ffffff" backgroundColor="#ff9f1313" transparent="1"/>
 </screen>
 """.format(resolveFilename(SCOPE_PLUGINS, 'Extensions/backupflashe'))
 	else:
@@ -49,8 +49,8 @@ else:
   <widget name="lab1" position="25,715" size="1397,115" font="Regular;30" valign="center" foregroundColor="#00ffc435" backgroundColor="#16000000" transparent="1" zPosition="1"/>
   <ePixmap pixmap="{0}/buttons/red35x35.png" position="25,846" size="35,35" alphatest="blend"/>
   <ePixmap pixmap="{0}/buttons/green35x35.png" position="385,846" size="35,35" alphatest="blend"/>
-  <widget name="key_red" position="68,843" zPosition="1" size="300,40" font="Regular;30" halign="center" valign="center" foregroundColor="#00ffffff" backgroundColor="#ff9f1313" transparent="1"/>
-  <widget name="key_green" position="433,843" zPosition="1" size="300,40" font="Regular;30" halign="center" valign="center" foregroundColor="#00ffffff" backgroundColor="#ff9f1313" transparent="1"/>
+  <widget name="key_red" position="68,843" zPosition="1" size="180,40" font="Regular;30" halign="center" valign="center" foregroundColor="#00ffffff" backgroundColor="#ff9f1313" transparent="1"/>
+  <widget name="key_green" position="433,843" zPosition="1" size="180,40" font="Regular;30" halign="center" valign="center" foregroundColor="#00ffffff" backgroundColor="#ff9f1313" transparent="1"/>
 </screen>
 """.format(resolveFilename(SCOPE_PLUGINS, 'Extensions/backupflashe'))
 
