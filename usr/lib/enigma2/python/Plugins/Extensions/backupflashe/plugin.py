@@ -249,7 +249,7 @@ class SelectionScreen(Screen, ConfigListScreen):
 			self.close(True)
 
 
-class full_main(Screen):
+class Menu_Main(Screen):
 	def __init__(self, session):
 		global rootfs
 		self.session = session
@@ -266,7 +266,7 @@ class full_main(Screen):
 		sz_w = getDesktop(0).size().width()
 		skin_str = ""
 		if sz_w == 1280:
-			skin_str = '<screen name="full_main" position="0,0" size="1280,720" flags="wfNoBorder" backgroundColor="#16000000">\n'
+			skin_str = '<screen name="Menu_Main" position="0,0" size="1280,720" flags="wfNoBorder" backgroundColor="#16000000">\n'
 			skin_str += '<widget name="title_label" position="30,15" size="600,45" font="Regular;32" halign="left" valign="center" foregroundColor="#ffffff" backgroundColor="#16000000" transparent="1"/>\n'
 			skin_str += '<widget source="global.CurrentTime" render="Label" position="850,10" size="400,45" font="Regular;42" halign="right" valign="center" foregroundColor="#ffffff" backgroundColor="#16000000" transparent="1">\n'
 			skin_str += '  <convert type="ClockToText">Format:%H:%M</convert>\n'
@@ -287,7 +287,7 @@ class full_main(Screen):
 				skin_str += '<widget name="label_%s" position="%s,%s" size="180,40" font="Regular;24" halign="center" valign="center" foregroundColor="#ffffff" backgroundColor="#00000000" zPosition="3" transparent="1"/>\n' % (i, x_pos-25, y_pos+135)
 			skin_str += '</screen>'
 		else:
-			skin_str = '<screen name="full_main" position="0,0" size="1920,1080" flags="wfNoBorder" backgroundColor="#16000000">\n'
+			skin_str = '<screen name="Menu_Main" position="0,0" size="1920,1080" flags="wfNoBorder" backgroundColor="#16000000">\n'
 			skin_str += '<widget name="title_label" position="50,20" size="800,60" font="Regular;45" halign="left" valign="center" foregroundColor="#ffffff" backgroundColor="#16000000" transparent="1"/>\n'
 			skin_str += '<widget source="global.CurrentTime" render="Label" position="1270,15" size="600,65" font="Regular;60" halign="right" valign="center" foregroundColor="#ffffff" backgroundColor="#16000000" transparent="1">\n'
 			skin_str += '  <convert type="ClockToText">Format:%H:%M</convert>\n'
@@ -756,7 +756,7 @@ def main_menu(menuid, **kwargs):
 def main(session, *args, **kwargs):
 	# mounted_devices = getmDevices()
 	# if len(mounted_devices) > 0:
-	session.open(full_main)
+	session.open(Menu_Main)
 	# else:
 	#        session.open(MessageBox, "Sorry no device mounted found.\nPlease check your media in devices manager.", MessageBox.TYPE_ERROR,timeout=8)
 
