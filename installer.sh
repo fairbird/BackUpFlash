@@ -1,8 +1,8 @@
 #!/bin/bash
 ##setup command=wget https://raw.githubusercontent.com/fairbird/BackUpFlash/main/installer.sh -O - | /bin/sh
 
-version=12.6
-description=What is NEW :\n- Move to version 8.1.1 for OpenDroid images
+version=12.7
+description=What is NEW :\n- Redesigning the plugin interface
 echo ""
 if [ ! -d '/usr/lib64' ]; then
 	LIBPATH='/usr/lib'
