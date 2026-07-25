@@ -14,55 +14,43 @@ def DreamOS():
 #### main menu screen
 sz_w = getDesktop(0).size().width()
 if sz_w == 1280 :
-	SKIN_full_main = """
-<screen name="full_main" position="center,center" size="902,400" title="Flash And Full Backup" backgroundColor="#16000000" >
+	SKIN_Setup_Menu = """
+<screen name="Setup_Menu" position="center,center" size="902,400" title="Flash And Full Backup" backgroundColor="#16000000" >
   <widget source="Title" render="Label" font="Regular;35" foregroundColor="#00bab329" position="30,5" size="838,40" transparent="1"/>
   <widget name="config" position="30,48" size="840,186" scrollbarMode="showOnDemand" foregroundColor="#00ffffff" backgroundColor="#16000000"/>
   <widget source="help" render="Label" position="30,239" size="840,79" font="Regular;25" foregroundColor="#00ff2525" backgroundColor="#16000000" valign="center" transparent="1" zPosition="1"/>
   <widget name="lab1" position="30,325" size="840,30" font="Regular;24" valign="center" foregroundColor="#00ffc435" backgroundColor="#16000000" transparent="1"/>
   <ePixmap pixmap="{0}/buttons/red35x35.png" position="35,362" size="35,35" alphatest="blend"/>
   <ePixmap pixmap="{0}/buttons/green35x35.png" position="242,362" size="35,35" alphatest="blend"/>
-  <ePixmap pixmap="{0}/buttons/yellow35x35.png" position="455,362" size="35,35" alphatest="blend"/>
-  <ePixmap pixmap="{0}/buttons/blue35x35.png" position="665,362" size="35,35" alphatest="blend"/>
-  <widget name="key_red" position="70,360" zPosition="1" size="140,40" font="Regular;20" halign="center" valign="center" foregroundColor="#00ffffff" backgroundColor="#ff1f771f" transparent="1"/>
-  <widget name="key_green" position="280,360" zPosition="1" size="140,40" font="Regular;20" halign="center" valign="center" foregroundColor="#00ffffff" backgroundColor="#ff9f1313" transparent="1"/>
-  <widget name="key_yellow" position="492,360" zPosition="1" size="140,40" font="Regular;20" halign="center" valign="center" foregroundColor="#00ffffff" backgroundColor="#ff9f1313" transparent="1"/>
-  <widget name="key_blue" position="700,360" zPosition="1" size="140,40" font="Regular;20" halign="center" valign="center" foregroundColor="#00ffffff" backgroundColor="#ff1f771f" transparent="1"/>
+  <widget name="key_red" position="70,360" zPosition="1" size="90,40" font="Regular;20" halign="center" valign="center" foregroundColor="#00ffffff" backgroundColor="#ff1f771f" transparent="1"/>
+  <widget name="key_green" position="280,360" zPosition="1" size="90,40" font="Regular;20" halign="center" valign="center" foregroundColor="#00ffffff" backgroundColor="#ff9f1313" transparent="1"/>
 </screen>
 """.format(resolveFilename(SCOPE_PLUGINS, 'Extensions/backupflashe'))
 else:
 	if DreamOS():
-		SKIN_full_main = """
-<screen name="full_main" position="center,center" size="1442,888" title="Flash And Full Backup" backgroundColor="#16000000" >
+		SKIN_Setup_Menu = """
+<screen name="Setup_Menu" position="center,center" size="1442,888" title="Flash And Full Backup" backgroundColor="#16000000" >
   <widget source="Title" render="Label" font="Regular;35" foregroundColor="#00bab329" position="25,5" size="1408,85" transparent="1"/>
   <widget name="config" position="25,55" size="1406,460" scrollbarMode="showOnDemand" foregroundColor="#00ffffff" backgroundColor="#16000000" zPosition="1"/>
   <widget source="help" render="Label" position="25,560" size="1397,150" font="Regular;30" foregroundColor="#00ff2525" backgroundColor="#16000000" valign="center" transparent="1" zPosition="1"/>
   <widget name="lab1" position="25,715" size="1397,115" font="Regular;30" valign="center" foregroundColor="#00ffc435" backgroundColor="#16000000" transparent="1" zPosition="1"/>
   <ePixmap pixmap="{0}/buttons/red35x35.png" position="25,846" size="35,35" alphatest="blend"/>
   <ePixmap pixmap="{0}/buttons/green35x35.png" position="385,846" size="35,35" alphatest="blend"/>
-  <ePixmap pixmap="{0}/buttons/yellow35x35.png" position="744,846" size="35,35" alphatest="blend"/>
-  <ePixmap pixmap="{0}/buttons/blue35x35.png" position="1104,846" size="35,35" alphatest="blend"/>
-  <widget name="key_red" position="68,843" zPosition="1" size="300,40" font="Regular;30" halign="center" valign="center" foregroundColor="#00ffffff" backgroundColor="#ff9f1313" transparent="1"/>
-  <widget name="key_green" position="433,843" zPosition="1" size="300,40" font="Regular;30" halign="center" valign="center" foregroundColor="#00ffffff" backgroundColor="#ff9f1313" transparent="1"/>
-  <widget name="key_yellow" position="791,843" zPosition="1" size="300,40" font="Regular;30" halign="center" valign="center" foregroundColor="#00ffffff" backgroundColor="#ff9f1313" transparent="1"/>
-  <widget name="key_blue" position="1149,843" zPosition="1" size="300,40" font="Regular;30" halign="center" valign="center" foregroundColor="#00ffffff" backgroundColor="#ff1f771f" transparent="1"/>
+  <widget name="key_red" position="68,843" zPosition="1" size="180,40" font="Regular;30" halign="center" valign="center" foregroundColor="#00ffffff" backgroundColor="#ff9f1313" transparent="1"/>
+  <widget name="key_green" position="433,843" zPosition="1" size="180,40" font="Regular;30" halign="center" valign="center" foregroundColor="#00ffffff" backgroundColor="#ff9f1313" transparent="1"/>
 </screen>
 """.format(resolveFilename(SCOPE_PLUGINS, 'Extensions/backupflashe'))
 	else:
-		SKIN_full_main = """
-<screen name="full_main" position="center,center" size="1442,888" title="Flash And Full Backup" backgroundColor="#16000000" >
+		SKIN_Setup_Menu = """
+<screen name="Setup_Menu" position="center,center" size="1442,888" title="Flash And Full Backup" backgroundColor="#16000000" >
   <widget source="Title" render="Label" font="Regular;35" foregroundColor="#00bab329" position="25,5" size="1408,85" transparent="1"/>
-  <widget name="config" position="25,55" size="1406,460" font="Regular;32" secondfont="Regular;32" itemHeight="40" scrollbarMode="showOnDemand" foregroundColor="#00ffffff" backgroundColor="#16000000" zPosition="1"/>
+  <widget name="config" position="25,55" size="1406,460" font="Regular;32" valueFont="Regular;32" itemHeight="40" scrollbarMode="showOnDemand" foregroundColor="#00ffffff" backgroundColor="#16000000" zPosition="1"/>
   <widget source="help" render="Label" position="25,560" size="1397,150" font="Regular;30" foregroundColor="#00ff2525" backgroundColor="#16000000" valign="center" transparent="1" zPosition="1"/>
   <widget name="lab1" position="25,715" size="1397,115" font="Regular;30" valign="center" foregroundColor="#00ffc435" backgroundColor="#16000000" transparent="1" zPosition="1"/>
   <ePixmap pixmap="{0}/buttons/red35x35.png" position="25,846" size="35,35" alphatest="blend"/>
   <ePixmap pixmap="{0}/buttons/green35x35.png" position="385,846" size="35,35" alphatest="blend"/>
-  <ePixmap pixmap="{0}/buttons/yellow35x35.png" position="744,846" size="35,35" alphatest="blend"/>
-  <ePixmap pixmap="{0}/buttons/blue35x35.png" position="1104,846" size="35,35" alphatest="blend"/>
-  <widget name="key_red" position="68,843" zPosition="1" size="300,40" font="Regular;30" halign="center" valign="center" foregroundColor="#00ffffff" backgroundColor="#ff9f1313" transparent="1"/>
-  <widget name="key_green" position="433,843" zPosition="1" size="300,40" font="Regular;30" halign="center" valign="center" foregroundColor="#00ffffff" backgroundColor="#ff9f1313" transparent="1"/>
-  <widget name="key_yellow" position="791,843" zPosition="1" size="300,40" font="Regular;30" halign="center" valign="center" foregroundColor="#00ffffff" backgroundColor="#ff9f1313" transparent="1"/>
-  <widget name="key_blue" position="1149,843" zPosition="1" size="300,40" font="Regular;30" halign="center" valign="center" foregroundColor="#00ffffff" backgroundColor="#ff1f771f" transparent="1"/>
+  <widget name="key_red" position="68,843" zPosition="1" size="180,40" font="Regular;30" halign="center" valign="center" foregroundColor="#00ffffff" backgroundColor="#ff9f1313" transparent="1"/>
+  <widget name="key_green" position="433,843" zPosition="1" size="180,40" font="Regular;30" halign="center" valign="center" foregroundColor="#00ffffff" backgroundColor="#ff9f1313" transparent="1"/>
 </screen>
 """.format(resolveFilename(SCOPE_PLUGINS, 'Extensions/backupflashe'))
 
