@@ -78,7 +78,7 @@ if grep -qs "Package: $CRYPT" "$STATUS" && \
 	grep -qs "Package: $xz" "$STATUS" && \
 	grep -qs "Package: $pigz" "$STATUS" && \
 	grep -qs "Package: $flashscripts" "$STATUS" && \
-	grep -qs "Package: $zip" "$STATUS" || grep -qs "Package: $p7zip" "$STATUS"; then
+	( grep -qs "Package: $zip" "$STATUS" || grep -qs "Package: $p7zip" "$STATUS" ); then
 	echo ""
 	echo "All depend packages Installed"
 else
@@ -87,49 +87,49 @@ else
 		echo ""
 	else
 		echo "Need to install $CRYPT"
-		opkg install $CRYPT update >/dev/null 2>&1
+		opkg install $CRYPT >/dev/null 2>&1
 	fi
 	if grep -qs "Package: $REQUESTS" cat $STATUS ; then
 		echo ""
 	else
 		echo "Need to install $REQUESTS"
-		opkg install $REQUESTS update >/dev/null 2>&1
+		opkg install $REQUESTS >/dev/null 2>&1
 	fi
 	if grep -qs "Package: $wget" cat $STATUS ; then
 		echo ""
 	else
 		echo "Need to install $wget"
-		opkg install $wget update >/dev/null 2>&1
+		opkg install $wget >/dev/null 2>&1
 	fi
 	if grep -qs "Package: $pigz" cat $STATUS ; then
 		echo ""
 	else
 		echo "Need to install $pigz"
-		opkg install $pigz update >/dev/null 2>&1
+		opkg install $pigz >/dev/null 2>&1
 	fi
 	if grep -qs "Package: $p7zip" cat $STATUS ; then
 		echo ""
 	else
 		echo "Need to install $p7zip"
-		opkg install $p7zip update >/dev/null 2>&1
+		opkg install $p7zip >/dev/null 2>&1
 	fi
  	if grep -qs "Package: $zip" cat $STATUS ; then
 		echo ""
 	else
 		echo "Need to install $zip"
-		opkg install $zip update >/dev/null 2>&1
+		opkg install $zip >/dev/null 2>&1
 	fi
-	if grep -qs "Package: $xz" cat $STATUS ; then
+	if grep -qs "Package: $xz" "$STATUS" ; then
 		echo ""
 	else
 		echo "Need to install $xz"
-		opkg install $xz update >/dev/null 2>&1
+		opkg install $xz >/dev/null 2>&1
 	fi
 	if grep -qs "Package: $flashscripts" cat $STATUS ; then
 		echo ""
 	else
 		echo "Need to install $flashscripts"
-		opkg install $flashscripts update >/dev/null 2>&1
+		opkg install $flashscripts >/dev/null 2>&1
 	fi
 fi
 # Make more check depend packges
@@ -161,6 +161,12 @@ if grep -q $CRYPT $STATUS ; then
      echo ""
 else
      echo "Missing ($CRYPT) package"
+exit 1
+fi
+if grep -q "xz" $STATUS ; then
+     echo ""
+else
+     echo "Missing (xz) package"
 exit 1
 fi
 
