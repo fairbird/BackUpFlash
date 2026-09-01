@@ -20,7 +20,7 @@ from .bftools import logdata, dellog, copylog, getboxtype
 boxtype = getboxtype()
 		
 cancelBackup = "/tmp/.cancelBackup"
-LOG = '/tmp/backupflash.scr'
+LOG = '/tmp/backupflash.log'
 SCRIPT = '/tmp/backupflash_Convert.sh'
 
 
@@ -89,7 +89,7 @@ class doConvert(Screen):
 			if os.path.exists(BUILDFOLDER):
 				os.system("rm -f %s" % BUILDFOLDER)
 			mytitle = _('Convert image')
-			cmdlist.append('exec > /tmp/backupflash.scr')
+			cmdlist.append('exec > %s' % LOG)
 			cmdlist.append('Convert (%s) on [%s]\n\n\n' % (self.getname, self.device_path))
 			if self.checkonetwoimage():
 				os.system('echo "#!/bin/bash\n" > %s' % SCRIPT)
@@ -114,7 +114,7 @@ class doConvert(Screen):
 			os.system('echo "mv %s/rootfs.tar.bz2 %s/%s" >> %s' % (BUILDFOLDER, BUILDFOLDER, boxtype, SCRIPT))
 			os.system('echo "chmod 777 -R %s/%s/*" >> %s' % (BUILDFOLDER, boxtype, SCRIPT))
 			os.system('echo "7za a -r %s.zip %s/%s" >> %s' % (IMAGENAME, BUILDFOLDER, boxtype, SCRIPT))
-			os.system('echo "rm -r %s" >> %s' % (BUILDFOLDER, SCRIPT))
+			os.system('echo "rmdir %s" >> %s' % (BUILDFOLDER, SCRIPT))
 			#os.system('echo "rm -f %s" >> %s' % (SCRIPT, SCRIPT))
 			os.system('echo "\n" >> %s' % SCRIPT)
 			os.system('echo "exit 0" >> %s' % SCRIPT)
@@ -142,7 +142,7 @@ class doConvert(Screen):
 			try:
 				os.remove(cancelBackup)
 				if os.path.exists(BUILDFOLDER):
-					os.system("rm -r %s" % BUILDFOLDER)
+					os.system("rmdir %s" % BUILDFOLDER)
 				if os.path.exists(IMAGEZIPNAME):
 					os.remove(IMAGEZIPNAME)
 				if os.path.exists(SCRIPT):
