@@ -7,7 +7,7 @@ from .compat import compat_Request, compat_urlopen, PY3
 from Components.About import about
 from Tools.Directories import fileExists, copyfile, createDir, resolveFilename, SCOPE_PLUGINS
 
-import os, traceback, re, json, datetime, ssl, base64
+import os, sys, traceback, re, json, datetime, ssl, base64
 
 logfile="/tmp/backupflash.log"
 backupflash_script="/tmp/backupflash.sh"
@@ -144,6 +144,23 @@ def get_package():
 	return (XZ_, PIGZ_, ZIP_, WGET_)  # Always return a tuple
 
 
+def getFreeSpaceMB(path):
+	try:
+		st = os.statvfs(path)
+		free_mb = (st.f_bavail * st.f_frsize) / float(1024 * 1024)
+		return free_mb
+	except:
+		trace_error()
+		return 0
+
+
+def formatFreeSpace(free_mb):
+	if free_mb >= 1000:
+		return "%.2f GB" % (free_mb / 1024.0)
+	else:
+		return "%.0f MB" % free_mb
+		
+		
 def get_images(url,regx):
 	images = []
 	logdata("images_url",url)

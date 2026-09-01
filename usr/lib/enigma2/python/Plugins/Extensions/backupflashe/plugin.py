@@ -526,6 +526,10 @@ class Menu_Main(Screen):
 				try:
 					image_name = target
 					device_path = config.backupflashe.device_path.value
+					free_mb = getFreeSpaceMB(device_path)
+					if free_mb < 400:
+						self.session.open(MessageBox, _("The selected path contains only (%s) free space\n\nThe required space must be more than (400 MB)") % formatFreeSpace(free_mb), MessageBox.TYPE_ERROR, timeout=8)
+						return
 					image_compression_value = imagecompressionvalue
 					self.session.open(doBackUpInternal, image_name, device_path, image_compression_value)
 				except:
@@ -564,6 +568,10 @@ class Menu_Main(Screen):
 					image_name = target
 					image_path = self.image_path
 					device_path = self.device_path
+					free_mb = getFreeSpaceMB(device_path)
+					if free_mb < 400:
+						self.session.open(MessageBox, _("The selected path contains only (%s) free space\n\nThe required space must be more than (400 MB)") % formatFreeSpace(free_mb), MessageBox.TYPE_ERROR, timeout=8)
+						return
 					image_compression_value = imagecompressionvalue
 					self.session.open(doBackUpExternal, image_name, image_path,device_path, image_compression_value)
 				except:
@@ -591,6 +599,10 @@ class Menu_Main(Screen):
 			configfile.save()
 			getname = source[1].rstrip()
 			device_path = config.backupflashe.device_path.value
+			free_mb = getFreeSpaceMB(device_path)
+			if free_mb < 400:
+				self.session.open(MessageBox, _("The selected path contains only (%s) free space\n\nThe required space must be more than (400 MB)") % formatFreeSpace(free_mb), MessageBox.TYPE_ERROR, timeout=8)
+				return
 			self.session.open(doConvert, device_path, getname)
 
 	def red(self,):
