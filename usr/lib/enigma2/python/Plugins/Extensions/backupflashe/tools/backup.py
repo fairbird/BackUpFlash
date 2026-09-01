@@ -54,7 +54,7 @@ class doBackUpInternal(Screen):
 		if fileExists("/tmp/root"):
 			os.system("umount /tmp/root >> %s 2>&1" % LOG)
 		if not fileExists("/tmp/root/usr"):
-			os.system("rmdir /tmp/root >> %s 2>&1" % LOG)
+			os.system("find /tmp/root -mindepth 1 -maxdepth 1 ! -name mnt ! -name media -exec rm -rf {} + >> %s 2>&1" % LOG)
 		if fileExists("/tmp/root/usr"):
 			self.session.open(MessageBox, _('The folder (/tmp/root) is still mounted from a previous session and cannot be removed.\nPlease do a full restart for the receiver and try again.'), MessageBox.TYPE_ERROR, timeout=8)
 			self.close()
@@ -115,7 +115,7 @@ class doBackUpInternal(Screen):
 			cmdlist.append('exec >> %s 2>&1' % LOG)
 			cmdlist.append('Backup (%s) on [%s]\n\n\n ' % (IMAGENAME, self.device_path))
 #			cmdlist.append('umount /tmp/root >> %s 2>&1' % LOG)
-#			cmdlist.append('rmdir /tmp/root >> %s 2>&1' % LOG)
+#			os.system("find /tmp/root -mindepth 1 -maxdepth 1 ! -name mnt ! -name media -exec rm -rf {} + >> %s 2>&1" % LOG)
 			cmdlist.append('mkdir /tmp/root >> %s 2>&1' % LOG)
 			cmdlist.append('mount -o bind / /tmp/root >> %s 2>&1' % LOG)
 			if config.backupflashe.cleanba.value:
@@ -157,7 +157,7 @@ class doBackUpInternal(Screen):
 	def dofinish(self):
 		os.system('umount /tmp/root >> %s 2>&1' % LOG)
 		if not fileExists("/tmp/root/usr"):
-			os.system("rmdir /tmp/root >> %s 2>&1" % LOG)
+			os.system("find /tmp/root -mindepth 1 -maxdepth 1 ! -name mnt ! -name media -exec rm -rf {} + >> %s 2>&1" % LOG)
 		NOW = datetime.datetime.now()
 		logdata("Finished Time", NOW.strftime('%H:%M')) ## Print Finished time to log file
 		IMAGENAME = ""
@@ -195,7 +195,7 @@ class doBackUpInternal(Screen):
 				pass
 			os.system('umount -l /tmp/root >> %s 2>&1' % LOG)
 			if not fileExists("/tmp/root/usr"):
-				os.system("rmdir /tmp/root >> %s 2>&1" % LOG)
+				os.system("find /tmp/root -mindepth 1 -maxdepth 1 ! -name mnt ! -name media -exec rm -rf {} + >> %s 2>&1" % LOG)
 			logdata(".\n.\nCancelled Backup !!!!!!")
 			self.close()
 		else:
@@ -251,7 +251,7 @@ class doBackUpExternal(Screen):
 		if fileExists("/tmp/root"):
 			os.system("umount /tmp/root >> %s 2>&1" % LOG)
 		if not fileExists("/tmp/root/usr"):
-			os.system("rmdir /tmp/root >> %s 2>&1" % LOG)
+			os.system("find /tmp/root -mindepth 1 -maxdepth 1 ! -name mnt ! -name media -exec rm -rf {} + >> %s 2>&1" % LOG)
 		if fileExists("/tmp/root/usr"):
 			self.session.open(MessageBox, _('The folder (/tmp/root) is still mounted from a previous session and cannot be removed.\nPlease do a full restart for the receiver and try again.'), MessageBox.TYPE_ERROR, timeout=8)
 			self.close()
@@ -313,7 +313,7 @@ class doBackUpExternal(Screen):
 			cmdlist.append('exec >> %s 2>&1' % LOG)
 			cmdlist.append('Backup (%s) on [%s]\n\n\n ' % (IMAGENAME, self.device_path))
 #			cmdlist.append('umount /tmp/root >> %s 2>&1' % LOG)
-#			cmdlist.append('rmdir /tmp/root >> %s 2>&1' % LOG)
+#			os.system("find /tmp/root -mindepth 1 -maxdepth 1 ! -name mnt ! -name media -exec rm -rf {} + >> %s 2>&1" % LOG)
 			cmdlist.append('mkdir /tmp/root >> %s 2>&1' % LOG)
 			cmdlist.append('mount -o bind %s/ /tmp/root >> %s 2>&1' % (self.image_path, LOG))
 			if config.backupflashe.cleanba.value:
@@ -355,7 +355,7 @@ class doBackUpExternal(Screen):
 	def dofinish(self):
 		os.system('umount /tmp/root >> %s 2>&1' % LOG)
 		if not fileExists("/tmp/root/usr"):
-			os.system("rmdir /tmp/root >> %s 2>&1" % LOG)
+			os.system("find /tmp/root -mindepth 1 -maxdepth 1 ! -name mnt ! -name media -exec rm -rf {} + >> %s 2>&1" % LOG)
 		NOW = datetime.datetime.now()
 		logdata("Finished Time", NOW.strftime('%H:%M')) ## Print Finished time to log file
 		IMAGENAME = ""
@@ -393,7 +393,7 @@ class doBackUpExternal(Screen):
 				pass
 			os.system('umount -l /tmp/root >> %s 2>&1' % LOG)
 			if not fileExists("/tmp/root/usr"):
-				os.system("rmdir /tmp/root >> %s 2>&1" % LOG)
+				os.system("find /tmp/root -mindepth 1 -maxdepth 1 ! -name mnt ! -name media -exec rm -rf {} + >> %s 2>&1" % LOG)
 			logdata(".\n.\nCancelled Backup !!!!!!")
 			self.close()
 		else:
