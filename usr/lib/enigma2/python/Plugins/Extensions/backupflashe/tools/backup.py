@@ -53,7 +53,7 @@ class doBackUpInternal(Screen):
 	def doBackUpjob(self):
 		if fileExists("/tmp/root"):
 			os.system("umount /tmp/root >> %s 2>&1" % LOG)
-		if not fileExists("/tmp/root/usr"):
+		if not fileExists("/tmp/root/usr") and not os.path.ismount("/tmp/root"):
 			os.system("find /tmp/root -mindepth 1 -maxdepth 1 ! -name mnt ! -name media -exec rm -rf {} + >> %s 2>&1" % LOG)
 		if fileExists("/tmp/root/usr"):
 			self.session.open(MessageBox, _('The folder (/tmp/root) is still mounted from a previous session and cannot be removed.\nPlease do a full restart for the receiver and try again.'), MessageBox.TYPE_ERROR, timeout=8)
@@ -156,7 +156,7 @@ class doBackUpInternal(Screen):
 
 	def dofinish(self):
 		os.system('umount /tmp/root >> %s 2>&1' % LOG)
-		if not fileExists("/tmp/root/usr"):
+		if not fileExists("/tmp/root/usr") and not os.path.ismount("/tmp/root"):
 			os.system("find /tmp/root -mindepth 1 -maxdepth 1 ! -name mnt ! -name media -exec rm -rf {} + >> %s 2>&1" % LOG)
 		NOW = datetime.datetime.now()
 		logdata("Finished Time", NOW.strftime('%H:%M')) ## Print Finished time to log file
@@ -194,7 +194,7 @@ class doBackUpInternal(Screen):
 			except:
 				pass
 			os.system('umount -l /tmp/root >> %s 2>&1' % LOG)
-			if not fileExists("/tmp/root/usr"):
+			if not fileExists("/tmp/root/usr") and not os.path.ismount("/tmp/root"):
 				os.system("find /tmp/root -mindepth 1 -maxdepth 1 ! -name mnt ! -name media -exec rm -rf {} + >> %s 2>&1" % LOG)
 			logdata(".\n.\nCancelled Backup !!!!!!")
 			self.close()
@@ -250,7 +250,7 @@ class doBackUpExternal(Screen):
 	def doBackUpjob(self):
 		if fileExists("/tmp/root"):
 			os.system("umount /tmp/root >> %s 2>&1" % LOG)
-		if not fileExists("/tmp/root/usr"):
+		if not fileExists("/tmp/root/usr") and not os.path.ismount("/tmp/root"):
 			os.system("find /tmp/root -mindepth 1 -maxdepth 1 ! -name mnt ! -name media -exec rm -rf {} + >> %s 2>&1" % LOG)
 		if fileExists("/tmp/root/usr"):
 			self.session.open(MessageBox, _('The folder (/tmp/root) is still mounted from a previous session and cannot be removed.\nPlease do a full restart for the receiver and try again.'), MessageBox.TYPE_ERROR, timeout=8)
@@ -354,7 +354,7 @@ class doBackUpExternal(Screen):
 
 	def dofinish(self):
 		os.system('umount /tmp/root >> %s 2>&1' % LOG)
-		if not fileExists("/tmp/root/usr"):
+		if not fileExists("/tmp/root/usr") and not os.path.ismount("/tmp/root"):
 			os.system("find /tmp/root -mindepth 1 -maxdepth 1 ! -name mnt ! -name media -exec rm -rf {} + >> %s 2>&1" % LOG)
 		NOW = datetime.datetime.now()
 		logdata("Finished Time", NOW.strftime('%H:%M')) ## Print Finished time to log file
@@ -392,7 +392,7 @@ class doBackUpExternal(Screen):
 			except:
 				pass
 			os.system('umount -l /tmp/root >> %s 2>&1' % LOG)
-			if not fileExists("/tmp/root/usr"):
+			if not fileExists("/tmp/root/usr") and not os.path.ismount("/tmp/root"):
 				os.system("find /tmp/root -mindepth 1 -maxdepth 1 ! -name mnt ! -name media -exec rm -rf {} + >> %s 2>&1" % LOG)
 			logdata(".\n.\nCancelled Backup !!!!!!")
 			self.close()
