@@ -324,7 +324,7 @@ class Menu_Main(Screen):
 			skin_str += '</screen>'
 		self.skin = skin_str
 		Screen.__init__(self, session)
-		title_text = "BackupFlashe V " + str(Ver)
+		title_text = "BackupFlash V " + str(Ver)
 		self["title_label"] = Label(title_text)
 		for i in range(8):
 			self["cursor_" + str(i)] = Pixmap()
@@ -379,7 +379,7 @@ class Menu_Main(Screen):
 		if self.num_icons > 0 and 0 <= self.selected < self.num_icons:
 			name = self.icon_files[self.selected].replace('.png', '').replace('_', ' ').title()
 		else:
-			name = "BackupFlashe"
+			name = "BackupFlash"
 		for summary in self.summaries:
 			if "entry" in summary:
 				summary["entry"].setText(name)
@@ -719,7 +719,7 @@ class Menu_MainSummary(Screen):
 
 	def __init__(self, session, parent):
 		Screen.__init__(self, session, parent=parent)
-		name = "BackupFlashe"
+		name = "BackupFlash"
 		if parent and parent.num_icons > 0 and 0 <= parent.selected < parent.num_icons:
 			name = parent.icon_files[parent.selected].replace('.png', '').replace('_', ' ').title()
 		self["entry"] = StaticText(name)
