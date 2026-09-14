@@ -30,6 +30,19 @@ from Plugins.Extensions.backupflashe.tools.bftools import *
 from Plugins.Extensions.backupflashe.tools.convert import *
 from Plugins.Extensions.backupflashe.tools.compat import PY3
 from Plugins.Extensions.backupflashe.tools.Console import Console
+from Plugins.Extensions.backupflashe.tools.webui import setWebSession, startWebServer, getLocalIP, WEBPORT
+
+_webserver_started = [False]
+
+def sessionstart(reason, session=None, **kwargs):
+	if reason == 0 and session is not None:
+		setWebSession(session)
+		if not _webserver_started[0]:
+			try:
+				startWebServer()
+				_webserver_started[0] = True
+			except:
+				pass
 
 
 BRANDOS = '/var/lib/dpkg/status'  # DreamOS
@@ -275,6 +288,7 @@ class Menu_Main(Screen):
 			skin_str += '  <convert type="ClockToText">Format:%a %d %B %Y</convert>\n'
 			skin_str += '</widget>\n'
 			skin_str += ' <widget name="lab1" position="30,680" size="840,30" font="Regular;24" valign="center" foregroundColor="#00ffc435" backgroundColor="#16000000" transparent="1"/>\n'
+			skin_str += ' <widget name="weburl" position="880,680" size="390,30" font="Regular;18" halign="right" valign="center" foregroundColor="#0000ff00" backgroundColor="#16000000" transparent="1"/>\n'
 			max_cols = 4
 			for i in range(8):
 				row = i // max_cols
@@ -296,6 +310,7 @@ class Menu_Main(Screen):
 			skin_str += '  <convert type="ClockToText">Format:%a %d %B %Y</convert>\n'
 			skin_str += '</widget>\n'
 			skin_str += '<widget name="lab1" position="25,950" size="1397,115" font="Regular;30" valign="center" foregroundColor="#00ffc435" backgroundColor="#16000000" transparent="1" zPosition="1"/>\n'
+			skin_str += '<widget name="weburl" position="1430,950" size="480,115" font="Regular;24" halign="right" valign="center" foregroundColor="#0000ff00" backgroundColor="#16000000" transparent="1" zPosition="1"/>\n'
 			max_cols = 4
 			for i in range(8):
 				row = i // max_cols
@@ -325,6 +340,7 @@ class Menu_Main(Screen):
 			"cancel": self.close,
 		}, -1)
 		self["lab1"] = Label("")
+		self["weburl"] = Label("")
 		self.deviceok = True
 		self.new_version = Ver
 		self.timer = eTimer()
@@ -334,6 +350,9 @@ class Menu_Main(Screen):
 		except:
 			self.timer_conn = self.timer.timeout.connect(self.updateList)
 		self.onLayoutFinish.append(self.layoutFinished)
+
+	def createSummary(self):
+		return Menu_MainSummary
 
 	def updateDisplay(self):
 		start_idx = self.page * 8
@@ -354,6 +373,16 @@ class Menu_Main(Screen):
 				self["icon_" + str(i)].hide()
 				self["label_" + str(i)].hide()
 				self["cursor_" + str(i)].hide()
+		self.updateSummaryText()
+
+	def updateSummaryText(self):
+		if self.num_icons > 0 and 0 <= self.selected < self.num_icons:
+			name = self.icon_files[self.selected].replace('.png', '').replace('_', ' ').title()
+		else:
+			name = "BackupFlashe"
+		for summary in self.summaries:
+			if "entry" in summary:
+				summary["entry"].setText(name)
 
 	def actionRight(self):
 		if self.deviceok:
@@ -433,6 +462,10 @@ class Menu_Main(Screen):
 				self["label_" + str(i)].hide()
 
 	def layoutFinished(self):
+		try:
+			self["weburl"].setText("Web UI: http://%s:%s" % (getLocalIP(), WEBPORT))
+		except:
+			pass
 		if config.backupflashe.update.value:
 			self.checkupdates()
 		missing = []
@@ -675,6 +708,22 @@ class Menu_Main(Screen):
 		return
 
 
+class Menu_MainSummary(Screen):
+	skin = """
+	<screen name="Menu_MainSummary" position="0,0" size="400,240">
+		<widget source="entry" render="Label" position="0,40" size="400,50" font="Regular;45" valign="center" halign="center" />
+		<widget source="global.CurrentTime" render="Label" position="center,110" size="225,100" font="Regular;85" halign="center" >
+			<convert type="ClockToText">Format:%H:%M</convert>
+		</widget>
+	</screen>"""
+
+	def __init__(self, session, parent):
+		Screen.__init__(self, session, parent=parent)
+		name = "BackupFlashe"
+		if parent and parent.num_icons > 0 and 0 <= parent.selected < parent.num_icons:
+			name = parent.icon_files[parent.selected].replace('.png', '').replace('_', ' ').title()
+		self["entry"] = StaticText(name)
+
 class Setup_Menu(Screen, ConfigListScreen):
 
 	def __init__(self, session):
@@ -739,6 +788,9 @@ class Setup_Menu(Screen, ConfigListScreen):
 		cur = self["config"].getCurrent()
 		if cur:
 			self["help"].text = cur[2]
+			for summary in self.summaries:
+				if "entry" in summary:
+					summary["entry"].setText(str(cur[0]))
 
 	def save(self):
 		for x in self['config'].list:
@@ -757,6 +809,29 @@ class Setup_Menu(Screen, ConfigListScreen):
 		if select:
 			if select[1] == "Install":
 				self.install(True)
+
+
+	def createSummary(self):
+		return Setup_MenuSummary
+
+
+class Setup_MenuSummary(Screen):
+	skin = """
+	<screen name="Setup_MenuSummary" position="0,0" size="400,240">
+		<widget source="entry" render="Label" position="0,40" size="400,50" font="Regular;45" valign="center" halign="center" />
+		<widget source="global.CurrentTime" render="Label" position="center,110" size="225,100" font="Regular;85" halign="center" >
+			<convert type="ClockToText">Format:%H:%M</convert>
+		</widget>
+	</screen>"""
+
+	def __init__(self, session, parent):
+		Screen.__init__(self, session, parent=parent)
+		name = "Setup"
+		if parent:
+			cur = parent["config"].getCurrent()
+			if cur:
+				name = str(cur[0])
+		self["entry"] = StaticText(name)
 
 
 def main_menu(menuid, **kwargs):
@@ -783,6 +858,10 @@ def Plugins(**kwargs):
 			icon="plugin.png",
 			where=PluginDescriptor.WHERE_PLUGINMENU,
 			fnc=main
+		),
+		PluginDescriptor(
+			where=PluginDescriptor.WHERE_SESSIONSTART,
+			fnc=sessionstart
 		),
 	]
 
