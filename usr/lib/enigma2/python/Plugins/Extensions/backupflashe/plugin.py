@@ -14,6 +14,7 @@ from Tools.Directories import resolveFilename, fileExists, pathExists, SCOPE_MED
 from Components.FileList import FileList
 from Components.ActionMap import ActionMap
 from Components.Label import Label
+from Components.ScrollLabel import ScrollLabel
 from Components.Pixmap import Pixmap
 from Components.MenuList import MenuList
 from Components.Sources.List import List
@@ -520,8 +521,13 @@ class Menu_Main(Screen):
 			self.convertimage()
 		elif 'recovery' in selected_icon:
 			self.red()
+		elif 'log' in selected_icon:
+			self.showLog()
 		else:
 			logdata("No matching action found for: " + str(selected_icon))
+
+	def showLog(self):
+		self.session.open(Console, title=_("BackupFlash Log"), cmdlist=["cat %s" % logfile])
 
 	def doFlash(self):
 		self.session.open(
