@@ -129,7 +129,7 @@ PAGE_HEAD = """<!DOCTYPE html>
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>BackupFlashe</title>
+<title>BackupFlash</title>
 <style>
 * { box-sizing:border-box; }
 body {
@@ -193,7 +193,7 @@ window.onload = tick;
 <body>
 <div class="wrap">
 <div class="header">
-<h1><a href="/" style="color:#fff; text-decoration:none;">🏠</a> BackupFlashe</h1>
+<h1><a href="/" style="color:#fff; text-decoration:none;">🏠</a> BackupFlash</h1>
 <div class="clock"><div class="time" id="clocktime">--:--</div><div class="date" id="clockdate"></div></div>
 </div>
 """
@@ -207,7 +207,7 @@ PAGE_FOOT = """
 <option value="115">%s</option>
 <option value="130">%s</option>
 </select>
-<span>BackupFlashe Web UI</span>
+<span>BackupFlash Web UI</span>
 </div>
 <script>
 function setFontSize(val) {
