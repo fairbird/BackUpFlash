@@ -2,7 +2,7 @@
 ##setup command=wget https://raw.githubusercontent.com/fairbird/BackUpFlash/main/installer.sh -O - | /bin/sh
 
 version=12.9
-description=What is NEW :\n- Add web UI with (port 1001) 
+description=What is NEW :\n- Add web UI with 'port 1001'
 echo ""
 if [ ! -d "/usr/lib64" ]; then
 	LIBPATH="/usr/lib"
