@@ -2,6 +2,8 @@
 # -*- coding: utf-8 -*-
 # RAED (c) 2026
 
+from __future__ import unicode_literals
+
 import os
 import datetime
 
@@ -127,43 +129,100 @@ PAGE_HEAD = """<!DOCTYPE html>
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>BackUpFlash</title>
+<title>BackupFlashe</title>
 <style>
-body { font-family: sans-serif; background:#111; color:#eee; padding:20px; max-width:700px; margin:0 auto; }
-h1 { color:#0af; }
+* { box-sizing:border-box; }
+body {
+	font-family: 'Segoe UI', sans-serif;
+	margin:0;
+	min-height:100vh;
+	color:#eee;
+	background: linear-gradient(135deg, #1e3c72 0%, #2a5298 40%, #0f2027 100%);
+	background-attachment: fixed;
+	padding:30px 15px 60px;
+}
+.wrap {
+	max-width:900px;
+	margin:0 auto;
+	padding:25px 30px;
+	background: rgba(255,255,255,0.08);
+	backdrop-filter: blur(16px);
+	-webkit-backdrop-filter: blur(16px);
+	border: 1px solid rgba(255,255,255,0.15);
+	border-radius: 18px;
+	box-shadow: 0 8px 32px rgba(0,0,0,0.4);
+}
+.header { display:flex; justify-content:space-between; align-items:flex-start; border-bottom:1px solid #333; padding-bottom:15px; margin-bottom:15px; }
+.header h1 { margin:0; font-size:28px; font-weight:normal; color:#fff; }
+.header .clock { text-align:right; }
+.header .clock .time { font-size:34px; color:#fff; }
+.header .clock .date { font-size:16px; color:#3584ba; }
+.nav { margin-bottom:25px; display:flex; gap:20px; flex-wrap:wrap; }
+.nav a { color:#0af; text-decoration:none; font-size:15px; }
+.nav a:hover { text-decoration:underline; }
 h2 { color:#0af; border-bottom:1px solid #333; padding-bottom:5px; }
-select, input[type=text], button { padding:8px; font-size:14px; margin:5px 0; width:100%%; box-sizing:border-box; }
-button { background:#0af; color:#fff; border:none; cursor:pointer; border-radius:4px; }
-pre { background:#000; color:#0f0; padding:10px; height:400px; overflow:auto; }
-a { color:#0af; text-decoration:none; }
-.nav { margin-bottom:20px; }
-.nav a { margin-right:15px; }
+select, input[type=text], button { padding:8px; font-size:14px; margin:5px 0; width:100%; background:rgba(255,255,255,0.08); color:#eee; border:1px solid rgba(255,255,255,0.2); border-radius:8px; backdrop-filter: blur(4px); }
+select option { background:#1e2a3a; color:#eee; }
+button { background:#0af; color:#fff; border:none; cursor:pointer; margin-top:30px; display:block; }
+pre { background:#000; color:#0f0; padding:10px; height:400px; overflow:auto; border-radius:4px; }
+a { color:#0af; }
 .item { border-bottom:1px solid #333; padding:8px 0; display:flex; justify-content:space-between; align-items:center; }
 label { display:block; margin-top:10px; color:#aaa; }
 .grid { display:flex; flex-wrap:wrap; gap:30px; justify-content:center; margin-top:30px; }
 .tile { display:flex; flex-direction:column; align-items:center; text-decoration:none; width:130px; }
-.tile .icon { width:100px; height:100px; border-radius:50%%; display:flex; align-items:center; justify-content:center; font-size:44px; margin-bottom:10px; border:3px solid transparent; box-sizing:border-box; }
+.tile .icon { width:100px; height:100px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:44px; margin-bottom:10px; border:3px solid transparent; }
 .tile:hover .icon { border-color:#0af; }
 .tile .label { color:#fff; font-size:16px; text-align:center; }
+.footer { position:fixed; bottom:0; left:0; right:0; background:#000c; padding:10px 20px; font-size:14px; color:#0f0; display:flex; justify-content:space-between; align-items:center; }
+.footer select { width:auto; margin:0; padding:4px 8px; font-size:13px; }
 </style>
+<script>
+function tick() {
+	var d = new Date();
+	var hh = ('0'+d.getHours()).slice(-2);
+	var mm = ('0'+d.getMinutes()).slice(-2);
+	document.getElementById('clocktime').textContent = hh+':'+mm;
+	var days=['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+	var months=['January','February','March','April','May','June','July','August','September','October','November','December'];
+	document.getElementById('clockdate').textContent = days[d.getDay()]+' '+d.getDate()+' '+months[d.getMonth()]+' '+d.getFullYear();
+}
+setInterval(tick, 1000);
+window.onload = tick;
+</script>
 </head>
 <body>
-<h1>BackUpFlash</h1>
-<div class="nav">
-<a href="/">%s</a>
-<a href="/backup">%s</a>
-<a href="/convert">%s</a>
-<a href="/download">%s</a>
-<a href="/recovery">%s</a>
-<a href="/settings">%s</a>
-<a href="/log">%s</a>
+<div class="wrap">
+<div class="header">
+<h1><a href="/" style="color:#fff; text-decoration:none;">🏠</a> BackupFlashe</h1>
+<div class="clock"><div class="time" id="clocktime">--:--</div><div class="date" id="clockdate"></div></div>
 </div>
-""" % (_('Home'), _('Backup'), _('Convert'), _('Download'), _('Recovery'), _('Settings'), _('Log'))
+"""
 
 PAGE_FOOT = """
+</div>
+<div class="footer">
+<select id="fontsize" onchange="setFontSize(this.value)">
+<option value="85">%s</option>
+<option value="100">%s</option>
+<option value="115">%s</option>
+<option value="130">%s</option>
+</select>
+<span>BackupFlashe Web UI</span>
+</div>
+<script>
+function setFontSize(val) {
+	document.body.style.zoom = val + "%%";
+	localStorage.setItem('bf_fontsize', val);
+}
+(function() {
+	var saved = localStorage.getItem('bf_fontsize') || '100';
+	document.getElementById('fontsize').value = saved;
+	setFontSize(saved);
+})();
+</script>
 </body>
 </html>
-"""
+""" % (_('Small'), _('Normal'), _('Large'), _('Extra Large'))
 
 
 class HomePage(resource.Resource):
@@ -176,6 +235,7 @@ class HomePage(resource.Resource):
 			('/download', '⬇️', _('Download Image'), '#1596c7'),
 			('/recovery', '♻️', _('Recovery Mode'), '#2e2e2e'),
 			('/settings', '⚙️', _('Setup'), '#2e2e2e'),
+			('/log', '📄', _('Log'), '#555555'),
 		]
 		html = PAGE_HEAD
 		html += '<div class="grid">'
