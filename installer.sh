@@ -1,10 +1,8 @@
 #!/bin/bash
 ##setup command=wget https://raw.githubusercontent.com/fairbird/BackUpFlash/main/installer.sh -O - | /bin/sh
 
-version=12.8
-description=What is NEW :\n- Do not delete the mounted folder if the mount is not removed.
-- Secure file deletion process.
-- Do not back up or convert images if the stored space is less than 400 MB.
+version=12.9
+description=What is NEW :\n- Add web UI with (port 1001) 
 echo ""
 if [ ! -d "/usr/lib64" ]; then
 	LIBPATH="/usr/lib"
