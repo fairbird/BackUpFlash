@@ -8,6 +8,7 @@ import datetime
 from twisted.web import server, resource
 from twisted.internet import reactor
 
+from enigma import quitMainloop
 from Components.config import config, configfile, ConfigSelection
 from Tools.Directories import fileExists
 
@@ -16,7 +17,7 @@ from .backup import doBackUpInternal, doBackUpExternal
 from .convert import doConvert
 from .flashonline import teamsScreen, imagesScreen
 from .download import imagedownloadScreen
-from enigma import quitMainloop
+
 
 try:
 	from urllib.parse import quote
@@ -64,6 +65,11 @@ def ensureDevicePathConfig():
 		devices = getmDevices()
 		config.backupflashe.device_path = ConfigSelection(choices=devices if devices else [("", "")])
 	return config.backupflashe.device_path
+
+
+def getConfiguredDevicePath():
+	device_path_conf = ensureDevicePathConfig()
+	return device_path_conf.value
 
 
 def detectExternalImagesPath():
@@ -134,6 +140,11 @@ a { color:#0af; text-decoration:none; }
 .nav a { margin-right:15px; }
 .item { border-bottom:1px solid #333; padding:8px 0; display:flex; justify-content:space-between; align-items:center; }
 label { display:block; margin-top:10px; color:#aaa; }
+.grid { display:flex; flex-wrap:wrap; gap:30px; justify-content:center; margin-top:30px; }
+.tile { display:flex; flex-direction:column; align-items:center; text-decoration:none; width:130px; }
+.tile .icon { width:100px; height:100px; border-radius:50%%; display:flex; align-items:center; justify-content:center; font-size:44px; margin-bottom:10px; border:3px solid transparent; box-sizing:border-box; }
+.tile:hover .icon { border-color:#0af; }
+.tile .label { color:#fff; font-size:16px; text-align:center; }
 </style>
 </head>
 <body>
@@ -159,8 +170,18 @@ class HomePage(resource.Resource):
 	isLeaf = True
 
 	def render_GET(self, request):
+		tiles = [
+			('/backup', '💾', _('Backup Image'), '#3d5a66'),
+			('/convert', '🔄', _('Convert Image'), '#2e2e2e'),
+			('/download', '⬇️', _('Download Image'), '#1596c7'),
+			('/recovery', '♻️', _('Recovery Mode'), '#2e2e2e'),
+			('/settings', '⚙️', _('Setup'), '#2e2e2e'),
+		]
 		html = PAGE_HEAD
-		html += '<p>%s</p>' % _('Welcome. Use the menu above to Backup, Convert, change Settings, or view the Log.')
+		html += '<div class="grid">'
+		for href, icon, label, color in tiles:
+			html += '<a class="tile" href="%s"><div class="icon" style="background:%s">%s</div><div class="label">%s</div></a>' % (href, color, icon, label)
+		html += '</div>'
 		html += PAGE_FOOT
 		return html.encode('utf-8')
 
@@ -177,18 +198,20 @@ class BackupPage(resource.Resource):
 		return self.showForm(request)
 
 	def showForm(self, request):
-		devices = getmDevices()
-		dev_options = ''.join(['<option value="%s">%s</option>' % (d[0], d[0]) for d in devices])
-		if not dev_options:
-			dev_options = '<option value="">%s</option>' % _('No device found')
+		device = getConfiguredDevicePath()
 		default_name = '%s-%s-%s' % (getimage_name(), boxtype, getDateTime())
 
 		html = PAGE_HEAD
+		if not device:
+			html += '<p>%s <a href="/settings">%s</a></p>' % (_('No storage path configured.'), _('Go to Settings'))
+			html += PAGE_FOOT
+			return html.encode('utf-8')
+
 		html += '<h2>%s</h2>' % _('Backup Current (Internal) Image')
+		html += '<p>%s <b>%s</b></p>' % (_('Storage path:'), device)
 		html += '<form action="/backup" method="get">'
 		html += '<input type="hidden" name="action" value="internal">'
 		html += '<label>%s</label><input type="text" name="name" value="%s">' % (_('Backup name'), default_name)
-		html += '<label>%s</label><select name="device">%s</select>' % (_('Target device'), dev_options)
 		html += '<button type="submit">%s</button>' % _('Start Internal Backup')
 		html += '</form>'
 
@@ -206,7 +229,6 @@ class BackupPage(resource.Resource):
 			html += '<input type="hidden" name="action" value="external">'
 			html += '<label>%s</label><select name="source">%s</select>' % (_('Source image'), file_options)
 			html += '<label>%s</label><input type="text" name="name" value="%s">' % (_('Backup name'), default_name)
-			html += '<label>%s</label><select name="device">%s</select>' % (_('Target device'), dev_options)
 			html += '<button type="submit">%s</button>' % _('Start External Backup')
 			html += '</form>'
 
@@ -215,10 +237,10 @@ class BackupPage(resource.Resource):
 
 	def runInternal(self, request):
 		name = request.args.get(b'name', [b''])[0].decode('utf-8').strip()
-		device = request.args.get(b'device', [b''])[0].decode('utf-8')
+		device = getConfiguredDevicePath()
 		html = PAGE_HEAD
 		if not name or not device:
-			html += '<p>%s</p>' % _('Name and device are required.')
+			html += '<p>%s</p>' % _('Name and storage path are required.')
 		elif _session is None:
 			html += '<p>%s</p>' % _('Session not ready yet, try again in a moment.')
 		else:
@@ -232,11 +254,11 @@ class BackupPage(resource.Resource):
 	def runExternal(self, request):
 		source = request.args.get(b'source', [b''])[0].decode('utf-8')
 		name = request.args.get(b'name', [b''])[0].decode('utf-8').strip()
-		device = request.args.get(b'device', [b''])[0].decode('utf-8')
+		device = getConfiguredDevicePath()
 		image_path_base = detectExternalImagesPath()
 		html = PAGE_HEAD
 		if not source or not name or not device or not image_path_base:
-			html += '<p>%s</p>' % _('Source image, name and device are required.')
+			html += '<p>%s</p>' % _('Source image, name and storage path are required.')
 		elif _session is None:
 			html += '<p>%s</p>' % _('Session not ready yet, try again in a moment.')
 		else:
@@ -252,42 +274,32 @@ class ConvertPage(resource.Resource):
 	isLeaf = True
 
 	def render_GET(self, request):
-		device = request.args.get(b'device', [b''])[0].decode('utf-8')
 		run_name = request.args.get(b'run', [b''])[0].decode('utf-8')
-		if run_name and device:
-			return self.runConvert(request, device, run_name)
-		if device:
-			return self.showFiles(request, device)
-		return self.showDevices(request)
+		if run_name:
+			return self.runConvert(request, run_name)
+		return self.showFiles(request)
 
-	def showDevices(self, request):
-		devices = getmDevices()
+	def showFiles(self, request):
+		device = getConfiguredDevicePath()
 		html = PAGE_HEAD
-		html += '<h2>%s</h2>' % _('Select device to convert images from')
-		if not devices:
-			html += '<p>%s</p>' % _('No device found')
-		else:
-			for d in devices:
-				html += '<div class="item"><span>%s</span><a href="/convert?device=%s">%s</a></div>' % (d[0], d[0], _('Open'))
-		html += PAGE_FOOT
-		return html.encode('utf-8')
-
-	def showFiles(self, request, device):
+		if not device:
+			html += '<p>%s <a href="/settings">%s</a></p>' % (_('No storage path configured.'), _('Go to Settings'))
+			html += PAGE_FOOT
+			return html.encode('utf-8')
 		try:
 			files = sorted([f for f in os.listdir(device) if f.endswith('.xz')])
 		except:
 			files = []
-		html = PAGE_HEAD
 		html += '<h2>%s: %s</h2>' % (_('Images on'), device)
 		if not files:
 			html += '<p>%s</p>' % _('No .xz images found on this device.')
 		for f in files:
-			html += '<div class="item"><span>%s</span><a href="/convert?device=%s&run=%s">%s</a></div>' % (f, device, f, _('Convert'))
-		html += '<p><a href="/convert">%s</a></p>' % _('Back to devices')
+			html += '<div class="item"><span>%s</span><a href="/convert?run=%s">%s</a></div>' % (f, f, _('Convert'))
 		html += PAGE_FOOT
 		return html.encode('utf-8')
 
-	def runConvert(self, request, device, name):
+	def runConvert(self, request, name):
+		device = getConfiguredDevicePath()
 		html = PAGE_HEAD
 		if _session is None:
 			html += '<p>%s</p>' % _('Session not ready yet, try again in a moment.')
@@ -341,13 +353,12 @@ class DownloadPage(resource.Resource):
 		team = arg('team')
 		name = arg('name')
 		link = arg('link')
-		device = arg('device')
 		run = arg('run')
 
-		if name and link and device and run == '1':
-			return self.runDownload(name, link, device)
+		if name and link and run == '1':
+			return self.runDownload(name, link)
 		if name and link:
-			return self.showDeviceForm(name, link)
+			return self.showConfirm(name, link)
 		if category and team:
 			return self.showImages(category, team)
 		if category:
@@ -388,26 +399,30 @@ class DownloadPage(resource.Resource):
 		html += PAGE_FOOT
 		return html.encode('utf-8')
 
-	def showDeviceForm(self, name, link):
-		devices = getmDevices()
-		dev_options = ''.join(['<option value="%s">%s</option>' % (d[0], d[0]) for d in devices])
-		if not dev_options:
-			dev_options = '<option value="">%s</option>' % _('No device found')
+	def showConfirm(self, name, link):
+		device = getConfiguredDevicePath()
 		html = PAGE_HEAD
+		if not device:
+			html += '<p>%s <a href="/settings">%s</a></p>' % (_('No storage path configured.'), _('Go to Settings'))
+			html += PAGE_FOOT
+			return html.encode('utf-8')
 		html += '<h2>%s: %s</h2>' % (_('Download'), name)
+		html += '<p>%s <b>%s</b></p>' % (_('Save to:'), device)
 		html += '<form action="/download" method="get">'
 		html += '<input type="hidden" name="name" value="%s">' % name
 		html += '<input type="hidden" name="link" value="%s">' % link
 		html += '<input type="hidden" name="run" value="1">'
-		html += '<label>%s</label><select name="device">%s</select>' % (_('Target device'), dev_options)
 		html += '<button type="submit">%s</button>' % _('Start Download')
 		html += '</form>'
 		html += PAGE_FOOT
 		return html.encode('utf-8')
 
-	def runDownload(self, name, link, device):
+	def runDownload(self, name, link):
+		device = getConfiguredDevicePath()
 		html = PAGE_HEAD
-		if _session is None:
+		if not device:
+			html += '<p>%s</p>' % _('No storage path configured.')
+		elif _session is None:
 			html += '<p>%s</p>' % _('Session not ready yet, try again in a moment.')
 		else:
 			imagePath = os.path.join(device, name)
