@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 # RAED & mfaraj57 (c) 2018 - 2025
 
-from enigma import eTimer, quitMainloop, getDesktop
+from enigma import eTimer, quitMainloop
 from Screens.ChoiceBox import ChoiceBox
 from Screens.MessageBox import MessageBox
 from Screens.VirtualKeyBoard import VirtualKeyBoard
@@ -167,13 +167,12 @@ class SelectionScreen(Screen, ConfigListScreen):
 		self.setTitle(self.setup_title)
 
 		# Load pixmaps for checkboxes
-		sz_w = getDesktop(0).size().width()
-		if sz_w == 1280 :
-			self.empty_box = LoadPixmap(resolveFilename(SCOPE_PLUGINS, 'Extensions/backupflashe/buttons/checkbox_empty.png'))
-			self.checked_box = LoadPixmap(resolveFilename(SCOPE_PLUGINS, 'Extensions/backupflashe/buttons/checkbox_checked.png'))
-		else:
+		if isFullHD() or isUHD():
 			self.empty_box = LoadPixmap(resolveFilename(SCOPE_PLUGINS, 'Extensions/backupflashe/buttons/checkbox_empty2.png'))
 			self.checked_box = LoadPixmap(resolveFilename(SCOPE_PLUGINS, 'Extensions/backupflashe/buttons/checkbox_checked2.png'))
+		else:
+			self.empty_box = LoadPixmap(resolveFilename(SCOPE_PLUGINS, 'Extensions/backupflashe/buttons/checkbox_empty.png'))
+			self.checked_box = LoadPixmap(resolveFilename(SCOPE_PLUGINS, 'Extensions/backupflashe/buttons/checkbox_checked.png'))
 
 		# Initialize selection states
 		self.selection_states = {
@@ -277,31 +276,30 @@ class Menu_Main(Screen):
 		self.selected = 0
 		self.page = 0
 		self.items_per_page = 8
-		sz_w = getDesktop(0).size().width()
 		skin_str = ""
-		if sz_w == 1280:
-			skin_str = '<screen name="Menu_Main" position="0,0" size="1280,720" flags="wfNoBorder" backgroundColor="#16000000">\n'
-			skin_str += '<widget name="title_label" position="30,15" size="600,45" font="Regular;32" halign="left" valign="center" foregroundColor="#ffffff" backgroundColor="#16000000" transparent="1"/>\n'
-			skin_str += '<widget source="global.CurrentTime" render="Label" position="850,10" size="400,45" font="Regular;42" halign="right" valign="center" foregroundColor="#ffffff" backgroundColor="#16000000" transparent="1">\n'
+		if isUHD():
+			skin_str = '<screen name="Menu_Main" position="0,0" size="2560,1440" flags="wfNoBorder" backgroundColor="#16000000">\n'
+			skin_str += '<widget name="title_label" position="65,30" size="1100,80" font="Regular;60" halign="left" valign="center" foregroundColor="#ffffff" backgroundColor="#16000000" transparent="1"/>\n'
+			skin_str += '<widget source="global.CurrentTime" render="Label" position="1690,20" size="800,85" font="Regular;80" halign="right" valign="center" foregroundColor="#ffffff" backgroundColor="#16000000" transparent="1">\n'
 			skin_str += '  <convert type="ClockToText">Format:%H:%M</convert>\n'
 			skin_str += '</widget>\n'
-			skin_str += '<widget source="global.CurrentTime" render="Label" position="850,55" size="400,30" font="Regular;22" halign="right" valign="center" foregroundColor="#003584ba" backgroundColor="#16000000" transparent="1">\n'
+			skin_str += '<widget source="global.CurrentTime" render="Label" position="1690,110" size="800,55" font="Regular;45" halign="right" valign="center" foregroundColor="#003584ba" backgroundColor="#16000000" transparent="1">\n'
 			skin_str += '  <convert type="ClockToText">Format:%a %d %B %Y</convert>\n'
 			skin_str += '</widget>\n'
-			skin_str += ' <widget name="lab1" position="30,680" size="840,30" font="Regular;24" valign="center" foregroundColor="#00ffc435" backgroundColor="#16000000" transparent="1"/>\n'
-			skin_str += ' <widget name="weburl" position="880,680" size="390,30" font="Regular;18" halign="right" valign="center" foregroundColor="#0000ff00" backgroundColor="#16000000" transparent="1"/>\n'
+			skin_str += '<widget name="lab1" position="35,1260" size="1860,150" font="Regular;40" valign="center" foregroundColor="#00ffc435" backgroundColor="#16000000" transparent="1" zPosition="1"/>\n'
+			skin_str += '<widget name="weburl" position="1900,1260" size="640,150" font="Regular;32" halign="right" valign="center" foregroundColor="#0000ff00" backgroundColor="#16000000" transparent="1" zPosition="1"/>\n'
 			max_cols = 4
 			for i in range(8):
 				row = i // max_cols
 				col = i % max_cols
-				start_x = (1280 - (max_cols * 220)) // 2
-				x_pos = start_x + (col * 220)
-				y_pos = 180 + (row * 220)
-				skin_str += '<widget name="cursor_%s" position="%s,%s" size="180,205" zPosition="1" pixmap="%s/background-icon.png" scale="1" alphatest="blend" transparent="1"/>\n' % (i, x_pos-25, y_pos-15, self.buttons_dir)
-				skin_str += '<widget name="icon_%s" position="%s,%s" size="130,130" zPosition="2" scale="1" alphatest="blend" transparent="1"/>\n' % (i, x_pos, y_pos)
-				skin_str += '<widget name="label_%s" position="%s,%s" size="180,40" font="Regular;24" halign="center" valign="center" foregroundColor="#ffffff" backgroundColor="#00000000" zPosition="3" transparent="1"/>\n' % (i, x_pos-25, y_pos+135)
+				start_x = (2560 - (max_cols * 440)) // 2
+				x_pos = start_x + (col * 440)
+				y_pos = 360 + (row * 440)
+				skin_str += '<widget name="cursor_%s" position="%s,%s" size="370,400" zPosition="1" pixmap="%s/background-icon.png" scale="1" alphatest="blend" transparent="1"/>\n' % (i, x_pos-50, y_pos-35, self.buttons_dir)
+				skin_str += '<widget name="icon_%s" position="%s,%s" size="260,260" zPosition="2" scale="1" alphatest="blend" transparent="1"/>\n' % (i, x_pos, y_pos)
+				skin_str += '<widget name="label_%s" position="%s,%s" size="370,65" font="Regular;45" halign="center" valign="center" foregroundColor="#ffffff" backgroundColor="#00000000" zPosition="3" transparent="1"/>\n' % (i, x_pos-50, y_pos+275)
 			skin_str += '</screen>'
-		else:
+		elif isFullHD():
 			skin_str = '<screen name="Menu_Main" position="0,0" size="1920,1080" flags="wfNoBorder" backgroundColor="#16000000">\n'
 			skin_str += '<widget name="title_label" position="50,20" size="800,60" font="Regular;45" halign="left" valign="center" foregroundColor="#ffffff" backgroundColor="#16000000" transparent="1"/>\n'
 			skin_str += '<widget source="global.CurrentTime" render="Label" position="1270,15" size="600,65" font="Regular;60" halign="right" valign="center" foregroundColor="#ffffff" backgroundColor="#16000000" transparent="1">\n'
@@ -322,6 +320,28 @@ class Menu_Main(Screen):
 				skin_str += '<widget name="cursor_%s" position="%s,%s" size="280,300" zPosition="1" pixmap="%s/background-icon.png" scale="1" alphatest="blend" transparent="1"/>\n' % (i, x_pos-40, y_pos-25, self.buttons_dir)
 				skin_str += '<widget name="icon_%s" position="%s,%s" size="200,200" zPosition="2" scale="1" alphatest="blend" transparent="1"/>\n' % (i, x_pos, y_pos)
 				skin_str += '<widget name="label_%s" position="%s,%s" size="280,50" font="Regular;34" halign="center" valign="center" foregroundColor="#ffffff" backgroundColor="#00000000" zPosition="3" transparent="1"/>\n' % (i, x_pos-40, y_pos+205)
+			skin_str += '</screen>'
+		else:
+			skin_str = '<screen name="Menu_Main" position="0,0" size="1280,720" flags="wfNoBorder" backgroundColor="#16000000">\n'
+			skin_str += '<widget name="title_label" position="30,15" size="600,45" font="Regular;32" halign="left" valign="center" foregroundColor="#ffffff" backgroundColor="#16000000" transparent="1"/>\n'
+			skin_str += '<widget source="global.CurrentTime" render="Label" position="850,10" size="400,45" font="Regular;42" halign="right" valign="center" foregroundColor="#ffffff" backgroundColor="#16000000" transparent="1">\n'
+			skin_str += '  <convert type="ClockToText">Format:%H:%M</convert>\n'
+			skin_str += '</widget>\n'
+			skin_str += '<widget source="global.CurrentTime" render="Label" position="850,55" size="400,30" font="Regular;22" halign="right" valign="center" foregroundColor="#003584ba" backgroundColor="#16000000" transparent="1">\n'
+			skin_str += '  <convert type="ClockToText">Format:%a %d %B %Y</convert>\n'
+			skin_str += '</widget>\n'
+			skin_str += ' <widget name="lab1" position="30,680" size="840,30" font="Regular;24" valign="center" foregroundColor="#00ffc435" backgroundColor="#16000000" transparent="1"/>\n'
+			skin_str += ' <widget name="weburl" position="880,680" size="390,30" font="Regular;18" halign="right" valign="center" foregroundColor="#0000ff00" backgroundColor="#16000000" transparent="1"/>\n'
+			max_cols = 4
+			for i in range(8):
+				row = i // max_cols
+				col = i % max_cols
+				start_x = (1280 - (max_cols * 220)) // 2
+				x_pos = start_x + (col * 220)
+				y_pos = 180 + (row * 220)
+				skin_str += '<widget name="cursor_%s" position="%s,%s" size="180,205" zPosition="1" pixmap="%s/background-icon.png" scale="1" alphatest="blend" transparent="1"/>\n' % (i, x_pos-25, y_pos-15, self.buttons_dir)
+				skin_str += '<widget name="icon_%s" position="%s,%s" size="130,130" zPosition="2" scale="1" alphatest="blend" transparent="1"/>\n' % (i, x_pos, y_pos)
+				skin_str += '<widget name="label_%s" position="%s,%s" size="180,40" font="Regular;24" halign="center" valign="center" foregroundColor="#ffffff" backgroundColor="#00000000" zPosition="3" transparent="1"/>\n' % (i, x_pos-25, y_pos+135)
 			skin_str += '</screen>'
 		self.skin = skin_str
 		Screen.__init__(self, session)
