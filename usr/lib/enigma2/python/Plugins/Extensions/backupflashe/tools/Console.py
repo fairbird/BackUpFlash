@@ -4,6 +4,7 @@
 
 from __future__ import print_function
 from .compat import PY3
+from .bftools import isFullHD, isUHD
 
 from enigma import eConsoleAppContainer
 from Screens.Screen import Screen
@@ -11,29 +12,20 @@ from Components.ActionMap import ActionMap
 from Components.ScrollLabel import ScrollLabel
 from Components.Sources.StaticText import StaticText
 from Screens.MessageBox import MessageBox
-from enigma import getDesktop
-
-def getDesktopSize():
-	s = getDesktop(0).size()
-	return (s.width(), s.height())
-
-def isHD():
-	desktopSize = getDesktopSize()
-	return desktopSize[0] == 1280
 
 class Console(Screen):
-	if isHD():
-		skin = '''<screen position="17,center" size="1245,681" title="Command execution..." backgroundColor="#16000000" flags="wfNoBorder">
-			<widget name="text" position="9,48" size="1237,587" backgroundColor="#16000000" foregroundColor="#00ffffff" font="Console;24"/>
-			<eLabel text="Command execution..." font="Regular;30" size="1000,40" position="8,3" foregroundColor="#00ffffff" backgroundColor="#16000000" zPosition="4"/>
-			<eLabel position="10,674" size="165,5" backgroundColor="#00ff2525" zPosition="1"/>
-			<eLabel position="238,674" size="165,5" backgroundColor="#00389416" zPosition="1"/>
-			<eLabel position="1068,674" size="165,5" backgroundColor="#000080ff" zPosition="1"/>
-			<eLabel text="Cancel" position="10,646" zPosition="2" size="165,30" font="Regular;24" halign="center" valign="center" backgroundColor="#16000000" foregroundColor="#00ffffff" transparent="1"/>
-			<eLabel text="Hide/Show" position="238,646" zPosition="2" size="165,30" font="Regular;24" halign="center" valign="center" backgroundColor="#16000000" foregroundColor="#00ffffff" transparent="1"/>
-			<eLabel text="Restart GUI" position="1068,646" zPosition="2" size="165,30" font="Regular;24" halign="center" valign="center" backgroundColor="#16000000" foregroundColor="#00ffffff" transparent="1"/>
+	if isUHD():
+		skin = '''<screen position="center,center" size="2560,1440" title="Command execution..." backgroundColor="#16000000" flags="wfNoBorder">
+			<widget name="text" position="12,127" size="2536,1200" backgroundColor="#16000000" foregroundColor="#00ffffff" font="Console;45"/>
+			<eLabel text="Command execution..." font="Regular;60" size="1500,100" position="10,5" foregroundColor="#00ffffff" backgroundColor="#16000000" zPosition="4"/>
+			<eLabel position="12,1430" size="350,7" backgroundColor="#00ff2525" zPosition="1"/>
+			<eLabel position="480,1430" size="350,7" backgroundColor="#00389416" zPosition="1"/>
+			<eLabel position="2198,1430" size="350,7" backgroundColor="#000080ff" zPosition="1"/>
+			<eLabel text="Cancel" position="12,1370" zPosition="2" size="350,50" font="Regular;38" halign="center" valign="center" backgroundColor="#16000000" foregroundColor="#00ffffff" transparent="1"/>
+			<eLabel text="Hide/Show" render="Label" position="480,1370" zPosition="2" size="350,50" font="Regular;38" halign="center" valign="center" backgroundColor="#16000000" foregroundColor="#00ffffff" transparent="1"/>
+			<eLabel text="Restart GUI" position="2198,1370" zPosition="2" size="350,50" font="Regular;38" halign="center" valign="center" backgroundColor="#16000000" foregroundColor="#00ffffff" transparent="1"/>
 		</screen>'''
-	else:
+	elif isFullHD():
 		skin = '''<screen position="center,center" size="1886,1051" title="Command execution..." backgroundColor="#16000000" flags="wfNoBorder">
 			<widget name="text" position="9,93" size="1868,897" backgroundColor="#16000000" foregroundColor="#00ffffff" font="Console;33"/>
 			<eLabel text="Command execution..." font="Regular;45" size="1163,80" position="8,3" foregroundColor="#00ffffff" backgroundColor="#16000000" zPosition="4"/>
@@ -44,6 +36,18 @@ class Console(Screen):
 			<eLabel text="Hide/Show" render="Label" position="353,1004" zPosition="2" size="250,40" font="Regular;28" halign="center" valign="center" backgroundColor="#16000000" foregroundColor="#00ffffff" transparent="1"/>
 			<eLabel text="Restart GUI" position="1626,1004" zPosition="2" size="250,40" font="Regular;28" halign="center" valign="center" backgroundColor="#16000000" foregroundColor="#00ffffff" transparent="1"/>
 		</screen>'''
+	else:
+		skin = '''<screen position="17,center" size="1245,681" title="Command execution..." backgroundColor="#16000000" flags="wfNoBorder">
+			<widget name="text" position="9,48" size="1237,587" backgroundColor="#16000000" foregroundColor="#00ffffff" font="Console;24"/>
+			<eLabel text="Command execution..." font="Regular;30" size="1000,40" position="8,3" foregroundColor="#00ffffff" backgroundColor="#16000000" zPosition="4"/>
+			<eLabel position="10,674" size="165,5" backgroundColor="#00ff2525" zPosition="1"/>
+			<eLabel position="238,674" size="165,5" backgroundColor="#00389416" zPosition="1"/>
+			<eLabel position="1068,674" size="165,5" backgroundColor="#000080ff" zPosition="1"/>
+			<eLabel text="Cancel" position="10,646" zPosition="2" size="165,30" font="Regular;24" halign="center" valign="center" backgroundColor="#16000000" foregroundColor="#00ffffff" transparent="1"/>
+			<eLabel text="Hide/Show" position="238,646" zPosition="2" size="165,30" font="Regular;24" halign="center" valign="center" backgroundColor="#16000000" foregroundColor="#00ffffff" transparent="1"/>
+			<eLabel text="Restart GUI" position="1068,646" zPosition="2" size="165,30" font="Regular;24" halign="center" valign="center" backgroundColor="#16000000" foregroundColor="#00ffffff" transparent="1"/>
+		</screen>'''
+
 
 	def __init__(self, session, title = 'Console', cmdlist = None, finishedCallback = None, closeOnSuccess = False, showStartStopText = True, skin = None):
 		Screen.__init__(self, session)

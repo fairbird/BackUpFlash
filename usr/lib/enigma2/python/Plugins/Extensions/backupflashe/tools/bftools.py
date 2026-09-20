@@ -4,6 +4,7 @@
 
 from .compat import compat_Request, compat_urlopen, PY3
 
+from enigma import getDesktop
 from Components.About import about
 from Tools.Directories import fileExists, copyfile, createDir, resolveFilename, SCOPE_PLUGINS
 
@@ -60,6 +61,21 @@ def trace_error():
 		traceback.print_exc(file=open(logfile, 'a'))
 	except:
 		pass
+
+
+def getDesktopSize():
+	s = getDesktop(0).size()
+	return (s.width(), s.height())
+
+
+def isFullHD():
+	desktopSize = getDesktopSize()
+	return desktopSize[0] == 1920
+
+
+def isUHD():
+	desktopSize = getDesktopSize()
+	return desktopSize[0] == 2560 or desktopSize[0] == 3840
 
 
 def copylog(device_path):
