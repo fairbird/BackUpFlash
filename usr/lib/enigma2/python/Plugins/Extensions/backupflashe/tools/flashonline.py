@@ -212,8 +212,8 @@ class imagesScreen(Screen):
 				key = 'gkhsdcxiikosk'
 			elif boxtype == "dm7080":
 				key = '5cmni3i0rch9e'
-			elif boxtype == "dm820":
-				key = '60ptu82mgakx6'
+			elif boxtype == "dreamtwo":
+				key = 'yx295tx6vgp8c'
 			else:
 				return []
 			imagesPath = 'https://www.mediafire.com/api/1.4/folder/get_content.php?r=cfgd&content_type=files&filter=all&order_by=name&order_direction=asc&chunk=1&version=1.5&folder_key=%s&response_format=json' % key
@@ -230,6 +230,8 @@ class imagesScreen(Screen):
 				key = 'gnxuy5xl3vmjo'
 			elif boxtype == "dm7080":
 				key = 'tb1x6tmtglyw4'
+			elif boxtype == "dreamtwo":
+				key = 'wik2i04d3e5zu'
 			else:
 				return []
 			imagesPath = 'https://www.mediafire.com/api/1.4/folder/get_content.php?r=cfgd&content_type=files&filter=all&order_by=name&order_direction=asc&chunk=1&version=1.5&folder_key=%s&response_format=json' % key
