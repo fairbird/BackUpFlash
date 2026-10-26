@@ -1,8 +1,8 @@
 #!/bin/bash
 ##setup command=wget https://raw.githubusercontent.com/fairbird/BackUpFlash/main/installer.sh -O - | /bin/sh
 
-version=13.0
-description=What is NEW :\n- Support UHD skins
+version=13.1
+description=What is NEW :\n- Support Dreamtwo for BlackHole and OpenTsimage
 echo ""
 if [ ! -d "/usr/lib64" ]; then
 	LIBPATH="/usr/lib"
