@@ -105,10 +105,10 @@ class Console(Screen):
 		self.run += 1
 		if self.run != len(self.cmdlist):
 			cmd = self.cmdlist[self.run]
-		if isinstance(cmd, list):
-			cmd = " ".join(cmd)
-		if self.container.execute(cmd):
-			self.runFinished(-1)
+			if isinstance(cmd, list):
+				cmd = " ".join(cmd)
+			if self.container.execute(cmd):
+				self.runFinished(-1)
 		else:
 			self.show()
 			self.finished = True
