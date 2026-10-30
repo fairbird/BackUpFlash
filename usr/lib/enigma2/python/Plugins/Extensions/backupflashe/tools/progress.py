@@ -220,13 +220,19 @@ class ProgressScreen(Screen):
 			startstr = 'Flash started'
 		self['text'].setText(_(startstr) + '\n\n')
 		print('Console: executing in run', self.run, ' the command:', self.cmdlist[self.run])
-		if self.container.execute(self.cmdlist[self.run]):
+		cmd = self.cmdlist[self.run]
+        if isinstance(cmd, list):
+            cmd = " ".join(cmd)
+        if self.container.execute(cmd):
 			self.runFinished(-1)
 
 	def runFinished(self, retval):
 		self.run += 1
 		if self.run != len(self.cmdlist):
-			if self.container.execute(self.cmdlist[self.run]):
+			cmd = self.cmdlist[self.run]
+        	if isinstance(cmd, list):
+            	cmd = " ".join(cmd)
+        	if self.container.execute(cmd):
 				self.runFinished(-1)
 		else:
 			self.finished = True

@@ -1,8 +1,8 @@
 #!/bin/bash
 ##setup command=wget https://raw.githubusercontent.com/fairbird/BackUpFlash/main/installer.sh -O - | /bin/sh
 
-version=13.1
-description=What is NEW :\n- Support Dreamtwo for BlackHole and OpenTsimage
+version=13.2
+description=What is NEW :\n- Small fix for Backup to DreamOne/Two 
 echo ""
 if [ ! -d "/usr/lib64" ]; then
 	LIBPATH="/usr/lib"
