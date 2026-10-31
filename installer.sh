@@ -1,8 +1,8 @@
 #!/bin/bash
 ##setup command=wget https://raw.githubusercontent.com/fairbird/BackUpFlash/main/installer.sh -O - | /bin/sh
 
-version=13.3
-description=What is NEW :\n- Small fix
+version=13.4
+description=What is NEW :\n- fix send tar stderr to log instead of the bz2 archive
 echo ""
 if [ ! -d "/usr/lib64" ]; then
 	LIBPATH="/usr/lib"
