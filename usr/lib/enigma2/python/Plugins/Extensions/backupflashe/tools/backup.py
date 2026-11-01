@@ -85,16 +85,16 @@ class doBackUpInternal(Screen):
 			if fileExists(BRANDOS):
 			   COMMANDTAR = 'tar --exclude=smg.sock --exclude msg.sock -cf - -C /tmp/root . | xz -%s -T 0 -c - > %s 2>&1' % (compression_value, IMAGENAMEPATH)
 			else:
-			   COMMANDTAR = 'tar -cf - -C /tmp/root . | xz -%s -T 0 -c - > %s 2>&1' % (compression_value, IMAGENAMEPATH)
+			   COMMANDTAR = 'tar --exclude=smg.sock --exclude msg.sock -cf - -C /tmp/root . | xz -%s -T 0 -c - > %s 2>&1' % (compression_value, IMAGENAMEPATH)
 		else:
 			IMAGENAMEBZ2 = '%s.bz2' % IMAGENAME
 			IMAGENAME2 = '%s.tar.bz2' % self.image_name
 			IMAGENAMEPATH = os.path.join(self.device_path, IMAGENAME)
 			IMAGENAMEPATH2 = os.path.join(self.device_path, IMAGENAME2)
 			if fileExists(BRANDOS):
-				COMMANDTAR = 'tar -cf - --exclude=smg.sock --exclude msg.sock --exclude ./boot/kernel.img --exclude ./.resizerootfs --exclude ./.resize-rootfs --exclude ./.resize-linuxrootfs --exclude ./.resize-userdata -C /tmp/root . > %s 2>&1 && bzip2 %s >> %s 2>&1' % (IMAGENAMEPATH, IMAGENAMEPATH, LOG)
+				COMMANDTAR = 'tar -cf - --exclude=smg.sock --exclude msg.sock --exclude ./boot/kernel.img --exclude ./.resizerootfs --exclude ./.resize-rootfs --exclude ./.resize-linuxrootfs --exclude ./.resize-userdata -C /tmp/root . > %s 2>> %s && bzip2 %s >> %s 2>&1' % (IMAGENAMEPATH, LOG, IMAGENAMEPATH, LOG)
 			else:
-				COMMANDTAR = 'tar -cf - --exclude ./boot/kernel.img --exclude ./.resizerootfs --exclude ./.resize-rootfs --exclude ./.resize-linuxrootfs --exclude ./.resize-userdata -C /tmp/root . > %s 2>&1 && bzip2 %s >> %s 2>&1' % (IMAGENAMEPATH, IMAGENAMEPATH, LOG)
+				COMMANDTAR = 'tar -cf - --exclude=smg.sock --exclude msg.sock --exclude ./boot/kernel.img --exclude ./.resizerootfs --exclude ./.resize-rootfs --exclude ./.resize-linuxrootfs --exclude ./.resize-userdata -C /tmp/root . > %s 2>> %s && bzip2 %s >> %s 2>&1' % (IMAGENAMEPATH, LOG, IMAGENAMEPATH, LOG)
 		IMAGENAMEPATHBZ2 = os.path.join(self.device_path, IMAGENAMEBZ2)
 		try:
 			if fileExists(IMAGENAMEPATH):
@@ -116,13 +116,13 @@ class doBackUpInternal(Screen):
 			cmdlist.append('Backup (%s) on [%s]\n\n\n ' % (IMAGENAME, self.device_path))
 #			cmdlist.append('umount /tmp/root >> %s 2>&1' % LOG)
 #			os.system("find /tmp/root -mindepth 1 -maxdepth 1 ! -name mnt ! -name media -exec rm -rf {} + >> %s 2>&1" % LOG)
-			cmdlist.append('mkdir /tmp/root >> %s 2>&1' % LOG)
+			cmdlist.append('mkdir -p /tmp/root >> %s 2>&1' % LOG)
 			cmdlist.append('mount -o bind / /tmp/root >> %s 2>&1' % LOG)
 			if config.backupflashe.cleanba.value:
 				cmdlist.append("rm -f /tmp/root/home/root/ba.sh; rm -f /tmp/root/sbin/bainit; rm -f /tmp/root/sbin/ba.sh; rm -f /tmp/root/sbin/init; ln -s /etc/alternatives/init /tmp/root/sbin/init; rm -f /tmp/root/etc/alternatives/init; ln -s /lib/systemd/systemd /tmp/root/etc/alternatives/init")
 			cmdlist.append('mkdir -p /tmp/root/var/volatile/tmp && chmod 1777 /tmp/root/var/volatile/tmp >> %s 2>&1' % LOG)
 			cmdlist.append(COMMANDTAR)
-			cmdlist.append('chmod 777 %s >> %s 2>&1' % (IMAGENAMEPATH, LOG))
+			cmdlist.append('chmod 777 %s >> %s 2>&1' % (IMAGENAMEPATHBZ2, LOG))
 			if config.backupflashe.Zipcompression.value == False:
 				if config.backupflashe.image_format.value == 'xz':
 					cmdlist.append('mv %s %s >> %s 2>&1' % (IMAGENAMEPATHBZ2, IMAGENAMEPATH2, LOG))
@@ -284,17 +284,16 @@ class doBackUpExternal(Screen):
 			if fileExists(BRANDOS):
 			   COMMANDTAR = 'tar --exclude=smg.sock --exclude msg.sock -cf - -C /tmp/root . | xz -%s -T 0 -c - > %s 2>&1' % (compression_value, IMAGENAMEPATH)
 			else:
-			   COMMANDTAR = 'tar -cf - -C /tmp/root . | xz -%s -T 0 -c - > %s 2>&1' % (compression_value, IMAGENAMEPATH)
+			   COMMANDTAR = 'tar --exclude=smg.sock --exclude msg.sock -cf - -C /tmp/root . | xz -%s -T 0 -c - > %s 2>&1' % (compression_value, IMAGENAMEPATH)
 		else:
 			IMAGENAMEBZ2 = '%s.bz2' % IMAGENAME
 			IMAGENAME2 = '%s.tar.bz2' % self.image_name
 			IMAGENAMEPATH = os.path.join(self.device_path, IMAGENAME)
 			IMAGENAMEPATH2 = os.path.join(self.device_path, IMAGENAME2)
 			if fileExists(BRANDOS):
-				COMMANDTAR = 'tar -cf - --exclude=smg.sock --exclude msg.sock --exclude ./boot/kernel.img --exclude ./.resizerootfs --exclude ./.resize-rootfs --exclude ./.resize-linuxrootfs --exclude ./.resize-userdata -C /tmp/root . > %s 2>&1 && bzip2 %s >> %s 2>&1' % (IMAGENAMEPATH, IMAGENAMEPATH, LOG)
+				COMMANDTAR = 'tar -cf - --exclude=smg.sock --exclude msg.sock --exclude ./boot/kernel.img --exclude ./.resizerootfs --exclude ./.resize-rootfs --exclude ./.resize-linuxrootfs --exclude ./.resize-userdata -C /tmp/root . > %s 2>> %s && bzip2 %s >> %s 2>&1' % (IMAGENAMEPATH, LOG, IMAGENAMEPATH, LOG)
 			else:
-				COMMANDTAR = 'tar -cf - --exclude ./boot/kernel.img --exclude ./.resizerootfs --exclude ./.resize-rootfs --exclude ./.resize-linuxrootfs --exclude ./.resize-userdata -C /tmp/root . > %s 2>&1 && bzip2 %s >> %s 2>&1' % (IMAGENAMEPATH, IMAGENAMEPATH, LOG)
-		IMAGENAMEPATHBZ2 = os.path.join(self.device_path, IMAGENAMEBZ2)
+				COMMANDTAR = 'tar -cf - --exclude=smg.sock --exclude msg.sock --exclude ./boot/kernel.img --exclude ./.resizerootfs --exclude ./.resize-rootfs --exclude ./.resize-linuxrootfs --exclude ./.resize-userdata -C /tmp/root . > %s 2>> %s && bzip2 %s >> %s 2>&1' % (IMAGENAMEPATH, LOG, IMAGENAMEPATH, LOG)
 		try:
 			if fileExists(IMAGENAMEPATH):
 				os.remove(IMAGENAMEPATH)
@@ -315,13 +314,13 @@ class doBackUpExternal(Screen):
 			cmdlist.append('Backup (%s) on [%s]\n\n\n ' % (IMAGENAME, self.device_path))
 #			cmdlist.append('umount /tmp/root >> %s 2>&1' % LOG)
 #			os.system("find /tmp/root -mindepth 1 -maxdepth 1 ! -name mnt ! -name media -exec rm -rf {} + >> %s 2>&1" % LOG)
-			cmdlist.append('mkdir /tmp/root >> %s 2>&1' % LOG)
+			cmdlist.append('mkdir -p /tmp/root >> %s 2>&1' % LOG)
 			cmdlist.append('mount -o bind %s/ /tmp/root >> %s 2>&1' % (self.image_path, LOG))
 			if config.backupflashe.cleanba.value:
 				cmdlist.append("rm -f /tmp/root/home/root/ba.sh; rm -f /tmp/root/sbin/bainit; rm -f /tmp/root/sbin/ba.sh; rm -f /tmp/root/sbin/init; ln -s /etc/alternatives/init /tmp/root/sbin/init; rm -f /tmp/root/etc/alternatives/init; ln -s /lib/systemd/systemd /tmp/root/etc/alternatives/init")
 			cmdlist.append('mkdir -p /tmp/root/var/volatile/tmp && chmod 1777 /tmp/root/var/volatile/tmp >> %s 2>&1' % LOG)
 			cmdlist.append(COMMANDTAR)
-			cmdlist.append('chmod 777 %s >> %s 2>&1' % (IMAGENAMEPATH, LOG))
+			cmdlist.append('chmod 777 %s >> %s 2>&1' % (IMAGENAMEPATHBZ2, LOG))
 			if config.backupflashe.Zipcompression.value == False:
 				if config.backupflashe.image_format.value == 'xz':
 					cmdlist.append('mv %s %s >> %s 2>&1' % (IMAGENAMEPATHBZ2, IMAGENAMEPATH2, LOG))
