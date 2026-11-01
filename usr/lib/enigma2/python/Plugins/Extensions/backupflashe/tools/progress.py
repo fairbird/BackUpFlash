@@ -161,7 +161,16 @@ class ProgressScreen(Screen):
 				self.root_size = 0
 				backup_progress = 3
 			if self.image_size > 0:
-				if self.imagePath.endswith(".bz2"):
+				if self.imagePath.endswith("rootfs.tar"):
+					try:
+						bz2size = os.path.getsize(self.imagePath + ".bz2")
+					except:
+						bz2size = 0
+					if bz2size > 0:
+						backup_progress = min(99, 50 + int(50 * bz2size / (0.3 * self.image_size)))
+					else:
+						backup_progress = min(50, int(50 * self.image_size / root_size))
+				elif self.imagePath.endswith(".bz2"):
 				   backup_progress =  int(550*gfactor*self.image_size /(root_size))
 				else:
 				   backup_progress =  int(500*xfactor*self.image_size /(root_size))
