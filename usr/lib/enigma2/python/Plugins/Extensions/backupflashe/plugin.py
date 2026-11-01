@@ -778,6 +778,20 @@ class Setup_Menu(Screen, ConfigListScreen):
 	def layoutFinished(self):
 		self["config"].onSelectionChanged.append(self.updateHelp)
 
+	def keyLeft(self):
+		self.changeAndRefresh(ConfigListScreen.keyLeft)
+
+	def keyRight(self):
+		self.changeAndRefresh(ConfigListScreen.keyRight)
+
+	def changeAndRefresh(self, keyfunc):
+		oldformat = config.backupflashe.image_format.value
+		keyfunc(self)
+		if config.backupflashe.image_format.value != oldformat:
+			index = self["config"].getCurrentIndex()
+			self.createSetup()
+			self["config"].setCurrentIndex(index)
+
 	def updateList(self):
 		self["lab1"].setText(_("# Press Menu ..\nTo open option of show Plugin in any where you like"))
 		config.backupflashe.device_path = ConfigSelection(choices=mounted_devices)
