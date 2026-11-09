@@ -11,7 +11,7 @@ from Screens.Screen import Screen
 from Tools.Directories import fileExists, resolveFilename, SCOPE_PLUGINS
 from enigma import eTimer
 from time import sleep
-import os, datetime, re
+import os, datetime, re, shutil
 
 from .Console import Console
 from .progress import ProgressScreen 
@@ -77,7 +77,9 @@ class doConvert(Screen):
 		IMAGENAMEPATHBZ2_TMP = os.path.join(self.device_path, IMAGENAMEBZ2)
 		IMAGENAME = os.path.join(self.device_path, REALNAME)
 		self.IMAGENAMEPATH = IMAGENAMEPATH
-		if fileExists(BUILDFOLDER):
+		if os.path.isdir(BUILDFOLDER):
+			shutil.rmtree(BUILDFOLDER)
+		elif os.path.exists(BUILDFOLDER):
 			os.remove(BUILDFOLDER)
 		if fileExists(IMAGENAMEPATH_TMP):
 			os.remove(IMAGENAMEPATH_TMP)

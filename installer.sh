@@ -1,8 +1,8 @@
 #!/bin/bash
 ##setup command=wget https://raw.githubusercontent.com/fairbird/BackUpFlash/main/installer.sh -O - | /bin/sh
 
-version=13.5
-description=What is NEW :\n- Move to V 8.0.1 or openaTV images
+version=13.6
+description=What is NEW :\n- Fix build_folder directory removal during image conversion
 echo ""
 if [ ! -d "/usr/lib64" ]; then
 	LIBPATH="/usr/lib"
